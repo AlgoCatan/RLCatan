@@ -3,6 +3,25 @@
 $dark-divider: rgb(0 0 0 / 80%);
 
 .analysis-box {
+  .analysis-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .analysis-button-row {
+    width: 100%;
+    padding: 0 10px;
+    box-sizing: border-box;
+  }
+
+  h3 {
+    margin: 0;
+    text-align: center;
+  }
+
   .loading-indicator {
     text-align: center;
     padding: 16px;
@@ -67,6 +86,15 @@ $dark-divider: rgb(0 0 0 / 80%);
       font-size: 0.9rem;
       margin: 2px 0;
     }
+
+    .analysis-header {
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .analysis-button-row {
+      padding: 0 10px;
+    }
     
     .loading-indicator {
       padding: 4px;
@@ -92,9 +120,9 @@ $dark-divider: rgb(0 0 0 / 80%);
        }
     }
     
-    .MuiButton-root {
+    .analysis-button.MuiButton-root {
       font-size: 0.65rem;
-      padding: 2px 6px;
+      padding: 6px 6px;
       margin-top: 2px;
     }
   }

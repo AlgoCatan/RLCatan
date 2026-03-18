@@ -11,13 +11,15 @@ type ReplayBoxProps = {
   onPrevMove: () => void;
   onNextMove: () => void;
   onSeekMove: (value: number) => void;
+  compact?: boolean;
 };
 
 export default function ReplayBox({stateIndex,
   latestStateIndex,
   onPrevMove,
   onNextMove,
-  onSeekMove
+  onSeekMove,
+  compact = false,
 }: ReplayBoxProps ) {
   const [inputValue, setInputValue] = useState<string>(String(stateIndex));
 
@@ -37,13 +39,14 @@ export default function ReplayBox({stateIndex,
   };
 
   return (
-    <div className="replay-box">
+    <div className={`replay-box ${compact ? "compact" : ""}`.trim()}>
       <h3>Replay</h3>
 
-      Move: {stateIndex} / {latestStateIndex}
+      <div className="move-summary">Move: {stateIndex} / {latestStateIndex}</div>
 
       <Slider
         className="move-slider"
+        size={compact ? "small" : "medium"}
         min={0}
         max={latestStateIndex}
         step={1}
@@ -53,6 +56,7 @@ export default function ReplayBox({stateIndex,
 
       <NumericTextInput
         label="Go to move"
+        margin={compact ? "dense" : "none"}
         size="small"
         value={inputValue}
         onChange={setInputValue}
@@ -61,6 +65,8 @@ export default function ReplayBox({stateIndex,
 
       <div className="button-container">
         <Button
+          size={compact ? "small" : "medium"}
+          className="replay-nav-button"
           variant="contained"
           color="primary"
           onClick={onPrevMove}
@@ -71,6 +77,8 @@ export default function ReplayBox({stateIndex,
         </Button>
 
         <Button
+          size={compact ? "small" : "medium"}
+          className="replay-nav-button"
           variant="contained"
           color="primary"
           onClick={onNextMove}

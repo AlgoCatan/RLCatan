@@ -100,6 +100,7 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
       <Divider />
       <div style={{ padding: 10, display: 'flex', justifyContent: 'center' }}>
         <Button 
+          className="watch-replay-button"
           variant="contained" 
           onClick={() => navigate(`/replays/${gameId}`)}
           style={{ width: "100%" }}

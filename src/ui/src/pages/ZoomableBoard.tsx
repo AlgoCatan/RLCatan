@@ -161,14 +161,13 @@ export default function ZoomableBoard({ replayMode }: ZoomableBoardProps) {
 
   if (!width || !height) return;
 
-  const initialScale = 1;
-  const initialX = 0;
+  const initialScale = isSmallScreen ? 0.9 : 1;
+  const initialX = isSmallScreen && width ? width * 0.05 : 0;
   
   return (
     <TransformWrapper
       initialScale={initialScale}
-      minScale={0.5}
-      maxScale={1}
+      {...(isSmallScreen ? { minScale: 0.5, maxScale: 1 } : {})}
       initialPositionX={initialX}
       initialPositionY={0}
       centerZoomedOut={false}

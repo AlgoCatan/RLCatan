@@ -20,12 +20,14 @@ function DrawerContent({ gameState }: { gameState: GameState }) {
     const key = playerKey(gameState, color);
     return (
       <React.Fragment key={color}>
-        <PlayerStateBox
-          playerState={gameState.player_state}
-          playerKey={key}
-          color={color}
-          botName={gameState.player_models?.[color]}
-        />
+        <div className="player-section">
+          <PlayerStateBox
+            playerState={gameState.player_state}
+            playerKey={key}
+            color={color}
+            botName={gameState.player_models?.[color]}
+          />
+        </div>
         <Divider />
       </React.Fragment>
     );
