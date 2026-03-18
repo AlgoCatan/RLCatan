@@ -92,13 +92,20 @@ export default function ZoomableBoard({ replayMode }: ZoomableBoardProps) {
   const { state, dispatch } = useContext(store);
   const { width, height } = useWindowSize();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.up("md"));
+  // isMobile here seems to actually match "desktop" (md and up) based on existing code. 
+  // keeping it as is to avoid breaking Board component logic, but adding isSmallScreen for our layout logic.
+  const isMobile = useMediaQuery(theme.breakpoints.up("md")); 
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
+
   const [show, setShow] = useState(false);
   const gameState = state.gameState
   if (!gameState)
     throw new Error("GameState is not ready!");
   if (!gameId)
     throw new Error("expecting gameId in URL");
+
+  // Calculate adjusted height for mobile split screen, minus 60px for header + spacing
+  const boardHeight = isSmallScreen && height ? (height * 0.65) - 60 : height;
 
   // TODO: Move these up to GameScreen and let Zoomable be presentational component
   // https://stackoverflow.com/questions/61255053/react-usecallback-with-parameter
@@ -154,13 +161,24 @@ export default function ZoomableBoard({ replayMode }: ZoomableBoardProps) {
 
   if (!width || !height) return;
 
+  const initialScale = 1;
+  const initialX = 0;
+  
   return (
-    <TransformWrapper>
+    <TransformWrapper
+      initialScale={initialScale}
+      minScale={0.5}
+      maxScale={1}
+      initialPositionX={initialX}
+      initialPositionY={0}
+      centerZoomedOut={false}
+      limitToBounds={false}
+    >
       <div className="board-container">
-        <TransformComponent>
+        <TransformComponent wrapperStyle={{ width: "100%", height: "100%" }}>
           <Board
             width={width}
-            height={height}
+            height={boardHeight}
             buildOnNodeClick={buildOnNodeClick}
             buildOnEdgeClick={buildOnEdgeClick}
             handleTileClick={handleTileClick}
