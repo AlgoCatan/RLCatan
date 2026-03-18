@@ -1,16 +1,20 @@
 @use "../variables.scss";
 
 .prompt {
-  padding: variables.$sm-gutter;
+  padding: 0px 4px !important; // Minimal vertical padding
+  margin: 0 !important;
 
-  height: 60px;
+  height: auto !important; 
+  min-height: 20px !important; // Absolute minimum
   width: 100%;
-  font-size: 1rem;
+  font-size: 0.7rem !important;
 
-  text-align: left;
+  text-align: center; 
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
+  line-height: 1.2;
 
   overflow-x: auto;
   white-space: nowrap;

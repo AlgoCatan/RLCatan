@@ -347,11 +347,13 @@ export default function ActionsToolbar({
   return (
     <>
       <div className="state-summary">
-        <Hidden breakpoint={{ size: "md", direction: "up" }}>
-          <Button className="open-drawer-btn" onClick={openLeftDrawer}>
-            <ChevronLeftIcon />
-          </Button>
-        </Hidden>
+        <div className="hide-on-mobile">
+          <Hidden breakpoint={{ size: "md", direction: "up" }}>
+            <Button className="open-drawer-btn" onClick={openLeftDrawer}>
+              <ChevronLeftIcon />
+            </Button>
+          </Hidden>
+        </div>
         {humanColor && (
           <ResourceCards
             playerState={gameState.player_state}
@@ -359,15 +361,17 @@ export default function ActionsToolbar({
             size="large"
           />
         )}
-        <Hidden breakpoint={{ size: "lg", direction: "up" }}>
-          <Button
-            className="open-drawer-btn"
-            onClick={openRightDrawer}
-            style={{ marginLeft: "auto" }}
-          >
-            <ChevronRightIcon />
-          </Button>
-        </Hidden>
+        <div className="hide-on-mobile">
+          <Hidden breakpoint={{ size: "lg", direction: "up" }}>
+            <Button
+              className="open-drawer-btn"
+              onClick={openRightDrawer}
+              style={{ marginLeft: "auto" }}
+            >
+              <ChevronRightIcon />
+            </Button>
+          </Hidden>
+        </div>
       </div>
       <div className="actions-toolbar">
         {!(botsTurn || gameState.winning_color) && !replayMode && (
