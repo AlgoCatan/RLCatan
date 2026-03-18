@@ -173,3 +173,76 @@
     font-weight: bold;
   }
 }
+
+@media (max-width: variables.$md-breakpoint) {
+  .player-state-box {
+    padding: 0 4px;
+    
+    // Reduce container gap
+    .resource-cards {
+       gap: 4px;
+       margin-bottom: 2px !important;
+    }
+    
+    .bot-name { 
+      padding: 0 !important; 
+      margin-bottom: 2px !important;
+      small {
+         font-size: 0.6rem !important;
+      }
+    }
+    
+    .scores {
+        gap: 0;
+        
+        // Compact score items
+        .victory-points, .num-roads, .num-knights {
+           width: 30px;
+           height: 25px;
+           font-size: 0.7rem;
+           
+           svg, img {
+             width: 12px;
+             height: 12px;
+           }
+        }
+    }
+    
+    // Resource cards (Large typically for player box)
+    .resource-cards.large {
+       gap: 3px;
+       
+       .resource-card-container {
+          width: 40px;
+          
+          .card-visual {
+              width: 35px;
+              height: 50px; // Smaller card
+              
+              svg, img {
+                 width: 18px;
+              }
+          }
+          
+          .label { 
+             font-size: 0.6rem;
+             margin-top: 1px;
+          }
+       }
+    }
+    
+    // Small Resource cards for the drawers
+    .resource-cards.small {
+       height: 25px;
+       
+       .resource-card-container {
+         width: 16px; 
+         height: 25px;
+         
+         .card-visual {
+            font-size: 0.5rem;
+         }
+       }
+    }
+  }
+}

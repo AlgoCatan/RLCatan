@@ -61,3 +61,41 @@ $dark-divider: rgb(0 0 0 / 80%);
     }
   }
 }
+@media (max-width: variables.$md-breakpoint) {
+  .analysis-box {
+    h3 {
+      font-size: 0.9rem;
+      margin: 2px 0;
+    }
+    
+    .loading-indicator {
+      padding: 4px;
+      font-size: 0.8rem;
+    }
+    
+    .probability-bars {
+       margin-bottom: 4px;
+       
+       .probability-row {
+         padding: 2px 4px;
+         margin: 1px 0;
+         font-size: 0.7rem;
+         
+         .player-color { min-width: 40px; }
+         
+         .probability-bar { 
+            height: 8px; 
+            margin: 0 4px;
+         }
+         
+         .probability-value { min-width: 25px; }
+       }
+    }
+    
+    .MuiButton-root {
+      font-size: 0.65rem;
+      padding: 2px 6px;
+      margin-top: 2px;
+    }
+  }
+}

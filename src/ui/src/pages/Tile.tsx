@@ -78,19 +78,19 @@ const calculatePortPosition = (
   let x = 0;
   let y = 0;
   if (direction.includes("SOUTH")) {
-    y += size / 3;
+    y += size * 0.45;
   } else if (direction.includes("NORTH")) {
-    y -= size / 3;
+    y -= size * 0.45;
   }
   if (direction.includes("WEST")) {
-    x -= size / 4;
+    x -= size * 0.25;
     if (direction === "WEST") {
-      x = -size / 3;
+      x = -size * 0.5;
     }
   } else if (direction.includes("EAST")) {
-    x += size / 4;
+    x += size * 0.25;
     if (direction === "EAST") {
-      x = size / 3;
+      x = size * 0.5;
     }
   }
   return { x, y };
@@ -119,9 +119,9 @@ const Port = ({
       style={{
         ...style,
         backgroundImage: `url("${tile}")`,
-        height: 60,
+        height: 30,
         backgroundSize: "contain",
-        width: 52,
+        width: 26,
         backgroundRepeat: "no-repeat",
       }}
     >
