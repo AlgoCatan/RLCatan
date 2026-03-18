@@ -210,6 +210,7 @@ def build_production_features(consider_robber):
     prefix = "EFFECTIVE_" if consider_robber else "TOTAL_"
 
     def production_features(game: Game, p0_color: Color):
+        # P0_WHEAT_PRODUCTION, P0_ORE_PRODUCTION, ..., P1_WHEAT_PRODUCTION, ...
         features = {}
         board = game.state.board
         robber_coordinate = board.robber_coordinate if consider_robber else None
