@@ -73,14 +73,6 @@ $btn-height: 60px;
     width: 100%;
   }
 
-  .action-popover {
-    z-index: 1;
-
-    overflow: auto;
-    max-height: calc(100% - #{$btn-height});
-    margin-bottom: 10px;
-  }
-
   .MuiButton-label {
     display: flex;
     flex-direction: column;
@@ -90,6 +82,16 @@ $btn-height: 60px;
     .MuiButton-startIcon {
       margin: 0;
     }
+  }
+}
+
+.action-popover {
+  z-index: 1400;
+
+  .MuiPaper-root {
+    overflow-y: auto;
+    max-height: min(320px, calc(100vh - 120px));
+    margin-bottom: 10px;
   }
 }
 
@@ -118,5 +120,11 @@ $btn-height: 60px;
         margin: 0 !important;
         min-height: 0 !important; 
      }
+  }
+
+  .action-popover {
+    .MuiPaper-root {
+      max-height: min(260px, calc(100vh - 80px));
+    }
   }
 }

@@ -1,6 +1,5 @@
 import { useContext, useState } from "react";
-import { CircularProgress, Button } from "@mui/material";
-import AssessmentIcon from "@mui/icons-material/Assessment";
+import { Button } from "@mui/material";
 import { type MCTSProbabilities, type StateIndex, getMctsAnalysis } from "../utils/apiClient";
 import { useParams } from "react-router";
 
@@ -48,15 +47,24 @@ export default function AnalysisBox( { stateIndex }: AnalysisBoxProps ) {
     <div className="analysis-box">
       <div className="analysis-header">
         <h3>Win Probability Analysis</h3>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleAnalyzeClick}
-          disabled={loading || !!state.gameState?.winning_color}
-          startIcon={loading ? <CircularProgress size={20} /> : <AssessmentIcon />}
-        >
-          {loading ? "Analyzing..." : "Analyze"}
-        </Button>
+        <div className="analysis-button-row">
+          <Button
+            className="analysis-button"
+            variant="contained"
+            color="primary"
+            onClick={handleAnalyzeClick}
+            disabled={loading || !!state.gameState?.winning_color}
+            fullWidth
+            sx={{
+              "&.Mui-disabled": {
+                backgroundColor: "rgba(255, 255, 255, 0.3)",
+                color: "rgba(255, 255, 255, 0.7)",
+              },
+            }}
+          >
+            {loading ? "Analyzing..." : "Analyze"}
+          </Button>
+        </div>
       </div>
 
       {error && (

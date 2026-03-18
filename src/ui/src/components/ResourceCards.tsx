@@ -90,9 +90,9 @@ function ResourceCardItem({
     >
       <div className="card-visual">
         <span className="count">{count}</span>
+        {size === "large" && <span className="label">{shortLabel ?? label}</span>}
         {shortLabel && <span className="short-label">{shortLabel}</span>}
       </div>
-      {size === "large" && <span className="label">{label}</span>}
     </div>
   );
 }

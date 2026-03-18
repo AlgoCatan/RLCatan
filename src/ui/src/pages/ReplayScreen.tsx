@@ -13,6 +13,8 @@ import { getState } from "../utils/apiClient";
 import AnalysisBox from "../components/AnalysisBox";
 import { Divider } from "@mui/material";
 import ReplayBox from "../components/ReplayBox";
+import PlayerStats from "../components/PlayerStats";
+import ActionLog from "../components/ActionLog";
 
 function ReplayScreen() {
   const { gameId } = useParams();
@@ -56,22 +58,62 @@ function ReplayScreen() {
     );
   }
 
+  const rightDrawerContent = (
+    <>
+      <AnalysisBox stateIndex={stateIndex}/>
+      <Divider />
+      <ReplayBox
+        stateIndex={stateIndex}
+        latestStateIndex={latestStateIndex}
+        onNextMove={handleNextState}
+        onPrevMove={handlePrevState}
+        onSeekMove={(index) => setStateIndex(index)}
+      />
+    </>
+  );
+
   return (
-    <main>
-      <h1 className="logo">Catan Arena</h1>
-      <ZoomableBoard replayMode={true} />
-      <LeftDrawer />
-      <RightDrawer>
-        <AnalysisBox stateIndex={stateIndex}/>
-        <Divider />
-        <ReplayBox
-          stateIndex={stateIndex}
-          latestStateIndex={latestStateIndex}
-          onNextMove={handleNextState}
-          onPrevMove={handlePrevState}
-          onSeekMove={(index) => setStateIndex(index)}
-        />
-      </RightDrawer>
+    <main className="replay-screen-main">
+      <div className="desktop-layout">
+        <h1 className="logo">Catan Arena</h1>
+        <ZoomableBoard replayMode={true} />
+        <LeftDrawer />
+        <RightDrawer>
+          {rightDrawerContent}
+        </RightDrawer>
+      </div>
+
+      <div className="mobile-layout">
+        <div className="mobile-top-half">
+          <h1 className="logo">Catan Arena</h1>
+          <div className="zoomable-wrapper" style={{ flex: 1, position: "relative", width: "100%", overflow: "hidden" }}>
+            <ZoomableBoard replayMode={true} />
+          </div>
+        </div>
+        <div className="mobile-bottom-half">
+          <div className="mobile-replay-controls">
+            <ReplayBox
+              stateIndex={stateIndex}
+              latestStateIndex={latestStateIndex}
+              onNextMove={handleNextState}
+              onPrevMove={handlePrevState}
+              onSeekMove={(index) => setStateIndex(index)}
+              compact
+            />
+          </div>
+          <div className="mobile-drawers-row">
+            <div className="mobile-left-drawer-content">
+              <PlayerStats gameState={state.gameState} />
+            </div>
+            <div className="mobile-right-drawer-content">
+              <AnalysisBox stateIndex={stateIndex}/>
+            </div>
+          </div>
+          <div className="mobile-action-log">
+            <ActionLog gameState={state.gameState} />
+          </div>
+        </div>
+      </div>
     </main>
   );
 }
