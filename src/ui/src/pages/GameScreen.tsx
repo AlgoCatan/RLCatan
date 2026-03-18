@@ -17,6 +17,8 @@ import { dispatchSnackbar } from "../components/Snackbar";
 import { getHumanColor } from "../utils/stateUtils";
 import AnalysisBox from "../components/AnalysisBox";
 import { Divider, Button } from "@mui/material";
+import PlayerStats from "../components/PlayerStats";
+import ActionLog from "../components/ActionLog";
 
 const ROBOT_THINKING_TIME = 300;
 
@@ -92,25 +94,57 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
     );
   }
 
+  const rightDrawerContent = (
+    <>
+      <AnalysisBox stateIndex={"latest"}/>
+      <Divider />
+      <div style={{ padding: 10, display: 'flex', justifyContent: 'center' }}>
+        <Button 
+          className="watch-replay-button"
+          variant="contained" 
+          onClick={() => navigate(`/replays/${gameId}`)}
+          style={{ width: "100%" }}
+        >
+          Watch Replay
+        </Button>
+      </div>
+    </>
+  );
+
   return (
-    <main>
-      <h1 className="logo">Catan Arena</h1>
-      <ZoomableBoard replayMode={replayMode} />
-      <ActionsToolbar isBotThinking={isBotThinking} replayMode={replayMode} />
-      <LeftDrawer />
-      <RightDrawer>
-        <AnalysisBox stateIndex={"latest"}/>
-        <Divider />
-        <div style={{ padding: 10, display: 'flex', justifyContent: 'center' }}>
-          <Button 
-            variant="contained" 
-            onClick={() => navigate(`/replays/${gameId}`)}
-            style={{ width: "100%" }}
-          >
-            Watch Replay
-          </Button>
+    <main className="game-screen-main">
+      <div className="desktop-layout">
+        <h1 className="logo">Catan Arena</h1>
+        <ZoomableBoard replayMode={replayMode} />
+        <ActionsToolbar isBotThinking={isBotThinking} replayMode={replayMode} />
+        <LeftDrawer />
+        <RightDrawer>
+          {rightDrawerContent}
+        </RightDrawer>
+      </div>
+
+      <div className="mobile-layout">
+        <div className="mobile-top-half">
+          <h1 className="logo">Catan Arena</h1>
+          <div className="zoomable-wrapper" style={{ flex: 1, position: 'relative', width: '100%', overflow: 'hidden' }}>
+             <ZoomableBoard replayMode={replayMode} />
+          </div>
         </div>
-      </RightDrawer>
+        <div className="mobile-bottom-half">
+          <ActionsToolbar isBotThinking={isBotThinking} replayMode={replayMode} />
+          <div className="mobile-drawers-row">
+            <div className="mobile-left-drawer-content">
+               <PlayerStats gameState={state.gameState} />
+            </div>
+            <div className="mobile-right-drawer-content">
+               {rightDrawerContent}
+            </div>
+          </div>
+          <div className="mobile-action-log">
+             <ActionLog gameState={state.gameState} />
+          </div>
+        </div>
+      </div>
     </main>
   );
 }

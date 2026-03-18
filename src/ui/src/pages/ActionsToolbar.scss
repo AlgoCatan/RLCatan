@@ -1,15 +1,16 @@
 @use "../variables.scss";
 
+// State Summary (Resource Cards)
 .state-summary {
-  min-height: 60px;
-  height: auto; // Allow growing to fit larger cards
+  min-height: 40px; // Reduced min-height
+  height: auto; 
   width: 100%;
   max-width: variables.$sm-breakpoint;
   margin: 0 auto;
   display: flex;
-  padding: 5px variables.$sm-gutter 20px;
+  padding: 5px variables.$sm-gutter 5px; // Reduced bottom padding
   box-sizing: border-box; 
-  align-items: flex-start; // Align items to top
+  align-items: flex-start;
   
   .open-drawer-btn {
     color: white;
@@ -19,7 +20,8 @@
 
 $btn-height: 60px;
 .actions-toolbar {
-  height: $btn-height + 2 * variables.$sm-gutter;
+  height: auto; // Allow height to adjust based on content
+  min-height: $btn-height; // Maintain minimum height for buttons
   width: 100%;
   max-width: variables.$sm-breakpoint;
   margin-left: auto;
@@ -71,14 +73,6 @@ $btn-height: 60px;
     width: 100%;
   }
 
-  .action-popover {
-    z-index: 1;
-
-    overflow: auto;
-    max-height: calc(100% - #{$btn-height});
-    margin-bottom: 10px;
-  }
-
   .MuiButton-label {
     display: flex;
     flex-direction: column;
@@ -87,6 +81,50 @@ $btn-height: 60px;
 
     .MuiButton-startIcon {
       margin: 0;
+    }
+  }
+}
+
+.action-popover {
+  z-index: 1400;
+
+  .MuiPaper-root {
+    overflow-y: auto;
+    max-height: min(320px, calc(100vh - 120px));
+    margin-bottom: 10px;
+  }
+}
+
+@media (max-width: variables.$md-breakpoint) {
+  .actions-toolbar {
+     min-height: 20px !important; // Allow for minimal prompt
+     height: auto !important;
+     padding: 0 !important;
+     margin: 0 !important;
+     gap: 0 !important;
+     
+     // Only add spacing if buttons are present (not empty)
+     &:not(:empty) {
+        padding: 2px !important;
+     }
+
+     button {
+        height: 35px !important;
+        min-width: 40px !important;
+        font-size: 0.75rem !important;
+        margin: 0 !important;
+     }
+
+     .prompt {
+        padding: 0 !important;
+        margin: 0 !important;
+        min-height: 0 !important; 
+     }
+  }
+
+  .action-popover {
+    .MuiPaper-root {
+      max-height: min(260px, calc(100vh - 80px));
     }
   }
 }

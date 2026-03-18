@@ -64,7 +64,7 @@
     }
   }
 
-  // LARGE variant (Solid fill, rectangular, text below)
+  // LARGE variant (Solid fill, rectangular, text inside card)
   &.large {
     height: auto;
     // Align items to top so they don't stretch weirdly 
@@ -75,7 +75,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      width: 70px; // Wrapper width to center label
+      width: 60px;
 
       .card-visual {
         width: 60px;  
@@ -113,31 +113,24 @@
             text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
 
+        .label {
+            position: absolute;
+            left: 50%;
+            bottom: 6px;
+            transform: translateX(-50%);
+            width: calc(100% - 12px);
+            font-size: 0.72rem;
+            font-weight: 700;
+            line-height: 1.05;
+            text-align: center;
+            text-transform: capitalize;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+        }
+
         // Short label (VP, KN) bottom-right or centered?
         .short-label {
-            position: absolute;
-            bottom: 5px;
-            right: 8px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            opacity: 0.9;
+            display: none;
         }
-      }
-
-      .label {
-        margin-top: 6px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: #ddd; // Light text for dark backgrounds? Or assumes this is on dark background?
-                     // ActionsToolbar seems to be footer-like. 
-                     // Let's use a dynamic color or assume dark theme context if implies.
-                     // The .actions-toolbar in ActionsToolbar.scss doesn't specify bg, but App usually has one.
-                     // If it's light theme, #ddd is invisible.
-                     // Given "solid fill", usually implies colorful cards. 
-                     // Let's stick to standard text color or inherit.
-        color: inherit; 
-        text-align: center;
-        text-transform: capitalize;
       }
     }
   }
@@ -156,6 +149,17 @@
   margin: 0 auto;
   width: 100%;
 
+  .player-header {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .bot-name {
+    padding: 4px 0;
+    text-align: center;
+    width: 100%;
+  }
+
   .scores {
     display: flex;
     justify-content: space-between;
@@ -171,5 +175,88 @@
 
   .bold {
     font-weight: bold;
+  }
+}
+
+@media (max-width: variables.$md-breakpoint) {
+  .player-state-box {
+    padding: 0 4px;
+
+    .player-header {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+    
+    // Reduce container gap
+    .resource-cards {
+       gap: 4px;
+       margin-bottom: 0 !important;
+       margin-left: auto;
+    }
+    
+    .bot-name { 
+      padding: 0 !important;
+      margin-bottom: 0 !important;
+      width: auto;
+      text-align: left;
+      flex: 1;
+      min-width: 0;
+
+      small {
+         font-size: 0.6rem !important;
+         display: block;
+         line-height: 1.1;
+      }
+    }
+    
+    .scores {
+        gap: 0;
+        
+        // Compact score items
+        .victory-points, .num-roads, .num-knights {
+           width: 30px;
+           height: 25px;
+           font-size: 0.7rem;
+           
+           svg, img {
+             width: 12px;
+             height: 12px;
+           }
+        }
+    }
+    
+    // Resource cards (Large typically for player box)
+    .resource-cards.large {
+       gap: 3px;
+       
+       .resource-card-container {
+          width: 35px;
+          
+          .card-visual {
+              width: 35px;
+              height: 50px; // Smaller card
+              
+              svg, img {
+                 width: 18px;
+              }
+          }
+       }
+    }
+    
+    // Small Resource cards for the drawers
+    .resource-cards.small {
+       height: 25px;
+       
+       .resource-card-container {
+         width: 16px; 
+         height: 25px;
+         
+         .card-visual {
+            font-size: 0.5rem;
+         }
+       }
+    }
   }
 }

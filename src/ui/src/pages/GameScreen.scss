@@ -115,3 +115,171 @@ main {
     }
   }
 }
+
+/* Mobile Layout Adaptation */
+
+.desktop-layout {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.mobile-layout {
+  display: none;
+}
+
+@media (max-width: variables.$md-breakpoint) {
+  // Reset main padding for mobile layout
+  main {
+      padding-left: 0 !important;
+      .board-container {
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+      }
+  }
+
+  .desktop-layout {
+    display: none !important;
+  }
+
+  .mobile-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+
+    .mobile-top-half {
+      flex: 1;
+      height: 65%;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      
+      .logo {
+         position: relative; // Static flow
+         height: 35px; // Slightly smaller height
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         margin: 0;
+         padding: 0;
+         z-index: 100;
+         text-shadow: 0 0 4px black;
+         font-size: 1.4rem;
+         line-height: 1;
+      }
+      
+      // Target the wrapper div we added in GameScreen.tsx to ensure flex flow
+      .zoomable-wrapper {
+        flex: 1;
+        position: relative;
+        overflow: hidden;
+        margin-top: 0; // Removed extra spacing
+      }
+      
+      // Ensure inner board container fills the wrapper
+      .board-container {
+         position: absolute; // Fill parent wrapper
+         width: 100%;
+         height: 100% !important; 
+         top: 0 !important;
+         left: 0 !important;
+         z-index: 1;
+         align-items: flex-start !important;
+      }
+    }
+
+    // HUD: Resource Cards Overlay (Always top)
+    .state-summary {
+       position: absolute;
+       top: 40px; // Starts below logo
+       width: 100%;
+       z-index: 200; // High z-index to sit on top of everything
+       pointer-events: none;
+       display: flex;
+       justify-content: center;
+
+       .resource-cards.large {
+         display: none;
+       }
+       
+       .open-drawer-btn {
+         display: none;
+       }
+       
+       > * {
+          pointer-events: auto;
+       }
+    }
+
+    .mobile-bottom-half {
+      flex: 1;
+      height: 35%;
+      display: flex;
+      flex-direction: column;
+      background-color: variables.$dark-gray;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+
+      // Controls (Buttons / Prompts) inside bottom half
+      .actions-toolbar {
+         position: relative;
+         width: 100%;
+         z-index: 10;
+         pointer-events: auto;
+         // Override absolute defaults if needed
+         bottom: auto;
+         left: auto;
+      }
+
+      .mobile-drawers-row {
+        flex: 1;
+        display: flex;
+        flex-direction: row;
+        overflow: hidden;
+        min-height: 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        
+        .mobile-left-drawer-content, .mobile-right-drawer-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2px 2px 0 2px;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .mobile-left-drawer-content {
+           border-right: 1px solid rgba(255, 255, 255, 0.12);
+        }
+      }
+      
+      .mobile-action-log {
+        flex: 1; 
+        min-height: 100px;
+        background-color: rgba(0,0,0,0.2);
+        padding: 5px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+
+        .log {
+            flex: 1;
+            height: 100%;
+            overflow-y: auto;
+        }
+      }
+
+      .watch-replay-button {
+        font-size: 0.65rem;
+      }
+    }
+  }
+}
+
+/* Hide on mobile for drawers */
+@media (max-width: variables.$md-breakpoint) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+}

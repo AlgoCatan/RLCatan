@@ -1,6 +1,6 @@
 @use "../variables.scss";
 
-main {
+.replay-screen-main {
   background: variables.$black;
   color: white;
   height: 100%;
@@ -16,5 +16,207 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  .board-container,
+  .loader {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.board-container {
+  .react-transform-wrapper {
+    height: 100%;
+    width: 100%;
+  }
+
+  .react-transform-component {
+    height: 100%;
+    width: 100%;
+
+    .react-transform-element {
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  .board {
+    position: relative;
+    opacity: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  .board.show {
+    opacity: 1;
+  }
+}
+
+.desktop-layout {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.mobile-layout {
+  display: none;
+}
+
+@media (min-width: variables.$md-breakpoint) {
+  .replay-screen-main {
+    padding-left: 280px;
+
+    .board-container {
+      margin-right: 0;
+    }
+  }
+}
+
+@media (min-width: variables.$lg-breakpoint) {
+  .replay-screen-main {
+    padding-left: 0;
+
+    .board-container {
+      margin-left: 140px;
+    }
+  }
+}
+
+@media (max-width: variables.$md-breakpoint) {
+  .replay-screen-main {
+    padding-left: 0 !important;
+
+    .board-container {
+      margin-right: 0 !important;
+      margin-left: 0 !important;
+    }
+  }
+
+  .desktop-layout {
+    display: none !important;
+  }
+
+  .mobile-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+
+    .mobile-top-half {
+      flex: 1;
+      height: 65%;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+
+      .logo {
+        position: relative;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        padding: 0;
+        z-index: 100;
+        text-shadow: 0 0 4px black;
+        font-size: 1.4rem;
+        line-height: 1;
+      }
+
+      .zoomable-wrapper {
+        flex: 1;
+        position: relative;
+        overflow: hidden;
+        margin-top: 0;
+      }
+
+      .board-container {
+        position: absolute;
+        width: 100%;
+        height: 100% !important;
+        top: 0 !important;
+        left: 0 !important;
+        z-index: 1;
+        align-items: flex-start !important;
+      }
+    }
+
+    .mobile-bottom-half {
+      flex: 1;
+      height: 35%;
+      display: flex;
+      flex-direction: column;
+      background-color: variables.$dark-gray;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+
+      .mobile-replay-controls {
+        padding: 4px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+
+        .replay-box {
+          gap: 4px;
+
+          h3 {
+            margin: 0;
+            font-size: 0.95rem;
+            text-align: center;
+          }
+
+          .button-container {
+            gap: 4px;
+
+            button {
+              flex: 1;
+              min-width: 0;
+              font-size: 0.7rem;
+            }
+          }
+        }
+      }
+
+      .mobile-drawers-row {
+        flex: 1;
+        display: flex;
+        flex-direction: row;
+        overflow: hidden;
+        min-height: 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+
+        .mobile-left-drawer-content,
+        .mobile-right-drawer-content {
+          flex: 1;
+          overflow-y: auto;
+          padding: 2px 2px 0 2px;
+          -webkit-overflow-scrolling: touch;
+        }
+
+        .mobile-left-drawer-content {
+          border-right: 1px solid rgba(255, 255, 255, 0.12);
+        }
+      }
+
+      .mobile-action-log {
+        flex: 1;
+        min-height: 100px;
+        background-color: rgba(0, 0, 0, 0.2);
+        padding: 5px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+
+        .log {
+          flex: 1;
+          height: 100%;
+          overflow-y: auto;
+        }
+      }
+    }
   }
 }

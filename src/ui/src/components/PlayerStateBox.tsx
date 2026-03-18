@@ -9,12 +9,14 @@ export default function PlayerStateBox({ playerState, playerKey, color, botName 
   const actualVps = playerState[`${playerKey}_ACTUAL_VICTORY_POINTS`];
   return (
     <div className={cn("player-state-box foreground", color)}>
-      <ResourceCards playerState={playerState} playerKey={playerKey} />
-      {botName && (
-        <div className="bot-name" style={{ padding: "4px 0", textAlign: "center", width: "100%" }}>
-          <small>{botName}</small>
-        </div>
-      )}
+      <div className="player-header">
+        {botName && (
+          <div className="bot-name">
+            <small>{botName}</small>
+          </div>
+        )}
+        <ResourceCards playerState={playerState} playerKey={playerKey} />
+      </div>
       <div className="scores">
         <div
           className={cn("num-knights center-text", {

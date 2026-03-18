@@ -264,7 +264,7 @@ function PlayButtons() {
       <Button
         disabled={gameState.is_initial_build_phase || isRoadBuilding}
         variant="contained"
-        color="primary"
+        color="secondary"
         startIcon={
           isRoll ? (
             <img src={diceIcon} style={{ width: 24, height: 24 }} alt="roll" />
@@ -347,11 +347,13 @@ export default function ActionsToolbar({
   return (
     <>
       <div className="state-summary">
-        <Hidden breakpoint={{ size: "md", direction: "up" }}>
-          <Button className="open-drawer-btn" onClick={openLeftDrawer}>
-            <ChevronLeftIcon />
-          </Button>
-        </Hidden>
+        <div className="hide-on-mobile">
+          <Hidden breakpoint={{ size: "md", direction: "up" }}>
+            <Button className="open-drawer-btn" onClick={openLeftDrawer}>
+              <ChevronLeftIcon />
+            </Button>
+          </Hidden>
+        </div>
         {humanColor && (
           <ResourceCards
             playerState={gameState.player_state}
@@ -359,15 +361,17 @@ export default function ActionsToolbar({
             size="large"
           />
         )}
-        <Hidden breakpoint={{ size: "lg", direction: "up" }}>
-          <Button
-            className="open-drawer-btn"
-            onClick={openRightDrawer}
-            style={{ marginLeft: "auto" }}
-          >
-            <ChevronRightIcon />
-          </Button>
-        </Hidden>
+        <div className="hide-on-mobile">
+          <Hidden breakpoint={{ size: "lg", direction: "up" }}>
+            <Button
+              className="open-drawer-btn"
+              onClick={openRightDrawer}
+              style={{ marginLeft: "auto" }}
+            >
+              <ChevronRightIcon />
+            </Button>
+          </Hidden>
+        </div>
       </div>
       <div className="actions-toolbar">
         {!(botsTurn || gameState.winning_color) && !replayMode && (
@@ -415,7 +419,7 @@ function OptionsButton({
   disabled,
 }: OptionsButtonProps) {
   const [open, setOpen] = useState(false);
-  const anchorRef = useRef<HTMLAnchorElement>(null);
+  const anchorRef = useRef<HTMLButtonElement>(null);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -454,7 +458,7 @@ function OptionsButton({
       <Button
         disabled={disabled}
         ref={anchorRef}
-        href="#"
+        type="button"
         aria-controls={open ? menuListId : undefined}
         aria-haspopup="true"
         variant="contained"
@@ -470,7 +474,6 @@ function OptionsButton({
         anchorEl={anchorRef.current}
         role={undefined}
         transition
-        disablePortal
       >
         {({ TransitionProps, placement }) => (
           <Grow
