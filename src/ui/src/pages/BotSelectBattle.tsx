@@ -76,9 +76,18 @@ export default function BotSelectBattle() {
         color: "#fff",
         backgroundColor: "#121212",
         minHeight: "100vh",
+        padding: "0 16px", // Add padding for mobile
+        textAlign: "center", // Ensure text is centered
       }}
     >
-      <h1 style={{ fontSize: "3rem", color: "#ffffff", marginBottom: 24 }}>
+      <h1
+        style={{
+          fontSize: "3rem",
+          color: "#ffffff",
+          marginBottom: 24,
+          wordWrap: "break-word", // Ensure long titles wrap properly
+        }}
+      >
         Battle Two Bots
       </h1>
       <div style={{ opacity: 0.8, marginBottom: 12, textAlign: "center" }}>
@@ -91,11 +100,28 @@ export default function BotSelectBattle() {
         </div>
       )}
 
-      <div style={{ display: "flex", justifyContent: "center", gap: 32, marginBottom: 24 }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          gap: 16, // Reduce gap for better spacing on mobile
+          marginBottom: 24,
+          flexWrap: "wrap", // Allow dropdowns to wrap on smaller screens
+        }}
+      >
         {/* Bot A */}
-        <div>
-          <div style={{ marginBottom: 6, textAlign: "center", color: "#ffccbc" }}>Bot A</div>
-          <select value={a} onChange={(e) => setA(e.target.value)} style={dropdownStyle}>
+        <div style={{ width: "100%", maxWidth: "250px" }}>
+          <div style={{ marginBottom: 6, textAlign: "center", color: "#ffccbc" }}>
+            Bot A
+          </div>
+          <select
+            value={a}
+            onChange={(e) => setA(e.target.value)}
+            style={{
+              ...dropdownStyle,
+              width: "100%", // Make dropdown responsive
+            }}
+          >
             {bots.map((x) => (
               <option key={x.id} value={x.id}>
                 {(x.name ?? x.id) + ` (Elo ${x.elo})`}
@@ -105,9 +131,18 @@ export default function BotSelectBattle() {
         </div>
 
         {/* Bot B */}
-        <div>
-          <div style={{ marginBottom: 6, textAlign: "center", color: "#ffccbc" }}>Bot B</div>
-          <select value={b} onChange={(e) => setB(e.target.value)} style={dropdownStyle}>
+        <div style={{ width: "100%", maxWidth: "250px" }}>
+          <div style={{ marginBottom: 6, textAlign: "center", color: "#ffccbc" }}>
+            Bot B
+          </div>
+          <select
+            value={b}
+            onChange={(e) => setB(e.target.value)}
+            style={{
+              ...dropdownStyle,
+              width: "100%", // Make dropdown responsive
+            }}
+          >
             {bots.map((x) => (
               <option key={x.id} value={x.id}>
                 {(x.name ?? x.id) + ` (Elo ${x.elo})`}

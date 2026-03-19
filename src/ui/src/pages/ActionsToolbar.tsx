@@ -237,6 +237,7 @@ function PlayButtons() {
   const endTurnAction = carryOutAction([humanColor, "END_TURN", null]);
   return (
     <>
+      {/* USE Button */}
       <OptionsButton
         disabled={playableDevCardTypes.size === 0 || isPlayingDevCard}
         menuListId="use-menu-list"
@@ -245,6 +246,8 @@ function PlayButtons() {
       >
         Use
       </OptionsButton>
+
+      {/* BUY Button */}
       <OptionsButton
         disabled={buildActionTypes.size === 0 || isPlayingDevCard}
         menuListId="build-menu-list"
@@ -253,6 +256,8 @@ function PlayButtons() {
       >
         Buy
       </OptionsButton>
+
+      {/* TRADE Button */}
       <OptionsButton
         disabled={tradeItems.length === 0 || isPlayingDevCard}
         menuListId="trade-menu-list"
@@ -261,6 +266,8 @@ function PlayButtons() {
       >
         Trade
       </OptionsButton>
+
+      {/* END Button */}
       <Button
         disabled={gameState.is_initial_build_phase || isRoadBuilding}
         variant="contained"
