@@ -9,7 +9,7 @@ import ACTIONS from "../actions";
 
 import "./RightDrawer.scss";
 
-export default function RightDrawer( { children }: PropsWithChildren ) {
+export default function RightDrawer( { children, inlineOnDesktop = false }: PropsWithChildren & { inlineOnDesktop?: boolean } ) {
   const { state, dispatch } = useContext(store);
   const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
@@ -53,18 +53,21 @@ export default function RightDrawer( { children }: PropsWithChildren ) {
           </div>
         </SwipeableDrawer>
       </Hidden>
-      <Hidden breakpoint={{ size: "md", direction: "down" }} implementation="css">
-        <Drawer
-          className="right-drawer"
-          anchor="right"
-          variant="permanent"
-          open
-        >
-          <div className="drawer-content">
-            {children}
-          </div>
-        </Drawer>
-      </Hidden>
+      {/* On desktop, render the permanent Drawer only when not using inline box */}
+      {!inlineOnDesktop && (
+        <Hidden breakpoint={{ size: "md", direction: "down" }} implementation="css">
+          <Drawer
+            className="right-drawer"
+            anchor="right"
+            variant="permanent"
+            open
+          >
+            <div className="drawer-content">
+              {children}
+            </div>
+          </Drawer>
+        </Hidden>
+      )}
     </>
   );
 }

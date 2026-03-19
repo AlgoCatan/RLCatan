@@ -326,9 +326,11 @@ function PlayButtons() {
 export default function ActionsToolbar({
   isBotThinking,
   replayMode,
+  rightDrawerContent,
 }: {
   isBotThinking: boolean;
   replayMode: boolean;
+  rightDrawerContent?: React.ReactNode;
 }) {
   const { state, dispatch } = useContext(store);
   const { gameState } = state;
@@ -383,23 +385,19 @@ export default function ActionsToolbar({
       </div>
       <div className="actions-toolbar">
         {!(botsTurn || gameState.winning_color) && !replayMode && (
-          <PlayButtons />
+          <div className="play-buttons-group">
+            <PlayButtons />
+          </div>
         )}
         {(botsTurn || gameState.winning_color) && (
           <Prompt gameState={gameState} isBotThinking={isBotThinking} />
         )}
-        {/* <Button
-          disabled={disabled}
-          className="confirm-btn"
-          variant="contained"
-          color="primary"
-          onClick={onTick}
-        >
-          Ok
-        </Button> */}
-
-        {/* <Button onClick={zoomIn}>Zoom In</Button>
-      <Button onClick={zoomOut}>Zoom Out</Button> */}
+        {/* Inline right-drawer box on desktop, hidden on mobile */}
+        {rightDrawerContent && (
+          <div className="right-drawer-inline hide-on-mobile" role="complementary">
+            {rightDrawerContent}
+          </div>
+        )}
       </div>
     </>
   );
