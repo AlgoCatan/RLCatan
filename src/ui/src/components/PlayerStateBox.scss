@@ -155,14 +155,26 @@
   }
 
   .bot-name {
-    padding: 4px 0;
+    font-weight: bold; // Make bot names bold
+    font-size: 1.1rem; // Slightly larger font size
     text-align: center;
+    padding: 4px 0;
     width: 100%;
   }
 
   .scores {
     display: flex;
     justify-content: space-between;
+
+    .num-knights,
+    .num-roads,
+    .victory-points {
+      flex-direction: column;
+      width: 50px;
+      height: 40px;
+      font-weight: bold; // Make scores bold
+      font-size: 1.05rem; // Slightly larger font size
+    }
   }
 
   .num-knights,

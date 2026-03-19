@@ -14,10 +14,10 @@
       padding: variables.$sm-gutter;
       font-weight: bold; // Bold text
 
-      // High contrast colors for log
-      &.RED { color: lighten(variables.$red, 20%); }
-      &.BLUE { color: lighten(variables.$blue, 20%); }
-      &.ORANGE { color: lighten(variables.$orange, 10%); }
-      &.WHITE { color: white; text-shadow: 0 0 2px black; } 
+      // Use colors directly from variables.scss
+      &.RED { color: variables.$red; }
+      &.BLUE { color: variables.$blue; }
+      &.ORANGE { color: variables.$orange; }
+      &.WHITE { color: variables.$white; text-shadow: 0 0 2px black; }
     }
 }
