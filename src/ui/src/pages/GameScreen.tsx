@@ -67,9 +67,10 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
           // simulate thinking
           setIsBotThinking(false);
           dispatch({ type: ACTIONS.SET_GAME_STATE, data: gameState });
-          if (getHumanColor(gameState)) {
-            dispatchSnackbar(enqueueSnackbar, closeSnackbar, gameState);
-          }
+          // Commented out dispatchSnackbar
+          // if (getHumanColor(gameState)) {
+          //   dispatchSnackbar(enqueueSnackbar, closeSnackbar, gameState);
+          // }
         }, ROBOT_THINKING_TIME - requestTime);
       })();
     }

@@ -53,7 +53,8 @@ function PlayButtons() {
     memoize((action?: GameAction) => async () => {
       const gameState = await postAction(gameId, action);
       dispatch({ type: ACTIONS.SET_GAME_STATE, data: gameState });
-      dispatchSnackbar(enqueueSnackbar, closeSnackbar, gameState);
+      // Commented out dispatchSnackbar
+      // dispatchSnackbar(enqueueSnackbar, closeSnackbar, gameState);
     }),
     [enqueueSnackbar, closeSnackbar]
   );
