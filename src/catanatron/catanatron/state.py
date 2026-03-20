@@ -5,7 +5,7 @@ Module with main State class and main apply_action call (game controller).
 import random
 import pickle
 from collections import defaultdict
-from typing import Any, List, Sequence, Tuple, Dict
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from catanatron.models.map import BASE_MAP_TEMPLATE, CatanMap
 from catanatron.models.board import Board
@@ -120,6 +120,8 @@ class State:
         current_prompt (ActionPrompt): DEPRECATED. Not needed; use is_initial_build_phase,
             is_moving_knight, etc... instead.
         is_discarding (bool): If current player needs to discard.
+        discard_counts (List[int]): Remaining number of single-card discards owed
+            by each player in seating order.
         is_moving_knight (bool): If current player needs to move robber.
         is_road_building (bool): If current player needs to build free roads per Road
             Building dev card.
@@ -170,6 +172,7 @@ class State:
             self.current_prompt = ActionPrompt.BUILD_INITIAL_SETTLEMENT
             self.is_initial_build_phase = True
             self.is_discarding = False
+            self.discard_counts = [0 for _ in self.colors]
             self.is_moving_knight = False
             self.is_road_building = False
             self.free_roads_available = 0
@@ -222,6 +225,7 @@ class State:
         state_copy.current_prompt = self.current_prompt
         state_copy.is_initial_build_phase = self.is_initial_build_phase
         state_copy.is_discarding = self.is_discarding
+        state_copy.discard_counts = self.discard_counts.copy()
         state_copy.is_moving_knight = self.is_moving_knight
         state_copy.is_road_building = self.is_road_building
         state_copy.free_roads_available = self.free_roads_available
@@ -306,6 +310,13 @@ def advance_turn(state, direction=1):
 
 def next_player_index(state, direction=1):
     return (state.current_player_index + direction) % len(state.colors)
+
+
+def next_discarder_index(state, start_index: int) -> Optional[int]:
+    for index in range(start_index, len(state.colors)):
+        if state.discard_counts[index] > 0:
+            return index
+    return None
 
 
 def apply_action(state: State, action: Action):
@@ -462,17 +473,20 @@ def apply_action(state: State, action: Action):
         action = Action(action.color, action.action_type, dices)
 
         if number == 7:
-            discarders = [
-                player_num_resource_cards(state, color) > state.discard_limit
+            state.discard_counts = [
+                player_num_resource_cards(state, color) // 2
+                if player_num_resource_cards(state, color) > state.discard_limit
+                else 0
                 for color in state.colors
             ]
-            should_enter_discarding_sequence = any(discarders)
+            first_discarder_index = next_discarder_index(state, 0)
 
-            if should_enter_discarding_sequence:
-                state.current_player_index = discarders.index(True)
+            if first_discarder_index is not None:
+                state.current_player_index = first_discarder_index
                 state.current_prompt = ActionPrompt.DISCARD
                 state.is_discarding = True
             else:
+                state.discard_counts = [0 for _ in state.colors]
                 # state.current_player_index stays the same
                 state.current_prompt = ActionPrompt.MOVE_ROBBER
                 state.is_moving_knight = True
@@ -491,31 +505,39 @@ def apply_action(state: State, action: Action):
             state.playable_actions = generate_playable_actions(state)
     elif action.action_type == ActionType.DISCARD:
         hand = player_deck_to_array(state, action.color)
-        num_to_discard = len(hand) // 2
         if action.value is None:
-            # TODO: Forcefully discard randomly so that decision tree doesnt explode in possibilities.
-            discarded = random.sample(hand, k=num_to_discard)
+            discarded = random.choice(hand)
+        elif isinstance(action.value, (list, tuple)):
+            if len(action.value) != 1:
+                raise ValueError("Discard action must choose exactly one resource")
+            discarded = action.value[0]
         else:
-            discarded = action.value  # for replay functionality
-        to_discard = freqdeck_from_listdeck(discarded)
+            discarded = action.value
+        to_discard = freqdeck_from_listdeck([discarded])
 
         player_freqdeck_subtract(state, action.color, to_discard)
         state.resource_freqdeck = freqdeck_add(state.resource_freqdeck, to_discard)
         action = Action(action.color, action.action_type, discarded)
 
-        # Advance turn
-        discarders_left = [
-            player_num_resource_cards(state, color) > 7 for color in state.colors
-        ][state.current_player_index + 1 :]
-        if any(discarders_left):
-            to_skip = discarders_left.index(True)
-            state.current_player_index = state.current_player_index + 1 + to_skip
-            # state.current_prompt stays the same
+        state.discard_counts[state.current_player_index] -= 1
+        if state.discard_counts[state.current_player_index] < 0:
+            raise ValueError("Player discarded more cards than required")
+
+        if state.discard_counts[state.current_player_index] > 0:
+            # state.current_player_index stays the same
+            # state.current_prompt stays as DISCARD
+            pass
         else:
-            state.current_player_index = state.current_turn_index
-            state.current_prompt = ActionPrompt.MOVE_ROBBER
-            state.is_discarding = False
-            state.is_moving_knight = True
+            next_player = next_discarder_index(state, state.current_player_index + 1)
+            if next_player is not None:
+                state.current_player_index = next_player
+                # state.current_prompt stays as DISCARD
+            else:
+                state.discard_counts = [0 for _ in state.colors]
+                state.current_player_index = state.current_turn_index
+                state.current_prompt = ActionPrompt.MOVE_ROBBER
+                state.is_discarding = False
+                state.is_moving_knight = True
 
         state.playable_actions = generate_playable_actions(state)
     elif action.action_type == ActionType.MOVE_ROBBER:

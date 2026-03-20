@@ -140,16 +140,22 @@ def test_rolling_a_seven_triggers_default_discard_limit(fake_roll_dice):
 
     until_nine = 9 - player_num_resource_cards(game.state, players[1].color)
     player_deck_replenish(game.state, players[1].color, WHEAT, until_nine)
-    assert player_num_resource_cards(game.state, players[1].color) == 9
+    original_hand_size = player_num_resource_cards(game.state, players[1].color)
+    assert original_hand_size == 9
     game.play_tick()  # should be player 0 rolling.
 
-    assert len(game.state.playable_actions) == 1
-    assert game.state.playable_actions == [
-        Action(players[1].color, ActionType.DISCARD, None)
-    ]
+    assert game.state.current_color() == players[1].color
+    assert all(
+        action.action_type == ActionType.DISCARD for action in game.state.playable_actions
+    )
 
-    game.play_tick()
+    for _ in range(original_hand_size // 2):
+        assert game.state.current_color() == players[1].color
+        assert game.state.current_prompt == ActionPrompt.DISCARD
+        game.play_tick()
+
     assert player_num_resource_cards(game.state, players[1].color) == 5
+    assert game.state.current_prompt == ActionPrompt.MOVE_ROBBER
 
 
 @patch("catanatron.state.roll_dice")
@@ -186,34 +192,22 @@ def test_all_players_discard_as_needed(fake_roll_dice):
 
     # the following assumes, no matter who rolled 7, asking players
     #   to discard, happens in original seating-order.
-    assert len(game.state.playable_actions) == 1
-    assert game.state.playable_actions == [
-        Action(ordered_players[0].color, ActionType.DISCARD, None)
-    ]
+    for ordered_player in ordered_players:
+        assert game.state.current_color() == ordered_player.color
+        discard_steps = 0
+        while game.state.current_prompt == ActionPrompt.DISCARD and (
+            game.state.current_color() == ordered_player.color
+        ):
+            assert all(
+                action.action_type == ActionType.DISCARD
+                for action in game.state.playable_actions
+            )
+            game.play_tick()
+            discard_steps += 1
 
-    game.play_tick()  # p0 discards, places p1 in line to discard
-    assert player_num_resource_cards(game.state, ordered_players[0].color) == 5
-    assert len(game.state.playable_actions) == 1
-    assert game.state.playable_actions == [
-        Action(ordered_players[1].color, ActionType.DISCARD, None)
-    ]
+        assert discard_steps == 4
+        assert player_num_resource_cards(game.state, ordered_player.color) == 5
 
-    game.play_tick()
-    assert player_num_resource_cards(game.state, ordered_players[1].color) == 5
-    assert len(game.state.playable_actions) == 1
-    assert game.state.playable_actions == [
-        Action(ordered_players[2].color, ActionType.DISCARD, None)
-    ]
-
-    game.play_tick()
-    assert player_num_resource_cards(game.state, ordered_players[2].color) == 5
-    assert len(game.state.playable_actions) == 1
-    assert game.state.playable_actions == [
-        Action(ordered_players[3].color, ActionType.DISCARD, None)
-    ]
-
-    game.play_tick()  # p3 discards, game goes back to p1 moving robber
-    assert player_num_resource_cards(game.state, ordered_players[3].color) == 5
     assert game.state.is_moving_knight
     assert all(a.color == ordered_players[1].color for a in game.state.playable_actions)
     assert all(
@@ -236,9 +230,10 @@ def test_discard_is_configurable(fake_roll_dice):
     assert player_num_resource_cards(game.state, players[1].color) == 9
     game.play_tick()  # should be p0 rolling.
 
-    assert game.state.playable_actions != [
-        Action(players[1].color, ActionType.DISCARD, None)
-    ]
+    assert not any(
+        action.action_type == ActionType.DISCARD
+        for action in game.state.playable_actions
+    )
 
 
 @patch("catanatron.state.roll_dice")

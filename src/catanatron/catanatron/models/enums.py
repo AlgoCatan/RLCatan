@@ -75,7 +75,7 @@ class ActionType(Enum):
 
     ROLL = "ROLL"  # value is None. Log instead sets it to (int, int) rolled.
     MOVE_ROBBER = "MOVE_ROBBER"  # value is (coordinate, Color|None). Log has extra element of card stolen.
-    DISCARD = "DISCARD"  # value is None|Resource[]. TODO: Should always be Resource[].
+    DISCARD = "DISCARD"  # value is Resource|None. Log should be fully specified.
 
     # Building/Buying
     BUILD_ROAD = "BUILD_ROAD"  # value is edge_id
