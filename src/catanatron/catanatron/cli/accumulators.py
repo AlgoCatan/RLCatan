@@ -4,6 +4,7 @@ import json
 from collections import defaultdict
 
 from catanatron.explanations.packet_builder import ExplanationPacketBuilder
+from catanatron.cli.llm_explanation import LLMExplanationClient
 from catanatron.game import GameAccumulator, Game
 from catanatron.json import GameEncoder
 from catanatron.state_functions import (
@@ -155,6 +156,7 @@ class ExplanationAccumulator(GameAccumulator):
         self.packets_by_game = defaultdict(list)
 
         self.builder = ExplanationPacketBuilder(recent_action_count=recent_action_count)
+        self.llm_client = LLMExplanationClient()
 
         if self.output_dir is not None:
             os.makedirs(self.output_dir, exist_ok=True)
@@ -170,6 +172,7 @@ class ExplanationAccumulator(GameAccumulator):
         decision_info = getattr(player, "last_decision_info", None)
 
         packet = self.builder.build_explanation_packet(snapshot, decision_info)
+        packet["llm_explanation"] = self.llm_client.explain_packet(packet)
         self.store_for_later(packet)
 
     def store_for_later(self, packet):
