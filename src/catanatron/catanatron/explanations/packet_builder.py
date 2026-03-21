@@ -105,14 +105,6 @@ class ExplanationPacketBuilder:
         state = snapshot.state
         actor = state.current_color()
 
-        playable_actions = decision_info.get("playable_actions", [])
-
-        action_type_counts = Counter(
-            action.get("action_type")
-            for action in playable_actions
-            if action.get("action_type") is not None
-        )
-
         # Don't want to leak hidden vps in the board context, so using visible rather than actual vp.
         known_scores = {
             color.value: get_visible_victory_points(state, color)
@@ -151,8 +143,6 @@ class ExplanationPacketBuilder:
             "leader_visible_vp": leader_score,
             "actor_visible_vp_gap_to_leader": leader_score - actor_score,
             "opponents": opponents,
-            "legal_action_type_counts": dict(action_type_counts),
-            "num_legal_actions": len(playable_actions),
             "actor_expandable_nodes_count": len(get_player_expandable_nodes(snapshot, actor)),
             "actor_buildable_nodes_count": len(buildable_nodes),
             "actor_best_buildable_nodes": buildable_node_summaries[:5], # limited to top 5 for brevity
@@ -172,6 +162,12 @@ class ExplanationPacketBuilder:
         action_type = chosen_action.get("action_type")
         action_value = chosen_action.get("value")
 
+        action_type_counts = Counter(
+            action.get("action_type")
+            for action in playable_actions
+            if action.get("action_type") is not None
+        )
+
         # In situations such as having multiple positions to build a settlement, it's nice to see what alternative relevant actions there were
         same_type_options = [
             action for action in playable_actions
@@ -187,6 +183,8 @@ class ExplanationPacketBuilder:
         context = {
             "action_type": action_type,
             "action_value": action_value,
+            "legal_action_type_counts": dict(action_type_counts),
+            "num_legal_actions": len(playable_actions),
             "same_type_option_count": len(same_type_options),
             "alternative_same_type_values": alternative_same_type_values[:8], # limited to 8 alternatives for brevity
             "is_only_action_of_this_type": len(same_type_options) == 1,
