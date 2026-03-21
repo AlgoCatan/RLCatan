@@ -161,12 +161,12 @@ class ExplanationAccumulator(GameAccumulator):
 
     def step(self, game_before_action, _):
         """Capture pre-action state and decision info before execute() mutates the game."""
-        snapshot = game_before_action.copy()
-        player = snapshot.state.current_player()
+        player = game_before_action.state.current_player()
 
         if not player.is_bot:
             return  # Don't want to try to explain a human player's moves back to them
 
+        snapshot = game_before_action.copy()
         decision_info = getattr(player, "last_decision_info", None)
 
         packet = self.builder.build_explanation_packet(snapshot, decision_info)

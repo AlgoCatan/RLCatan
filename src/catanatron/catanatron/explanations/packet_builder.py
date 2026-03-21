@@ -116,7 +116,7 @@ class ExplanationPacketBuilder:
         actor_score = known_scores[actor.value]
         leader_color, leader_score = max(known_scores.items(), key=lambda x: x[1])
 
-        buildable_nodes = list(state.board.buildable_node_ids(actor, True))
+        buildable_nodes = list(state.board.buildable_node_ids(actor))
         buildable_node_summaries = [
             self._summarize_node(snapshot, node_id, actor) for node_id in buildable_nodes
         ]
@@ -201,7 +201,7 @@ class ExplanationPacketBuilder:
             blocked_opponents = [ # Other players who could have built here but now can't
                 color.value
                 for color in state.colors
-                if color != actor and action_value in state.board.buildable_node_ids(color, True)
+                if color != actor and action_value in state.board.buildable_node_ids(color)
             ]
 
             context.update({
@@ -216,7 +216,7 @@ class ExplanationPacketBuilder:
             edge = tuple(sorted(action_value))  # Normalize edge representation
 
             endpoint_summaries = [self._summarize_node(snapshot, node_id, actor) for node_id in edge]
-            buildable_now = set(state.board.buildable_node_ids(actor, True))
+            buildable_now = set(state.board.buildable_node_ids(actor))
 
             # How valuable are the buildable nodes near this road, and therefore how much does this road support expansion towards valuable locations?
             nearby_buildable = []
@@ -366,7 +366,7 @@ class ExplanationPacketBuilder:
             "pip_total": pip_total,
             "port_at_node": port,
             "nearest_ports": nearest_ports,
-            "is_buildable_for_actor": node_id in state.board.buildable_node_ids(actor, True),
+            "is_buildable_for_actor": node_id in state.board.buildable_node_ids(actor),
             "occupied_by": occupied_by,
         }
 
