@@ -27,7 +27,7 @@ export default function HomePage() {
           <>
             <ul>
               <li>OPEN HAND</li>
-              <li>NO CHOICE DURING DISCARD</li>
+              <li>CHOOSE DISCARD CARDS</li>
             </ul>
 
             <div className="player-count-selector">

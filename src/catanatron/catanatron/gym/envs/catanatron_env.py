@@ -25,7 +25,7 @@ ACTIONS_ARRAY = [
     (ActionType.ROLL, None),
     # TODO: One for each tile (and abuse 1v1 setting).
     *[(ActionType.MOVE_ROBBER, tile) for tile in TILE_COORDINATES],
-    (ActionType.DISCARD, None),
+    *[(ActionType.DISCARD, resource) for resource in RESOURCES],
     *[(ActionType.BUILD_ROAD, tuple(sorted(edge))) for edge in get_edges()],
     *[(ActionType.BUILD_SETTLEMENT, node_id) for node_id in range(NUM_NODES)],
     *[(ActionType.BUILD_CITY, node_id) for node_id in range(NUM_NODES)],
@@ -81,7 +81,10 @@ def normalize_action(action):
     elif normalized.action_type == ActionType.BUY_DEVELOPMENT_CARD:
         return Action(action.color, action.action_type, None)
     elif normalized.action_type == ActionType.DISCARD:
-        return Action(action.color, action.action_type, None)
+        value = normalized.value
+        if isinstance(value, (list, tuple)):
+            value = value[0]
+        return Action(action.color, action.action_type, value)
     return normalized
 
 
@@ -358,9 +361,8 @@ CatanatronEnv.__doc__ += """
      - Float
 
    * - IS_DISCARDING
-     - Whether current player must discard. For now, there is only 1 
-       discarding action (at random), since otherwise action space
-       would explode in size.
+     - Whether current player must discard. Discarding is represented
+       as one action per resource type currently held.
      - 1
      - Boolean
    * - IS_MOVING_ROBBER

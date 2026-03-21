@@ -90,11 +90,18 @@ function PlayButtons() {
       .filter((action) => action[1] === "PLAY_YEAR_OF_PLENTY")
       .map((action) => action[2]);
   }, [gameState.current_playable_actions]);
+  const getDiscardOptions = useCallback(() => {
+    return gameState.current_playable_actions
+      .filter((action) => action[1] === "DISCARD" && action[2] !== null)
+      .map((action) => action[2] as ResourceCard);
+  }, [gameState.current_playable_actions]);
   const handleResourceSelection = useCallback(
     async (selectedResources: ResourceCard | ResourceCard[]) => {
       setResourceSelectorOpen(false);
       let action: GameAction;
-      if (isPlayingMonopoly) {
+      if (isDiscard) {
+        action = [humanColor, "DISCARD", selectedResources as ResourceCard];
+      } else if (isPlayingMonopoly) {
         action = [
           humanColor,
           "PLAY_MONOPOLY",
@@ -120,6 +127,7 @@ function PlayButtons() {
       dispatch,
       enqueueSnackbar,
       closeSnackbar,
+      isDiscard,
       isPlayingMonopoly,
       isPlayingYearOfPlenty,
     ]
@@ -234,7 +242,6 @@ function PlayButtons() {
     dispatch({ type: ACTIONS.SET_IS_MOVING_ROBBER });
   }, [dispatch]);
   const rollAction = carryOutAction([humanColor, "ROLL", null]);
-  const proceedAction = carryOutAction();
   const endTurnAction = carryOutAction([humanColor, "END_TURN", null]);
   return (
     <>
@@ -287,12 +294,10 @@ function PlayButtons() {
           )
         }
         onClick={
-          isDiscard
-            ? proceedAction
+          isDiscard || isPlayingYearOfPlenty || isPlayingMonopoly
+            ? handleOpenResourceSelector
             : isMoveRobber
             ? setIsMovingRobber
-            : isPlayingYearOfPlenty || isPlayingMonopoly
-            ? handleOpenResourceSelector
             : isRoll
             ? rollAction
             : endTurnAction
@@ -315,9 +320,15 @@ function PlayButtons() {
           dispatch({ type: ACTIONS.CANCEL_MONOPOLY });
           dispatch({ type: ACTIONS.CANCEL_YEAR_OF_PLENTY });
         }}
-        options={getValidYearOfPlentyOptions()}
+        options={isDiscard ? getDiscardOptions() : getValidYearOfPlentyOptions()}
         onSelect={handleResourceSelection}
-        mode={isPlayingMonopoly ? "monopoly" : "yearOfPlenty"}
+        mode={
+          isDiscard
+            ? "discard"
+            : isPlayingMonopoly
+            ? "monopoly"
+            : "yearOfPlenty"
+        }
       />
     </>
   );

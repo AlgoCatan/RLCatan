@@ -6,6 +6,7 @@ from catanatron.state import (
     player_deck_replenish,
 )
 from catanatron.models.actions import (
+    discard_possibilities,
     generate_playable_actions,
     monopoly_possibilities,
     year_of_plenty_possibilities,
@@ -16,6 +17,7 @@ from catanatron.models.actions import (
     maritime_trade_possibilities,
 )
 from catanatron.models.enums import (
+    Action,
     BRICK,
     ORE,
     RESOURCES,
@@ -53,6 +55,19 @@ def test_year_of_plenty_possible_actions_not_enough_cards():
 
 def test_monopoly_possible_actions():
     assert len(monopoly_possibilities(Color.RED)) == len(RESOURCES)
+
+
+def test_discard_possible_actions_are_one_resource_at_a_time():
+    player = SimplePlayer(Color.RED)
+    state = State([player])
+
+    player_deck_replenish(state, player.color, BRICK)
+    player_deck_replenish(state, player.color, WHEAT, 2)
+
+    assert discard_possibilities(state, Color.RED) == [
+        Action(Color.RED, ActionType.DISCARD, BRICK),
+        Action(Color.RED, ActionType.DISCARD, WHEAT),
+    ]
 
 
 def test_road_possible_actions():
