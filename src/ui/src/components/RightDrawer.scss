@@ -127,9 +127,11 @@ $dark-divider: rgb(0 0 0 / 80%);
 
     /* Distinct visual for explain active state */
     .explain-move-button.active {
-      background: linear-gradient(180deg, #f57c00, #ef6c00);
+      /* Desktop: use green for Cancel Explain */
+      background: linear-gradient(180deg, #43a047, #2e7d32);
       color: white;
       border: none;
+      box-shadow: 0 6px 18px rgba(46,125,50,0.18);
     }
 
     /* small spacing for the result area card inside drawer */
