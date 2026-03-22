@@ -152,12 +152,17 @@ class ExplanationAccumulator(GameAccumulator):
         self.output_dir = output_dir
         self.recent_action_count = recent_action_count # How many recent actions to include in the explanation packet for context
         self.packets = []
-        self.packets_by_game = defaultdict(list)
+        self.current_game_id = None
 
         self.builder = ExplanationPacketBuilder(recent_action_count=recent_action_count)
 
         if self.output_dir is not None:
             os.makedirs(self.output_dir, exist_ok=True)
+
+    def before(self, game):
+        # Reset for the new active game
+        self.current_game_id = game.id
+        self.packets = []
 
     def step(self, game_before_action, _):
         """Capture pre-action state and decision info before execute() mutates the game."""
@@ -175,11 +180,19 @@ class ExplanationAccumulator(GameAccumulator):
     def store_for_later(self, packet):
         """Store the packet in memory and optionally write it to disk for later analysis."""
         self.packets.append(packet)
-        self.packets_by_game[packet["game_id"]].append(packet)
 
         # Adding the option to write to disk in case we want to do analysis on the packets for debugging
         if self.output_dir is not None:
-            filepath = os.path.join(self.output_dir, f"{packet['game_id']}_explanations.jsonl")
+            filepath = os.path.join(self.output_dir, f"{self.current_game_id}_explanations.jsonl")
 
             with open(filepath, "a", encoding="utf-8") as f:
                 f.write(json.dumps(packet) + "\n")
+
+    def get_packet(self, action_index):
+        if action_index < 0 or action_index >= len(self.packets):
+            raise IndexError(
+                f"Action index {action_index} out of range. "
+                f"Valid range: 0..{len(self.packets) - 1}"
+            )
+
+        return self.packets[action_index]
