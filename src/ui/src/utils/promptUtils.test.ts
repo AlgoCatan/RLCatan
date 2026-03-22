@@ -175,8 +175,8 @@ describe("humanizeAction", () => {
   });
 
   test("DISCARD action", () => {
-    expect(humanizeAction(baseGameState, ["ORANGE", "DISCARD", null])).toBe(
-      "YOU DISCARDED"
+    expect(humanizeAction(baseGameState, ["ORANGE", "DISCARD", "WHEAT"])).toBe(
+      "YOU DISCARDED WHEAT"
     );
   });
 

@@ -65,7 +65,7 @@ def player_factory(player_key):
         player = AlphaBetaPlayer(color, 2, True)
 
     elif player_key[0] == "FINAL_BOSS":
-        player = AlphaBetaPlacementPlayer(color, 2, True)
+        player = AlphaBetaPlacementPlayer(color, 3, True)
 
     elif player_key[0] == "VALUE_FUNCTION":
         player = ValueFunctionPlayer(color, is_bot=True)
@@ -304,13 +304,13 @@ def _load_bots():
     default_bots = [
         {
             "id": "catanatron_ab_2",
-            "name": "Catanatron (AlphaBeta d2)",
+            "name": "Catanatron",
             "elo": 1500,
             "key": "CATANATRON",
         },
         {
             "id": "final_boss",
-            "name": "Final Boss (AlphaBeta Placement)",
+            "name": "Final Boss",
             "elo": 1600,
             "key": "FINAL_BOSS",
         },
@@ -320,10 +320,10 @@ def _load_bots():
             "elo": 1400,
             "key": "VALUE_FUNCTION",
         },
-        {"id": "mcts", "name": "MCTS (100 sims)", "elo": 1450, "key": "MCTS_PLAYER"},
+        {"id": "mcts", "name": "MCTS", "elo": 1450, "key": "MCTS_PLAYER"},
         {
             "id": "greedy",
-            "name": "Greedy Playouts (50)",
+            "name": "Greedy Playouts",
             "elo": 1300,
             "key": "GREEDY_PLAYER",
         },

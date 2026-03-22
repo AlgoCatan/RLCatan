@@ -10,7 +10,7 @@ export type TileCoordinate = [number, number, number];
 
 export type GameAction =
   | [Color, "ROLL", [number, number] | null]
-  | [Color, "DISCARD", null]
+  | [Color, "DISCARD", ResourceCard | null]
   | [Color, "BUY_DEVELOPMENT_CARD", null]
   | [Color, "BUILD_SETTLEMENT", number]
   | [Color, "BUILD_CITY", number]
