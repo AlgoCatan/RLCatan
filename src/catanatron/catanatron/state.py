@@ -474,9 +474,11 @@ def apply_action(state: State, action: Action):
 
         if number == 7:
             state.discard_counts = [
-                player_num_resource_cards(state, color) // 2
-                if player_num_resource_cards(state, color) > state.discard_limit
-                else 0
+                (
+                    player_num_resource_cards(state, color) // 2
+                    if player_num_resource_cards(state, color) > state.discard_limit
+                    else 0
+                )
                 for color in state.colors
             ]
             first_discarder_index = next_discarder_index(state, 0)
