@@ -109,3 +109,9 @@ export async function createGameConfigured(cfg: CreateGameConfig) {
   const response = await axios.post(API_URL + "/api/games", { players });
   return response.data.game_id;
 }
+
+// Fetch an explanation for a move using the same API_URL/axios configuration
+export async function getMoveExplanation(gameId: string, index: number) {
+  const response = await axios.get(`${API_URL}/api/games/${gameId}/explain/${index}`);
+  return response.data;
+}

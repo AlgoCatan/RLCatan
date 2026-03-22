@@ -326,11 +326,9 @@ function PlayButtons() {
 export default function ActionsToolbar({
   isBotThinking,
   replayMode,
-  rightDrawerContent,
 }: {
   isBotThinking: boolean;
   replayMode: boolean;
-  rightDrawerContent?: React.ReactNode;
 }) {
   const { state, dispatch } = useContext(store);
   const { gameState } = state;
@@ -345,12 +343,7 @@ export default function ActionsToolbar({
     });
   }, [dispatch]);
 
-  const openRightDrawer = useCallback(() => {
-    dispatch({
-      type: ACTIONS.SET_RIGHT_DRAWER_OPENED,
-      data: true,
-    });
-  }, [dispatch]);
+  // NOTE: right-drawer is opened via the fixed blue tab in GameScreen; toolbar should not provide another open control.
 
   const botsTurn = gameState.bot_colors.includes(gameState.current_color);
   const humanColor = getHumanColor(gameState);
@@ -371,17 +364,7 @@ export default function ActionsToolbar({
             size="large"
           />
         )}
-        <div className="hide-on-mobile">
-          <Hidden breakpoint={{ size: "lg", direction: "up" }}>
-            <Button
-              className="open-drawer-btn"
-              onClick={openRightDrawer}
-              style={{ marginLeft: "auto" }}
-            >
-              <ChevronRightIcon />
-            </Button>
-          </Hidden>
-        </div>
+        {/* No right-drawer open control in toolbar (desktop only blue tab in GameScreen handles it). */}
       </div>
       <div className="actions-toolbar">
         {!(botsTurn || gameState.winning_color) && !replayMode && (
@@ -392,12 +375,7 @@ export default function ActionsToolbar({
         {(botsTurn || gameState.winning_color) && (
           <Prompt gameState={gameState} isBotThinking={isBotThinking} />
         )}
-        {/* Inline right-drawer box on desktop, hidden on mobile */}
-        {rightDrawerContent && (
-          <div className="right-drawer-inline hide-on-mobile" role="complementary">
-            {rightDrawerContent}
-          </div>
-        )}
+        {/* Toolbar intentionally does not duplicate right-drawer content. */}
       </div>
     </>
   );

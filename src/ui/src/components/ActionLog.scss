@@ -10,14 +10,44 @@
     flex-direction: column-reverse;
     scrollbar-width: thin;
     scrollbar-color: #454545 variables.$dark-gray;
+
     .action {
       padding: variables.$sm-gutter;
       font-weight: bold; // Bold text
+      display: flex;
+      align-items: center;
+      gap: 8px;
 
       // Use colors directly from variables.scss
       &.RED { color: variables.$red; }
       &.BLUE { color: variables.$blue; }
       &.ORANGE { color: variables.$orange; }
       &.WHITE { color: variables.$white; text-shadow: 0 0 2px black; }
+    }
+
+    // Explain-mode (interactive) variations
+    &.explain-mode-active {
+      background: rgba(255, 255, 255, 0.02);
+
+      .action.clickable {
+        cursor: pointer;
+        transition: background 0.18s ease, transform 0.06s;
+        padding: 6px 8px;
+        border-radius: 6px;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.06);
+          transform: translateY(-1px);
+        }
+
+        .move-number {
+          opacity: 0.65;
+          margin-right: 8px;
+          font-size: 0.75rem;
+          color: rgba(255, 255, 255, 0.85);
+          min-width: 36px;
+          text-align: left;
+        }
+      }
     }
 }
