@@ -8,14 +8,15 @@ $sm-gutter: 10px;
 $black: #030000;
 $dark-gray: #151313;
 
-$blue: #2278ff;
-$red: #fe0400;
-$orange: #ffa500;
-$white: white;
+// Updated high-contrast colors
+$blue: lighten(#2278ff, 20%); // Lighter blue
+$red: lighten(#fe0000, 20%);  // Lighter red
+$orange: #ffb732;
+$white: white; // Keep white as is
 
-$wood: #119822;
-$brick: #cc0300;
-$wheat: #fac60c;
-$sheep: #96e5a7;
-$darker-sheep: #96e5a7;
+$wood: #125d1c;
+$brick: #cc03009a;
+$wheat: #fac60cda;
+$sheep: #6fba7f;
+$darker-sheep: #3d8d4e;
 $ore: #616166;

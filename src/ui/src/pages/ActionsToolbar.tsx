@@ -53,7 +53,8 @@ function PlayButtons() {
     memoize((action?: GameAction) => async () => {
       const gameState = await postAction(gameId, action);
       dispatch({ type: ACTIONS.SET_GAME_STATE, data: gameState });
-      dispatchSnackbar(enqueueSnackbar, closeSnackbar, gameState);
+      // Commented out dispatchSnackbar
+      // dispatchSnackbar(enqueueSnackbar, closeSnackbar, gameState);
     }),
     [enqueueSnackbar, closeSnackbar]
   );
@@ -244,6 +245,7 @@ function PlayButtons() {
   const endTurnAction = carryOutAction([humanColor, "END_TURN", null]);
   return (
     <>
+      {/* USE Button */}
       <OptionsButton
         disabled={playableDevCardTypes.size === 0 || isPlayingDevCard}
         menuListId="use-menu-list"
@@ -252,6 +254,8 @@ function PlayButtons() {
       >
         Use
       </OptionsButton>
+
+      {/* BUY Button */}
       <OptionsButton
         disabled={buildActionTypes.size === 0 || isPlayingDevCard}
         menuListId="build-menu-list"
@@ -260,6 +264,8 @@ function PlayButtons() {
       >
         Buy
       </OptionsButton>
+
+      {/* TRADE Button */}
       <OptionsButton
         disabled={tradeItems.length === 0 || isPlayingDevCard}
         menuListId="trade-menu-list"
@@ -268,6 +274,8 @@ function PlayButtons() {
       >
         Trade
       </OptionsButton>
+
+      {/* END Button */}
       <Button
         disabled={gameState.is_initial_build_phase || isRoadBuilding}
         variant="contained"
@@ -329,9 +337,11 @@ function PlayButtons() {
 export default function ActionsToolbar({
   isBotThinking,
   replayMode,
+  rightDrawerContent,
 }: {
   isBotThinking: boolean;
   replayMode: boolean;
+  rightDrawerContent?: React.ReactNode;
 }) {
   const { state, dispatch } = useContext(store);
   const { gameState } = state;
@@ -386,23 +396,19 @@ export default function ActionsToolbar({
       </div>
       <div className="actions-toolbar">
         {!(botsTurn || gameState.winning_color) && !replayMode && (
-          <PlayButtons />
+          <div className="play-buttons-group">
+            <PlayButtons />
+          </div>
         )}
         {(botsTurn || gameState.winning_color) && (
           <Prompt gameState={gameState} isBotThinking={isBotThinking} />
         )}
-        {/* <Button
-          disabled={disabled}
-          className="confirm-btn"
-          variant="contained"
-          color="primary"
-          onClick={onTick}
-        >
-          Ok
-        </Button> */}
-
-        {/* <Button onClick={zoomIn}>Zoom In</Button>
-      <Button onClick={zoomOut}>Zoom Out</Button> */}
+        {/* Inline right-drawer box on desktop, hidden on mobile */}
+        {rightDrawerContent && (
+          <div className="right-drawer-inline hide-on-mobile" role="complementary">
+            {rightDrawerContent}
+          </div>
+        )}
       </div>
     </>
   );

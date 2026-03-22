@@ -70,9 +70,18 @@ export default function BotSelectPlay() {
         color: "#fff",
         backgroundColor: "#121212",
         minHeight: "100vh",
+        padding: "0 16px", // Add padding for mobile
+        textAlign: "center", // Ensure text is centered
       }}
     >
-      <h1 style={{ fontSize: "3rem", color: "#ffffff", marginBottom: 24 }}>
+      <h1
+        style={{
+          fontSize: "3rem",
+          color: "#ffffff",
+          marginBottom: 24,
+          wordWrap: "break-word", // Ensure long titles wrap properly
+        }}
+      >
         Play Against a Bot
       </h1>
       <div style={{ opacity: 0.8, marginBottom: 12, textAlign: "center" }}>

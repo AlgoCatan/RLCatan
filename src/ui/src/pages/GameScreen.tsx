@@ -67,9 +67,10 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
           // simulate thinking
           setIsBotThinking(false);
           dispatch({ type: ACTIONS.SET_GAME_STATE, data: gameState });
-          if (getHumanColor(gameState)) {
-            dispatchSnackbar(enqueueSnackbar, closeSnackbar, gameState);
-          }
+          // Commented out dispatchSnackbar
+          // if (getHumanColor(gameState)) {
+          //   dispatchSnackbar(enqueueSnackbar, closeSnackbar, gameState);
+          // }
         }, ROBOT_THINKING_TIME - requestTime);
       })();
     }
@@ -95,20 +96,19 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
   }
 
   const rightDrawerContent = (
-    <>
-      <AnalysisBox stateIndex={"latest"}/>
-      <Divider />
-      <div style={{ padding: 10, display: 'flex', justifyContent: 'center' }}>
-        <Button 
+    <div className="right-drawer-card">
+      <div className="right-drawer-card-body">
+        <AnalysisBox stateIndex={"latest"} />
+        <Divider />
+        <Button
           className="watch-replay-button"
-          variant="contained" 
+          variant="contained"
           onClick={() => navigate(`/replays/${gameId}`)}
-          style={{ width: "100%" }}
         >
           Watch Replay
         </Button>
       </div>
-    </>
+    </div>
   );
 
   return (
@@ -116,9 +116,13 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
       <div className="desktop-layout">
         <h1 className="logo">Catan Arena</h1>
         <ZoomableBoard replayMode={replayMode} />
-        <ActionsToolbar isBotThinking={isBotThinking} replayMode={replayMode} />
+        <ActionsToolbar
+          isBotThinking={isBotThinking}
+          replayMode={replayMode}
+          rightDrawerContent={rightDrawerContent}
+        />
         <LeftDrawer />
-        <RightDrawer>
+        <RightDrawer inlineOnDesktop={true}>
           {rightDrawerContent}
         </RightDrawer>
       </div>
