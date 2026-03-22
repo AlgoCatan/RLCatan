@@ -33,7 +33,9 @@ def action_from_json(data):
         value = data[2]
         if isinstance(value, list):
             if len(value) != 1:
-                raise ValueError("Discard action must have 1 resource when encoded as a list")
+                raise ValueError(
+                    "Discard action must have 1 resource when encoded as a list"
+                )
             value = value[0]
         action = Action(color, action_type, value)
     elif action_type == ActionType.MOVE_ROBBER:
