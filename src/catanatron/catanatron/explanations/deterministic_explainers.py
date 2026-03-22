@@ -15,6 +15,13 @@ def _dedupe_preserve_order(items: list[str]) -> list[str]:
     return deduped
 
 
+def _format_num(value: Any, digits: int = 3) -> str:
+    """Format a number to a string with a specified number of decimal places, removing trailing zeros."""
+    if isinstance(value, float):
+        return f"{value:.{digits}f}".rstrip("0").rstrip(".")
+    return str(value)
+
+
 def _format_resource_mix(prod_dict: dict[str, int] | None) -> str:
     """
     Formats a resource production dictionary into a human-readable string.
@@ -28,7 +35,7 @@ def _format_resource_mix(prod_dict: dict[str, int] | None) -> str:
     if not nonzero:
         return "none"
 
-    return ", ".join(f"{resource} ({value})" for resource, value in nonzero)
+    return ", ".join(f"{resource} ({_format_num(value)})" for resource, value in nonzero)
 
 
 def _format_tile(tile: dict[str, Any]) -> str:
@@ -43,7 +50,7 @@ def _format_tile(tile: dict[str, Any]) -> str:
     if resource == "DESERT":
         return "desert"
 
-    return f"{str(resource).lower()} on {number} (pip weight {probability})"
+    return f"{str(resource).lower()} on {number} (pip weight {_format_num(probability)})"
 
 
 def _format_tile_list(adjacent_tiles: list[dict[str, Any]] | None) -> str:
@@ -133,6 +140,8 @@ def extract_common_facts(packet: dict) -> dict:
         "settlements": player_summary.get("settlements"),
         "cities": player_summary.get("cities"),
         "roads": player_summary.get("roads"),
+        "resource_hand": player_summary.get("resource_hand"),
+        "owned_ports": player_summary.get("owned_ports"),
         "has_longest_road": player_summary.get("has_longest_road"),
         "has_largest_army": player_summary.get("has_largest_army"),
         "dev_cards_in_hand": player_summary.get("dev_cards_in_hand"),
@@ -243,6 +252,18 @@ def explain_common(facts: dict[str, Any]) -> list[str]:
         else:
             reasons.append("This looks like a mid-game position, where the bot likely balanced development with immediate tactical gains.")
 
+    resource_hand = facts["resource_hand"]
+    if resource_hand:
+        hand_size = sum(resource_hand.values())
+
+        if hand_size == 0:
+            reasons.append("The bot had no resource cards this turn")
+        else:
+            reasons.append(f"The bot had the following resource hand: {resource_hand}")
+
+        if hand_size >= 7:
+            reasons.append("The bot had 7 or more cards, so it may have been trying to avoid losing half of them to the robber.")
+
     return reasons
 
 
@@ -272,32 +293,38 @@ def explain_board_context(facts: dict[str, Any]) -> list[str]:
         reasons.append(f"Effective production after robber impact: {_format_resource_mix(effective_prod)}.")
 
     if facts["has_longest_road"]:
-        reasons.append("The acting player currently holds Longest Road.")
+        reasons.append("The bot currently holds Longest Road.")
     if facts["has_largest_army"]:
-        reasons.append("The acting player currently holds Largest Army.")
+        reasons.append("The bot currently holds Largest Army.")
 
     dev_cards = facts["dev_cards_in_hand"]
     if dev_cards:
-        reasons.append(f"The acting player has {dev_cards} development card(s) in hand.")
+        reasons.append(f"The bot has {dev_cards} development card(s) in hand.")
+
+    owned_ports = facts["owned_ports"]
+    if owned_ports:
+        reasons.append(f"The bot has the following ports: {owned_ports}")
+    else:
+        reasons.append(f"The bot has no ports.")
 
     port_distances = facts["port_distances"]
     if port_distances:
-        reasons.append(f"Nearest ports from the actor's expandable network are {_format_port_distances(port_distances)}.")
+        reasons.append(f"Nearest ports from the bot's expandable network are {_format_port_distances(port_distances)}.")
 
     expandable_count = facts["expandable_nodes_count"]
     if expandable_count is not None:
-        reasons.append(f"The actor currently has {expandable_count} expandable node(s) reachable from their network.")
+        reasons.append(f"The bot currently has {expandable_count} expandable node(s) reachable from their network.")
 
     buildable_count = facts["buildable_nodes_count"]
     if buildable_count is not None:
-        reasons.append(f"There are {buildable_count} currently legal node(s) where the actor could build a settlement.")
+        reasons.append(f"There are {buildable_count} currently legal node(s) where the bot could build a settlement.")
 
     best_nodes = facts["best_buildable_nodes"]
     if best_nodes:
         best = best_nodes[0]
         reasons.append(
             f"One strong current settlement candidate is node {best['node_id']}, touching {_format_tile_list(best['adjacent_tiles'])},"
-            f" with pip total {best['pip_total']} and production {_format_resource_mix(best['production_by_resource'])}."
+            f" with pip total {_format_num(best['pip_total'])} and production {_format_resource_mix(best['production_by_resource'])}."
         )
 
     robber_tile = facts["robber_tile"]
@@ -368,8 +395,6 @@ def explain_action_context(facts: dict[str, Any]) -> list[str]:
                 reasons.append(f"This node is on a {node_summary['port_at_node']} port.")
             else:
                 reasons.append(f"Nearest ports from that node are {_format_port_distances(node_summary['nearest_ports'])}.")
-
-            # Leaving out "occupied_by" info here, since if they just made that action obviously they now own it
 
         blocked_opponents = facts["blocked_opponents"]
         if blocked_opponents:

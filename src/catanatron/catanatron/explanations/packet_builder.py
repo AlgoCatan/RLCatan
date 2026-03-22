@@ -6,7 +6,7 @@ from catanatron.state_functions import (
     get_dev_cards_in_hand,
     get_largest_army,
     get_longest_road_color,
-    get_player_buildings,
+    get_player_buildings, get_player_freqdeck,
 )
 from catanatron.models.enums import (
     SETTLEMENT,
@@ -85,6 +85,19 @@ class ExplanationPacketBuilder:
 
         total_prod, effective_prod = self._get_player_production(state, actor)
 
+        # Current resource cards
+        freqdeck = get_player_freqdeck(state, actor)
+        resource_hand = {
+            resource: count for resource, count in zip(RESOURCES, freqdeck)
+        }
+
+        owned_ports = sorted({
+            port
+            for node_id in settlements + cities
+            for port in [self._get_port_at_node(state.board.map, node_id)]
+            if port is not None
+        })
+
         return {
             "actual_victory_points": get_actual_victory_points(state, actor),
             "settlements": len(settlements),
@@ -93,6 +106,8 @@ class ExplanationPacketBuilder:
             "settlement_nodes": settlements,
             "city_nodes": cities,
             "road_edges": roads,
+            "resource_hand": resource_hand,
+            "owned_ports": owned_ports,
             "has_longest_road": get_longest_road_color(state) == actor,
             "has_largest_army": get_largest_army(state)[0] == actor,
             "dev_cards_in_hand": get_dev_cards_in_hand(state, actor),
@@ -231,7 +246,7 @@ class ExplanationPacketBuilder:
             nearby_buildable.sort(key=lambda x: (x["distance_from_edge"], -x["pip_total"], -x["total_production"]))
 
             actor_network_nodes = set()
-            for component in state.board.connected_components(actor):
+            for component in state.board.connected_components[actor]:
                 actor_network_nodes.update(component)
 
             context.update({
@@ -258,6 +273,8 @@ class ExplanationPacketBuilder:
                     stolen_resource = action_value[2]
 
             if target_coordinate is not None:
+                target_coordinate = tuple(target_coordinate)
+
                 target_tile = state.board.map.tiles[target_coordinate]
                 tile_summary = self._summarize_tile(state, target_tile)
                 affected_buildings = self._buildings_touching_tile(state, target_tile)
