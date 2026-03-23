@@ -168,8 +168,13 @@ class ExplanationAccumulator(GameAccumulator):
         """Capture pre-action state and decision info before execute() mutates the game."""
         player = game_before_action.state.current_player()
 
-        if not player.is_bot:
-            return  # Don't want to try to explain a human player's moves back to them
+        # I originally had player move explanations disabled, but we've decided that it's
+        # actually more consistent to capture explanations for all decisions, not just bots.
+        # If we want to filter out human player decisions later, we can do that in the analysis
+        # phase instead of here in the accumulation phase.
+
+        # if not player.is_bot:
+        #     return
 
         snapshot = game_before_action.copy()
         decision_info = getattr(player, "last_decision_info", None)

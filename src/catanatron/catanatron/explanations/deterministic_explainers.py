@@ -471,6 +471,10 @@ def explain_bot_specific(facts: dict[str, Any]) -> list[str]:
         reasons.append("This bot follows a simple rule-based policy and picks the first legal action in the list.")
     elif bot_class == "RandomPlayer":
         reasons.append("This bot chooses randomly from the legal actions, so the move is not based on strategic evaluation.")
+    elif bot_class == "HumanPlayer":
+        reasons.append(
+            "This actually wasn't a bot, it was a human player. As such, avoid bot related terminology and"
+            "emphasize that this is just a prediction of why the player made that move.")
     elif bot_class == "PPOPlayer":
         reasons.append("This bot uses a PPO policy, which evaluates the encoded game state and chooses among valid masked actions.")
 
