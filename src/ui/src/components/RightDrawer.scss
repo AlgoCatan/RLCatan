@@ -13,7 +13,7 @@ $dark-divider: rgb(0 0 0 / 80%);
   }
 
   .MuiDrawer-paper {
-    width: 280px;
+    width: 400px; /* WIDER on desktop */
     background: variables.$dark-gray;
     color: white;
   }
@@ -199,6 +199,22 @@ $dark-divider: rgb(0 0 0 / 80%);
     .llm-output-card .MuiButton-root:hover {
       background: rgba(255,255,255,0.02);
     }
+
+    /* Hint shown when explain mode is active but no move selected */
+    .llm-explain-hint {
+      padding: 12px;
+      background: rgba(255,255,255,0.02);
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.03);
+      color: rgba(255,255,255,0.9);
+      text-align: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+    }
   }
 }
 
@@ -345,6 +361,11 @@ $dark-divider: rgb(0 0 0 / 80%);
       .llm-output-card .MuiButton-root {
         padding: 6px 8px;
         font-size: 0.85rem;
+      }
+      .llm-explain-hint {
+        font-size: 0.9rem;
+        padding: 10px;
+        min-height: 44px;
       }
     }
   }

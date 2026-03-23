@@ -117,15 +117,16 @@ function ReplayScreen() {
         </div>
 
         <div style={{ marginTop: 12, flex: 1, minHeight: 0, overflow: "auto" }}>
-          {explanation && (
+          {isExplainMode && !explanation ? (
+            <div className="llm-explain-hint">
+              Please select a move from the list of moves taken
+            </div>
+          ) : explanation ? (
             <div className="llm-output-card">
               <div className="llm-header">AI EXPLANATION</div>
               <div className="llm-body">{isExplainingLoading ? "Generating insights..." : explanation}</div>
-              <div style={{ marginTop: 8 }}>
-                <Button size="small" onClick={() => setExplanation(null)}>Clear</Button>
-              </div>
             </div>
-          )}
+          ) : null}
         </div>
       </div>
     </div>
