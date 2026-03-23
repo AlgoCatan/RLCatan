@@ -1,0 +1,262 @@
+@use "../variables.scss";
+
+$dark-divider: rgb(0 0 0 / 80%);
+
+.analysis-box {
+  .analysis-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .analysis-button-row {
+    width: 100%;
+    padding: 0 10px;
+    box-sizing: border-box;
+  }
+
+  h3 {
+    margin: 0;
+    text-align: center;
+  }
+
+  .loading-indicator {
+    text-align: center;
+    padding: 16px;
+    color: rgba(255, 255, 255, 0.7);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .probability-bars {
+    margin-bottom: 16px;
+    .probability-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px;
+      margin: 4px 0;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.05);
+  
+      &.red { color: variables.$red; }
+      &.blue { color: variables.$blue; }
+      &.white { color: variables.$white; }
+      &.orange { color: variables.$orange; }
+  
+      .player-color {
+        min-width: 63px;
+      }
+  
+      .probability-bar {
+        flex-grow: 1;
+        height: 20px;
+        margin: 0 12px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        overflow: hidden;
+        position: relative;
+        
+        .bar-fill {
+          position: absolute;
+          height: 100%;
+          left: 0;
+          top: 0;
+          background-color: currentColor;
+          opacity: 0.6;
+          transition: width 0.3s ease;
+        }
+      }
+  
+      .probability-value {
+        font-weight: 500;
+        min-width: 43px;
+        text-align: right;
+      }
+    }
+  }
+}
+@media (max-width: variables.$md-breakpoint) {
+  .analysis-box {
+    h3 {
+      font-size: 0.9rem;
+      margin: 2px 0;
+    }
+
+    .analysis-header {
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .analysis-button-row {
+      padding: 0 8px;
+    }
+    
+    .loading-indicator {
+      padding: 4px;
+      font-size: 0.8rem;
+    }
+    
+    .probability-bars {
+       margin-bottom: 8px;
+       
+       .probability-row {
+         padding: 2px 4px;
+         margin: 1px 0;
+         font-size: 0.7rem;
+         
+         .player-color { min-width: 40px; }
+         
+         .probability-bar { 
+            height: 8px; 
+            margin: 0 4px;
+         }
+         
+         .probability-value { min-width: 25px; }
+       }
+    }
+    
+    // unified mobile button sizing for Analyze (matches Explain / Watch Replay)
+    $mobile-action-btn-font: 0.9rem;
+    .analysis-button.MuiButton-root {
+      font-size: $mobile-action-btn-font;
+      padding: 6px 10px;
+      margin-top: 0;
+      margin-bottom: 4px;
+      line-height: 1.05;
+    }
+
+    /* normalize any icon size inside the button */
+    .analysis-button .MuiButton-startIcon,
+    .analysis-button .MuiButton-startIcon svg {
+      font-size: 1.05rem;
+      margin-right: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+// Replace / normalize LLM output card styling for inline analysis box so it matches RightDrawer
+.llm-output-card {
+  margin-top: 8px;
+  padding: 14px;
+  background: linear-gradient(180deg, rgba(20,24,28,0.85), rgba(14,16,18,0.72));
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.55);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.llm-output-card .llm-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  color: variables.$blue;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.6px;
+}
+
+.llm-output-card .llm-header::before {
+  content: "🤖";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  box-shadow: inset 0 -2px 0 rgba(0,0,0,0.15);
+  font-size: 1.1rem;
+}
+
+.llm-output-card .llm-body {
+  background: rgba(0,0,0,0.12);
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 0.98rem;
+  line-height: 1.5;
+  color: #e6eef8;
+  white-space: pre-wrap;
+  overflow: auto;
+  max-height: 36vh;
+}
+
+/* style the Clear button inside the card to be subtle and aligned to the right */
+.llm-output-card .MuiButton-root {
+  align-self: flex-end;
+  color: variables.$blue;
+  background: transparent;
+  min-width: 0;
+  padding: 6px 10px;
+  font-weight: 800;
+}
+
+.llm-output-card .MuiButton-root:hover {
+  background: rgba(255,255,255,0.02);
+}
+
+/* small breakpoint adjustments to mirror RightDrawer */
+@media (max-width: variables.$md-breakpoint) {
+  .llm-output-card {
+    padding: 10px;
+  }
+  .llm-output-card .llm-header {
+    font-size: 0.82rem;
+  }
+  .llm-output-card .llm-body {
+    font-size: 0.92rem;
+    max-height: 28vh;
+    overflow: auto;
+    padding: 8px;
+  }
+  .llm-output-card .MuiButton-root {
+    align-self: flex-end;
+    padding: 6px 8px;
+    font-size: 0.85rem;
+    color: variables.$blue;
+    background: transparent;
+  }
+
+  /* Inline mobile container used by GameScreen/ReplayScreen */
+  .mobile-right-drawer-content {
+    padding: 6px;
+    box-sizing: border-box;
+
+    .llm-output-card {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px;
+      max-height: 30vh;
+      overflow: auto;
+      margin: 0; /* remove extra spacing inside mobile column */
+    }
+
+    .llm-output-card .llm-header {
+      font-size: 0.82rem;
+      gap: 8px;
+    }
+
+    .llm-output-card .llm-body {
+      font-size: 0.92rem;
+      max-height: 26vh;
+      padding: 8px;
+    }
+
+    .llm-output-card .MuiButton-root {
+      padding: 6px 8px;
+      font-size: 0.85rem;
+    }
+  }
+}

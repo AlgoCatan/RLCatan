@@ -243,6 +243,20 @@ def mcts_analysis_endpoint(game_id, state_index):
         )
 
 
+@bp.route("/games/<string:game_id>/explain/<int:move_index>", methods=["GET"])
+def explain_move_endpoint(game_id, move_index):
+    """
+    Temporary mock explain endpoint.
+    In future, use get_game_state(game_id, move_index) and pass the action/state
+    into an LLM or analysis pipeline to produce a meaningful explanation.
+    """
+    # Example mock response — replace with real LLM analysis later.
+    explanation = f"""Move {move_index} Explain test
+        """
+
+    return jsonify({"move_index": move_index, "explanation": explanation})
+
+
 def _parse_state_index(state_index_str: str):
     """Helper function to parse and validate state_index."""
     if state_index_str == "latest":

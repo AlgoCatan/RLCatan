@@ -1,6 +1,9 @@
-import { useCallback, useContext, type PropsWithChildren } from "react";
+import { useCallback, useContext, useEffect, type PropsWithChildren } from "react";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Drawer from "@mui/material/Drawer";
+import { useTheme, useMediaQuery } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 import { isTabOrShift, type InteractionEvent } from "../utils/events";
 
 import Hidden from "./Hidden";
@@ -12,6 +15,8 @@ import "./RightDrawer.scss";
 export default function RightDrawer( { children, inlineOnDesktop = false }: PropsWithChildren & { inlineOnDesktop?: boolean } ) {
   const { state, dispatch } = useContext(store);
   const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const openRightDrawer = useCallback(
     (event: InteractionEvent) => {
@@ -35,38 +40,38 @@ export default function RightDrawer( { children, inlineOnDesktop = false }: Prop
     [dispatch]
   );
 
+  // If we switch into mobile, ensure right drawer is closed and never rendered on mobile.
+  useEffect(() => {
+    if (isMobile && state.isRightDrawerOpen) {
+      dispatch({ type: ACTIONS.SET_RIGHT_DRAWER_OPENED, data: false });
+    }
+  }, [isMobile, state.isRightDrawerOpen, dispatch]);
+
   return (
     <>
-      <Hidden breakpoint={{ size: "lg", direction: "up" }} implementation="js">
-        <SwipeableDrawer
+      {/* Do not render any right-drawer UI on mobile (right drawer is disabled on small screens). */}
+      {!isMobile && !inlineOnDesktop && (
+        <Drawer
           className="right-drawer"
           anchor="right"
+          variant="persistent"
           open={state.isRightDrawerOpen}
-          onClose={closeRightDrawer}
-          onOpen={openRightDrawer}
-          disableBackdropTransition={!iOS}
-          disableDiscovery={iOS}
-          onKeyDown={closeRightDrawer}
         >
-          <div className="drawer-content">
+          <div className="drawer-content" style={{ height: "100vh", display: "flex", flexDirection: "column", minHeight: 0 }}>
+            {/* Close button at top for desktop persistent drawer */}
+            <div style={{ display: "flex", justifyContent: "flex-end", padding: 6 }}>
+              <IconButton
+                aria-label="Close analysis"
+                onClick={() => dispatch({ type: ACTIONS.SET_RIGHT_DRAWER_OPENED, data: false })}
+                size="small"
+                sx={{ color: "white" }}
+              >
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </div>
             {children}
           </div>
-        </SwipeableDrawer>
-      </Hidden>
-      {/* On desktop, render the permanent Drawer only when not using inline box */}
-      {!inlineOnDesktop && (
-        <Hidden breakpoint={{ size: "md", direction: "down" }} implementation="css">
-          <Drawer
-            className="right-drawer"
-            anchor="right"
-            variant="permanent"
-            open
-          >
-            <div className="drawer-content">
-              {children}
-            </div>
-          </Drawer>
-        </Hidden>
+        </Drawer>
       )}
     </>
   );

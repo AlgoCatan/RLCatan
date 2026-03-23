@@ -9,15 +9,396 @@ $dark-divider: rgb(0 0 0 / 80%);
     display: flex;
     flex-direction: column;
     gap: variables.$sm-gutter;
+    min-height: 0;
   }
 
   .MuiDrawer-paper {
-    width: 280px;
+    width: 400px; /* WIDER on desktop */
     background: variables.$dark-gray;
     color: white;
   }
 
   .MuiDivider-root {
     background: $dark-divider;
+  }
+
+  // New: ensure the internal right-drawer-card body can stretch and explanation panel scrolls
+  .right-drawer-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    &-header {
+      padding: 6px 0;
+    }
+
+    &-body {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      /* allow the body to take available height inside the drawer */
+      flex: 1 1 auto;
+      min-height: 0; /* critical for child overflow handling */
+    }
+
+    .analysis-primary-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+
+      .MuiButton-root {
+        height: 44px;
+        font-weight: 700;
+      }
+    }
+
+    .explanation-panel {
+      /* take remaining space and allow scrolling for long explanations */
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      padding: 8px;
+      background: rgba(255,255,255,0.02);
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+
+    .explain-section {
+      .explain-toggle-btn {
+        text-transform: none;
+        border-style: dashed;
+      }
+
+      .explain-hint {
+        margin-top: 6px;
+        font-size: 0.78rem;
+        color: rgba(255,255,255,0.7);
+        text-align: center;
+        font-style: italic;
+      }
+    }
+
+    .explain-controls {
+      /* keep explain button compact and left-aligned */
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .analysis-results-area {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+
+      .llm-response-container {
+        background: rgba(255,255,255,0.02);
+        border-radius: 8px;
+        padding: 12px;
+        border-left: 3px solid variables.$blue;
+
+        .llm-header {
+          font-size: 0.75rem;
+          text-transform: uppercase;
+          color: variables.$blue;
+          margin-bottom: 6px;
+          font-weight: 700;
+        }
+
+        .llm-text {
+          font-size: 0.9rem;
+          line-height: 1.45;
+          color: #eee;
+          white-space: pre-wrap;
+        }
+      }
+
+      /* Keep AnalysisBox's own Analyze button visible (we no longer hide it). */
+    }
+
+    /* Ensure the two primary buttons and the explain button look consistent */
+    .watch-replay-button,
+    .explain-move-button {
+      width: 100%;
+      height: 48px;
+      border-radius: 8px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    /* Distinct visual for explain active state */
+    .explain-move-button.active {
+      /* Desktop: use green for Cancel Explain */
+      background: linear-gradient(180deg, #43a047, #2e7d32);
+      color: white;
+      border: none;
+      box-shadow: 0 6px 18px rgba(46,125,50,0.18);
+    }
+
+    /* small spacing for the result area card inside drawer */
+    .llm-output-card {
+      margin-top: 8px;
+      padding: 14px;
+      background: linear-gradient(180deg, rgba(20,24,28,0.85), rgba(14,16,18,0.72));
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.6);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    .llm-output-card .llm-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      color: variables.$blue;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 0.6px;
+    }
+
+    /* small circular AI badge / icon */
+    .llm-output-card .llm-header::before {
+      content: "🤖";
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      box-shadow: inset 0 -2px 0 rgba(0,0,0,0.15);
+      font-size: 1.1rem;
+    }
+
+    .llm-output-card .llm-body {
+      background: rgba(0,0,0,0.12);
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 0.98rem;
+      line-height: 1.5;
+      color: #e6eef8;
+      white-space: pre-wrap;
+      overflow: auto;
+      max-height: 60vh;
+    }
+
+    /* style the Clear button inside the card to be subtle and aligned to the right */
+    .llm-output-card .MuiButton-root {
+      align-self: flex-end;
+      color: variables.$blue;
+      background: transparent;
+      min-width: 0;
+      padding: 6px 10px;
+      font-weight: 800;
+    }
+
+    .llm-output-card .MuiButton-root:hover {
+      background: rgba(255,255,255,0.02);
+    }
+
+    /* Hint shown when explain mode is active but no move selected */
+    .llm-explain-hint {
+      padding: 12px;
+      background: rgba(255,255,255,0.02);
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.03);
+      color: rgba(255,255,255,0.9);
+      text-align: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+    }
+  }
+}
+
+/* Clean three-button stack + results area */
+.analysis-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 12px;
+  padding: 8px;
+  box-sizing: border-box;
+  min-height: 0;
+
+  .analysis-actions-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .primary-analysis-btn {
+      height: 48px;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      border-radius: 8px;
+      background: linear-gradient(180deg, #1565c0, #0d47a1);
+      color: white;
+      &:hover { filter: brightness(0.95); }
+    }
+
+    .explain-btn {
+      height: 48px;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      border-radius: 8px;
+      text-transform: uppercase;
+
+      &.active {
+        background: linear-gradient(180deg, #f57c00, #ef6c00);
+        color: white;
+        border: none;
+      }
+    }
+  }
+
+  .explanation-results-area {
+    flex: 1 1 auto;
+    min-height: 0; /* critical for proper flex scrolling */
+    overflow-y: auto;
+    padding: 10px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 8px;
+
+    .explain-instruction {
+      color: rgba(255,255,255,0.72);
+      text-align: center;
+      font-style: italic;
+      font-size: 0.88rem;
+      margin-top: 20px;
+    }
+
+    .llm-output-card {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: rgba(0,0,0,0.15);
+      padding: 12px;
+      border-radius: 8px;
+      border-left: 4px solid variables.$blue;
+
+      .llm-header {
+        font-size: 0.75rem;
+        color: variables.$blue;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      .llm-body {
+        color: #eee;
+        font-size: 0.95rem;
+        line-height: 1.45;
+        white-space: pre-wrap;
+      }
+    }
+  }
+}
+
+/* Ensure mobile buttons (Watch Replay / Explain Move) match Analyze button size */
+@media (max-width: variables.$md-breakpoint) {
+  // Keep in sync with AnalysisBox mobile size
+  $mobile-action-btn-font: 0.9rem;
+  .watch-replay-button,
+  .explain-move-button,
+  /* fallback to also target AnalysisBox's button when rendered inline */
+  .analysis-button.MuiButton-root {
+    font-size: $mobile-action-btn-font !important;
+    line-height: 1.05 !important;
+    padding: 6px 10px !important;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  /* normalize icon sizing and spacing in these buttons */
+  .watch-replay-button .MuiButton-startIcon,
+  .explain-move-button .MuiButton-startIcon,
+  .analysis-button .MuiButton-startIcon {
+    font-size: 1.05rem !important;
+    margin-right: 8px !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ensure label content doesn't get vertically misaligned */
+  .watch-replay-button .MuiButton-label,
+  .explain-move-button .MuiButton-label,
+  .analysis-button .MuiButton-label {
+    align-items: center !important;
+    gap: 8px !important;
+  }
+
+  /* tighten up spacing inside the drawer on mobile */
+  .right-drawer {
+    .drawer-content { gap: 8px; } /* reduce overall internal gap */
+    .right-drawer-card {
+      &-body { gap: 8px; } /* reduce gap between AnalysisBox and the button stack */
+
+      /* remove any implicit margin that pushes WATCH REPLAY down */
+      .watch-replay-button { margin-top: 0 !important; }
+    }
+  }
+
+  .right-drawer {
+    .right-drawer-card {
+      .llm-output-card {
+        padding: 10px;
+      }
+      .llm-output-card .llm-header {
+        font-size: 0.82rem;
+      }
+      .llm-output-card .llm-body {
+        font-size: 0.92rem;
+        max-height: 28vh;
+        padding: 8px;
+      }
+      .llm-output-card .MuiButton-root {
+        padding: 6px 8px;
+        font-size: 0.85rem;
+      }
+      .llm-explain-hint {
+        font-size: 0.9rem;
+        padding: 10px;
+        min-height: 44px;
+      }
+    }
+  }
+
+  /* When the explanation is rendered inline in the mobile layout (not inside Drawer),
+     ensure it uses the same card rules and can scroll and fill width. */
+  .mobile-right-drawer-content {
+    padding: 6px; /* match drawer padding */
+    box-sizing: border-box;
+
+    .llm-output-card {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px;
+      max-height: 30vh;
+      overflow: auto;
+      margin: 0; /* remove extra spacing inside mobile column */
+    }
+
+    .llm-output-card .llm-header {
+      font-size: 0.82rem;
+      gap: 8px;
+    }
+
+    .llm-output-card .llm-body {
+      font-size: 0.92rem;
+      max-height: 26vh;
+      padding: 8px;
+    }
+
+    .llm-output-card .MuiButton-root {
+      padding: 6px 8px;
+      font-size: 0.85rem;
+    }
   }
 }

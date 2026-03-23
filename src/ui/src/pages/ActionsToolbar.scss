@@ -221,20 +221,23 @@ $btn-height: 56px; // make buttons a bit smaller
   .actions-toolbar {
      min-height: 20px !important; // Allow for minimal prompt
      height: auto !important;
-     padding: 0 !important;
-     margin: 0 !important;
+     padding: 6px 8px !important;   // add a little breathing room on mobile
+     margin: 0 auto !important;     // center within the mobile container
      gap: 0 !important;
      
      // Only add spacing if buttons are present (not empty)
      &:not(:empty) {
-        padding: 2px !important;
+        padding: 6px 8px !important;
      }
 
+     /* center the button group and allow wrapping so the toolbar stays centered */
      .play-buttons-group {
-       gap: 12px;
+       gap: 10px;
        flex-direction: row;
        align-items: center;
        justify-content: center;
+       flex-wrap: wrap; /* allow multiple rows on very small screens */
+       width: 100%;
      }
 
      button {
