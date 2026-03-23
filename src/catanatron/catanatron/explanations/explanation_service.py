@@ -32,7 +32,7 @@ class GeminiLLM(PromptLLM):
     def __init__(
         self,
         api_key: str | None = None,
-        model: str = "gemini-2.0-flash-lite",
+        model: str = "gemini-2.5-flash-lite",
     ):
         self.api_key = api_key or os.environ.get("GEMINI_API_KEY")
         if not self.api_key:
