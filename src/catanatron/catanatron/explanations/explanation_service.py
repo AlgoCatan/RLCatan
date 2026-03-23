@@ -14,12 +14,11 @@ class FakeLLM(Protocol):
         """Just a random prompt response for testing purposes."""
 
         return """
-The bot likely bought a development card because it had limited immediate options and saw value in converting surplus resources into flexible, potentially hidden advantages. With no available settlement placements and only one alternative (ending its turn), investing in a development card offered a way to progress while maintaining a strong position in the mid-game, especially since it was already leading.
-
-- It had no legal settlement builds and no brick, making typical expansion moves unavailable, so spending resources productively was preferable to passing.
-- Holding 7+ cards increased the risk of losing resources to the robber, so converting some into a development card reduced that risk.
-- With a lead at 6 points, a development card could provide safe, hidden value (e.g., victory points or tactical plays) without overextending.
-- The choice trades immediate board presence for future flexibility, which may be slightly slower but safer given its current advantage and lack of strong alternatives.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus lacus purus, viverra quis pharetra non, tincidunt at lectus.
+Nulla id efficitur quam, sed scelerisque orci. Mauris ut velit accumsan, posuere sapien nec, dapibus odio. Aliquam eu libero vitae arcu pharetra accumsan.
+ellentesque lacinia at quam in molestie. Vivamus porta justo eget ex gravida, vitae blandit libero scelerisque. Proin rhoncus felis sed est sodales fermentum.
+liquam ultricies aliquet justo. Maecenas porta gravida semper. Sed justo ipsum, consequat quis ante at, tempor condimentum lacus.
+hasellus lacus lectus, bibendum tempor sollicitudin non, laoreet semper mi. Integer placerat congue risus non porta. In blandit.
         """
 
 
