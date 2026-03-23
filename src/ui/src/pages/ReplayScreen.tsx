@@ -172,6 +172,7 @@ function ReplayScreen() {
             <ZoomableBoard replayMode={true} />
           </div>
         </div>
+
         <div className="mobile-bottom-half">
           <div className="mobile-replay-controls">
             <ReplayBox
@@ -183,16 +184,21 @@ function ReplayScreen() {
               compact
             />
           </div>
+
+          {/* Two-column bottom row: left = PlayerStats + ActionLog (stacked), right = right-drawer content */}
           <div className="mobile-drawers-row">
             <div className="mobile-left-drawer-content">
-              <PlayerStats gameState={state.gameState} />
+              <div className="mobile-left-top">
+                <PlayerStats gameState={state.gameState} />
+              </div>
+              <div className="mobile-left-bottom">
+                <ActionLog gameState={state.gameState} isExplainMode={isExplainMode} onActionClick={handleActionClick} />
+              </div>
             </div>
+
             <div className="mobile-right-drawer-content">
               {rightDrawerContent}
             </div>
-          </div>
-          <div className="mobile-action-log">
-            <ActionLog gameState={state.gameState} isExplainMode={isExplainMode} onActionClick={handleActionClick} />
           </div>
         </div>
       </div>

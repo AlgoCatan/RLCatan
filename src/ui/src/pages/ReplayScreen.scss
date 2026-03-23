@@ -189,16 +189,37 @@
         min-height: 0;
         border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 
-        .mobile-left-drawer-content,
-        .mobile-right-drawer-content {
-          flex: 1;
-          overflow-y: auto;
-          padding: 2px 2px 0 2px;
-          -webkit-overflow-scrolling: touch;
+        /* Left column: 50% width, stacked layout */
+        .mobile-left-drawer-content {
+          flex: 1 1 50%;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+          border-right: 1px solid rgba(255, 255, 255, 0.12);
+
+          .mobile-left-top {
+            /* PlayerStats area — content-sized, allow scrolling if tall */
+            flex: 0 0 auto;
+            overflow: auto;
+            padding: 4px 6px 0 6px;
+          }
+
+          .mobile-left-bottom {
+            /* ActionLog area — takes remaining height, scrollable */
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow-y: auto;
+            padding: 6px;
+            -webkit-overflow-scrolling: touch;
+          }
         }
 
-        .mobile-left-drawer-content {
-          border-right: 1px solid rgba(255, 255, 255, 0.12);
+        /* Right column: 50% width, fill and scroll for explanation content */
+        .mobile-right-drawer-content {
+          flex: 1 1 50%;
+          overflow-y: auto;
+          padding: 6px;
+          -webkit-overflow-scrolling: touch;
         }
       }
 

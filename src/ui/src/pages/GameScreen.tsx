@@ -246,21 +246,24 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
           {/* Explanation shown in RightDrawer (mobile users can open the drawer to view) */}
 
           <ActionsToolbar isBotThinking={isBotThinking} replayMode={replayMode} />
+
+          {/* Two-column bottom row: left = PlayerStats + ActionLog (stacked), right = right-drawer content */}
           <div className="mobile-drawers-row">
             <div className="mobile-left-drawer-content">
-               <PlayerStats gameState={state.gameState} />
+              <div className="mobile-left-top">
+                <PlayerStats gameState={state.gameState} />
+              </div>
+              <div className="mobile-left-bottom">
+                <ActionLog
+                  gameState={state.gameState}
+                  isExplainMode={isExplainMode}
+                  onActionClick={handleActionClick}
+                />
+              </div>
             </div>
             <div className="mobile-right-drawer-content">
                {rightDrawerContent}
             </div>
-          </div>
-          <div className="mobile-action-log">
-             {/* pass explain-mode and handler to action log used on mobile */}
-             <ActionLog
-               gameState={state.gameState}
-               isExplainMode={isExplainMode}
-               onActionClick={handleActionClick}
-             />
           </div>
         </div>
       </div>
