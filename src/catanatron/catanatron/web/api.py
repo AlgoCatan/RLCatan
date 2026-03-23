@@ -251,10 +251,8 @@ def explain_move_endpoint(game_id, move_index):
     into an LLM or analysis pipeline to produce a meaningful explanation.
     """
     # Example mock response — replace with real LLM analysis later.
-    explanation = (
-        f"""Move {move_index} Explain test
+    explanation = f"""Move {move_index} Explain test
         """
-    )
 
     return jsonify({"move_index": move_index, "explanation": explanation})
 
