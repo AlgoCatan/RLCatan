@@ -32,6 +32,7 @@ Windows CMD
 4. `pip install -e .`
 5. `pip install -e .[web,gym,dev]`
 6. `docker compose up`
+7. `docker exec -it src-server-1 pip install "gymnasium<=0.29.1" numpy pandas fastparquet sb3_contrib google-genai`
 
 
 macOS CMD
@@ -42,7 +43,7 @@ macOS CMD
 4. `pip install -e .`
 4. `pip install -e '.[web,gym,dev]'`
 5. `docker-compose up`
-6. `docker exec -it src-server-1 pip install "gymnasium<=0.29.1" numpy pandas fastparquet sb3_contrib`
+6. `docker exec -it src-server-1 pip install "gymnasium<=0.29.1" numpy pandas fastparquet sb3_contrib google-genai`
 
 
 ## Simulations
