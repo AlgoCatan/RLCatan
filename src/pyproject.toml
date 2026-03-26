@@ -28,6 +28,7 @@ web = [
     "sqlalchemy",
     "psycopg2-binary",
     "pymongo",
+    "google-genai",
 ]
 dev = [
     "black",

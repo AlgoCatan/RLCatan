@@ -9,7 +9,11 @@ from pathlib import Path
 from flask import Response, Blueprint, jsonify, abort, request
 
 from catanatron.cli.accumulators import ExplanationAccumulator
-from catanatron.explanations.explanation_service import ExplanationService, FakeLLM
+from catanatron.explanations.explanation_service import (
+    ExplanationService,
+    GeminiLLM,
+    LLMQuotaExceededError,
+)
 from catanatron.web.models import db, upsert_game_state, get_game_state, UserStart
 from catanatron.web.audit import log_game_start
 from catanatron.web.mcts_analysis import GameAnalyzer
@@ -35,7 +39,7 @@ VALID_MAP_TEMPLATES = {"BASE", "MINI", "TOURNAMENT"}
 CURRENT_EXPLANATION_ACCUMULATOR = ExplanationAccumulator(recent_action_count=5)
 CURRENT_EXPLANATION_SERVICE = ExplanationService(
     CURRENT_EXPLANATION_ACCUMULATOR,
-    FakeLLM(),
+    GeminiLLM(),
 )
 CURRENT_EXPLANATION_GAME_ID = None
 
@@ -175,7 +179,7 @@ def post_game_endpoint():
     CURRENT_EXPLANATION_ACCUMULATOR = ExplanationAccumulator(recent_action_count=5)
     CURRENT_EXPLANATION_SERVICE = ExplanationService(
         CURRENT_EXPLANATION_ACCUMULATOR,
-        FakeLLM(),
+        GeminiLLM(),
     )
     CURRENT_EXPLANATION_GAME_ID = game.id
     upsert_game_state(game)
@@ -340,6 +344,8 @@ def explain_move_endpoint(game_id, move_index):
 
     try:
         explanation = CURRENT_EXPLANATION_SERVICE.explain_action(move_index)
+    except LLMQuotaExceededError as exc:
+        abort(429, description=str(exc))
     except IndexError as exc:
         abort(400, description=str(exc))
     except ValueError as exc:
