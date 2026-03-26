@@ -16,5 +16,7 @@ services:
         value: /app/rlcatan/models/league/league.json
       - key: DATABASE_URL
         value: "sqlite:///:memory:"
+      - key: MONGODB_URI
+        sync: false
 
 

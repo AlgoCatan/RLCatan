@@ -3,45 +3,88 @@
 $dark-divider: rgb(0 0 0 / 80%);
 
 .analysis-box {
+  padding: 0;
+  background: transparent;
+
   .analysis-header {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 10px;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
   }
 
   .analysis-button-row {
     width: 100%;
-    padding: 0 10px;
+    padding: 0;
     box-sizing: border-box;
+    display: flex;
+    gap: 8px;
+
+    > * {
+      flex: 1 1 0;
+      min-width: 0;
+    }
   }
 
   h3 {
     margin: 0;
     text-align: center;
+    font-size: 1.05rem;
+    letter-spacing: 0.01em;
+  }
+
+  .analysis-button.MuiButton-root {
+    min-height: 36px;
+    border-radius: 10px;
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    background: linear-gradient(180deg, #2674d9, #114ea5);
+    box-shadow: 0 8px 18px rgba(17, 78, 165, 0.2);
+
+    &:hover {
+      background: linear-gradient(180deg, #2c7be3, #1558b7);
+    }
   }
 
   .loading-indicator {
     text-align: center;
-    padding: 16px;
-    color: rgba(255, 255, 255, 0.7);
+    padding: 18px 14px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    color: rgba(255, 255, 255, 0.74);
     display: flex;
     align-items: center;
     gap: 8px;
     justify-content: center;
   }
 
+  .error-message {
+    padding: 10px 12px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 0.82rem;
+    line-height: 1.35;
+    color: #ffb3ae;
+    background: rgba(190, 40, 30, 0.14);
+    border: 1px solid rgba(255, 130, 120, 0.18);
+  }
+
   .probability-bars {
-    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
     .probability-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 8px;
-      margin: 4px 0;
-      border-radius: 4px;
-      background: rgba(255, 255, 255, 0.05);
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.05);
   
       &.red { color: variables.$red; }
       &.blue { color: variables.$blue; }
@@ -49,15 +92,31 @@ $dark-divider: rgb(0 0 0 / 80%);
       &.orange { color: variables.$orange; }
   
       .player-color {
-        min-width: 63px;
+        min-width: 82px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 700;
+      }
+
+      .player-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: currentColor;
+        box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.04);
+      }
+
+      .player-color-label {
+        color: rgba(255, 255, 255, 0.92);
       }
   
       .probability-bar {
         flex-grow: 1;
-        height: 20px;
-        margin: 0 12px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 4px;
+        height: 12px;
+        margin: 0 4px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 999px;
         overflow: hidden;
         position: relative;
         
@@ -67,23 +126,41 @@ $dark-divider: rgb(0 0 0 / 80%);
           left: 0;
           top: 0;
           background-color: currentColor;
-          opacity: 0.6;
-          transition: width 0.3s ease;
+          opacity: 0.85;
+          border-radius: 999px;
+          box-shadow: 0 0 18px rgba(255, 255, 255, 0.06);
+          transition: width 0.35s ease;
         }
       }
   
       .probability-value {
-        font-weight: 500;
-        min-width: 43px;
+        font-weight: 800;
+        min-width: 54px;
         text-align: right;
+        color: rgba(255, 255, 255, 0.95);
       }
     }
   }
 }
+
+.watch-replay-button.analysis-button.MuiButton-root {
+  min-height: 36px;
+  border-radius: 10px;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  background: linear-gradient(180deg, #2674d9, #114ea5);
+  box-shadow: 0 8px 18px rgba(17, 78, 165, 0.2);
+
+  &:hover {
+    background: linear-gradient(180deg, #2c7be3, #1558b7);
+  }
+}
+
 @media (max-width: variables.$md-breakpoint) {
   .analysis-box {
     h3 {
-      font-size: 1.2rem;
+      font-size: 0.9rem;
       margin: 2px 0;
     }
 
@@ -93,7 +170,19 @@ $dark-divider: rgb(0 0 0 / 80%);
     }
 
     .analysis-button-row {
-      padding: 0 10px;
+      padding: 0 2px;
+      gap: 4px;
+    }
+
+    .analysis-button.MuiButton-root {
+      min-height: 28px;
+      border-radius: 8px;
+      box-shadow: none;
+      font-size: 0.5rem;
+      padding: 2px 3px;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      line-height: 1;
     }
     
     .loading-indicator {
@@ -102,28 +191,52 @@ $dark-divider: rgb(0 0 0 / 80%);
     }
     
     .probability-bars {
-       margin-bottom: 4px;
+       gap: 4px;
        
        .probability-row {
-         padding: 2px 4px;
-         margin: 1px 0;
+         gap: 4px;
+         padding: 5px 6px;
          font-size: 0.7rem;
+         border-radius: 10px;
          
-         .player-color { min-width: 40px; }
+         .player-color {
+           min-width: 42px;
+           gap: 4px;
+         }
+
+         .player-dot {
+           width: 6px;
+           height: 6px;
+         }
          
          .probability-bar { 
             height: 8px; 
-            margin: 0 4px;
+            margin: 0 2px;
          }
          
-         .probability-value { min-width: 25px; }
+         .probability-value {
+           min-width: 28px;
+           font-size: 0.62rem;
+         }
        }
     }
     
-    .analysis-button.MuiButton-root {
-      font-size: 0.65rem;
-      padding: 6px 6px;
-      margin-top: 2px;
+    .analysis-button-row .MuiButton-root {
+      font-size: 0.5rem;
+      min-width: 0;
+      padding-left: 3px;
+      padding-right: 3px;
     }
+  }
+
+  .watch-replay-button.analysis-button.MuiButton-root {
+    min-height: 28px;
+    border-radius: 8px;
+    box-shadow: none;
+    font-size: 0.5rem;
+    padding: 2px 3px;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    line-height: 1;
   }
 }

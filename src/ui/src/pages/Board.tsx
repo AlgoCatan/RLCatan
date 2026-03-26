@@ -43,6 +43,7 @@ type BoardProps = {
   isMobile: boolean;
   show: boolean;
   isMovingRobber: boolean;
+  validRobberCoordinates: Set<string>;
 }
 
 export default function Board({
@@ -58,6 +59,7 @@ export default function Board({
   isMobile,
   show,
   isMovingRobber,
+  validRobberCoordinates,
 }: BoardProps) {
   // TODO: Keep in sync with CSS
   const containerHeight = isMobile ? height - 144 - 38 - 40 : height;
@@ -87,7 +89,9 @@ export default function Board({
       coordinate={coordinate}
       tile={tile}
       size={size}
-      flashing={isMovingRobber}
+      flashing={
+        isMovingRobber && validRobberCoordinates.has(coordinate.join(","))
+      }
       onClick={() => handleTileClick(coordinate)}
     />
   ));

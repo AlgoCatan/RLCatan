@@ -4,6 +4,8 @@ import { GridLoader } from "react-spinners";
 import { Button, useTheme, useMediaQuery } from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import cn from "classnames";
 
 import ZoomableBoard from "./ZoomableBoard";
 
@@ -29,6 +31,7 @@ function ReplayScreen() {
   const [isExplainMode, setIsExplainMode] = useState(false);
   const [explanation, setExplanation] = useState<string | null>(null);
   const [isExplainingLoading, setIsExplainingLoading] = useState(false);
+  const [isMobilePlayerInfoCollapsed, setIsMobilePlayerInfoCollapsed] = useState(true);
 
   const handleActionClick = useCallback(
     async (index: number) => {
@@ -73,6 +76,10 @@ function ReplayScreen() {
     })();
   }, [gameId, stateIndex, dispatch]);
 
+  useEffect(() => {
+    setIsMobilePlayerInfoCollapsed(isMobile);
+  }, [isMobile]);
+
   if (!state.gameState) {
     return (
       <main>
@@ -90,15 +97,17 @@ function ReplayScreen() {
       <div className="right-drawer-card-body" style={{ display: "flex", flexDirection: "column", height: "100%" }}>
         <AnalysisBox stateIndex={stateIndex} />
         <Divider style={{ margin: "12px 0" }} />
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          <ReplayBox
-            stateIndex={stateIndex}
-            latestStateIndex={latestStateIndex}
-            onNextMove={handleNextState}
-            onPrevMove={handlePrevState}
-            onSeekMove={(index) => setStateIndex(index)}
-            compact={false}
-          />
+        <div className={`replay-right-actions ${isMobile ? "mobile" : ""}`}>
+          {!isMobile && (
+            <ReplayBox
+              stateIndex={stateIndex}
+              latestStateIndex={latestStateIndex}
+              onNextMove={handleNextState}
+              onPrevMove={handlePrevState}
+              onSeekMove={(index) => setStateIndex(index)}
+              compact={false}
+            />
+          )}
 
           <Button
             className={`explain-move-button ${isExplainMode ? "active" : ""}`}
@@ -119,7 +128,7 @@ function ReplayScreen() {
         <div style={{ marginTop: 12, flex: 1, minHeight: 0, overflow: "auto" }}>
           {isExplainMode && !explanation ? (
             <div className="llm-explain-hint">
-              Please select a move from the list of moves taken
+              Select a Move
             </div>
           ) : explanation ? (
             <div className="llm-output-card">
@@ -188,8 +197,24 @@ function ReplayScreen() {
           {/* Two-column bottom row: left = PlayerStats + ActionLog (stacked), right = right-drawer content */}
           <div className="mobile-drawers-row">
             <div className="mobile-left-drawer-content">
-              <div className="mobile-left-top">
-                <PlayerStats gameState={state.gameState} />
+              <div className={cn("mobile-left-top", { collapsed: isMobilePlayerInfoCollapsed })}>
+                <button
+                  type="button"
+                  className="mobile-player-toggle"
+                  aria-expanded={!isMobilePlayerInfoCollapsed}
+                  aria-label={isMobilePlayerInfoCollapsed ? "Show player info" : "Hide player info"}
+                  onClick={() => setIsMobilePlayerInfoCollapsed((current) => !current)}
+                >
+                  <span>Player Info</span>
+                  <KeyboardArrowDownIcon
+                    className={cn("mobile-player-toggle-icon", {
+                      open: !isMobilePlayerInfoCollapsed,
+                    })}
+                  />
+                </button>
+                <div className="mobile-player-panel">
+                  <PlayerStats gameState={state.gameState} />
+                </div>
               </div>
               <div className="mobile-left-bottom">
                 <ActionLog gameState={state.gameState} isExplainMode={isExplainMode} onActionClick={handleActionClick} />

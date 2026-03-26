@@ -25,29 +25,22 @@
       &.WHITE { color: variables.$white; text-shadow: 0 0 2px black; }
     }
 
-    // Explain-mode (interactive) variations
-    &.explain-mode-active {
-      background: rgba(255, 255, 255, 0.02);
-
-      .action.clickable {
-        cursor: pointer;
-        transition: background 0.18s ease, transform 0.06s;
-        padding: 6px 8px;
-        border-radius: 6px;
-
-        &:hover {
-          background: rgba(255, 255, 255, 0.06);
-          transform: translateY(-1px);
-        }
-
-        .move-number {
-          opacity: 0.65;
-          margin-right: 8px;
-          font-size: 0.75rem;
-          color: rgba(255, 255, 255, 0.85);
-          min-width: 36px;
-          text-align: left;
-        }
-      }
+    &.explain-mode-active .action.clickable {
+      cursor: pointer;
     }
+}
+
+@media (max-width: variables.$md-breakpoint) {
+  .log {
+    font-size: 0.5rem;
+
+    .action {
+      gap: 4px;
+      padding: 3px 5px;
+    }
+
+    &.explain-mode-active .action.clickable {
+      cursor: pointer;
+    }
+  }
 }

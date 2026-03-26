@@ -30,6 +30,7 @@ from catanatron.models.enums import (
     WOOD,
 )
 from catanatron.state_functions import (
+    get_actual_victory_points,
     get_player_buildings,
     get_player_freqdeck,
     player_can_afford_dev_card,
@@ -204,6 +205,19 @@ def city_possibilities(state, color) -> List[Action]:
 
 
 def robber_possibilities(state, color) -> List[Action]:
+    actions = _robber_possibilities_without_friendly_robber(state, color)
+    if not getattr(state, "friendly_robber", False):
+        return actions
+
+    filtered_actions = [
+        action
+        for action in actions
+        if not _robber_action_blocks_low_vp_enemy(state, color, action)
+    ]
+    return filtered_actions if len(filtered_actions) > 0 else actions
+
+
+def _robber_possibilities_without_friendly_robber(state, color) -> List[Action]:
     actions = []
     for coordinate, tile in state.board.map.land_tiles.items():
         if coordinate == state.board.robber_coordinate:
@@ -235,6 +249,24 @@ def robber_possibilities(state, color) -> List[Action]:
                 )
 
     return actions
+
+
+def _robber_action_blocks_low_vp_enemy(state, color, action) -> bool:
+    coordinate, _, _ = action.value
+    tile = state.board.map.land_tiles[coordinate]
+    for node_id in tile.nodes.values():
+        building = state.board.buildings.get(node_id, None)
+        if building is None:
+            continue
+
+        candidate_color = building[0]
+        if color == candidate_color:
+            continue
+
+        if get_actual_victory_points(state, candidate_color) < 3:
+            return True
+
+    return False
 
 
 def initial_road_possibilities(state, color) -> List[Action]:

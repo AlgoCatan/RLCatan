@@ -29,6 +29,8 @@ from catanatron.models.enums import (
     ROAD_BUILDING,
 )
 from catanatron.models.player import Color, RandomPlayer, SimplePlayer
+from catanatron.players.tree_search_utils import list_prunned_actions
+from tests.utils import build_initial_placements
 
 
 def test_initial_build_phase():
@@ -234,6 +236,50 @@ def test_discard_is_configurable(fake_roll_dice):
         action.action_type == ActionType.DISCARD
         for action in game.state.playable_actions
     )
+
+
+@patch("catanatron.state.roll_dice")
+def test_friendly_robber_filters_tiles_in_game_playable_actions(fake_roll_dice):
+    fake_roll_dice.return_value = (1, 6)
+    players = [SimplePlayer(Color.RED), SimplePlayer(Color.BLUE)]
+    blocked_coordinates = {(2, -2, 0), (2, -1, -1)}
+
+    regular_game = Game(players, seed=1, friendly_robber=False)
+    build_initial_placements(regular_game)
+    regular_game.execute(
+        Action(regular_game.state.current_color(), ActionType.ROLL, None)
+    )
+    regular_coordinates = {
+        action.value[0] for action in regular_game.state.playable_actions
+    }
+
+    friendly_game = Game(players, seed=1, friendly_robber=True)
+    build_initial_placements(friendly_game)
+    friendly_game.execute(
+        Action(friendly_game.state.current_color(), ActionType.ROLL, None)
+    )
+    friendly_coordinates = {
+        action.value[0] for action in friendly_game.state.playable_actions
+    }
+
+    assert blocked_coordinates.issubset(regular_coordinates)
+    assert blocked_coordinates.isdisjoint(friendly_coordinates)
+    assert friendly_coordinates == regular_coordinates - blocked_coordinates
+
+
+@patch("catanatron.state.roll_dice")
+def test_friendly_robber_does_not_break_pruned_robber_actions(fake_roll_dice):
+    fake_roll_dice.return_value = (1, 6)
+    players = [SimplePlayer(Color.RED), SimplePlayer(Color.BLUE)]
+
+    game = Game(players, seed=1, friendly_robber=True)
+    build_initial_placements(game)
+    game.execute(Action(game.state.current_color(), ActionType.ROLL, None))
+
+    actions = list_prunned_actions(game)
+
+    assert len(actions) > 0
+    assert all(action.action_type == ActionType.MOVE_ROBBER for action in actions)
 
 
 @patch("catanatron.state.roll_dice")
