@@ -9,9 +9,11 @@ from pathlib import Path
 from flask import Response, Blueprint, jsonify, abort, request
 
 from catanatron.web.models import upsert_game_state, get_game_state
+from catanatron.web.audit import log_game_start
 from catanatron.web.mcts_analysis import GameAnalyzer
 from catanatron.json import GameEncoder, action_from_json
 from catanatron.models.player import Color, Player, RandomPlayer
+from catanatron.models.map import build_map
 from catanatron.game import Game
 
 from catanatron.players.minimax_placement import AlphaBetaPlacementPlayer
@@ -26,6 +28,7 @@ from catanatron.players.ppo_player import PPOPlayer
 from werkzeug.exceptions import HTTPException
 
 bp = Blueprint("api", __name__, url_prefix="/api")
+VALID_MAP_TEMPLATES = {"BASE", "MINI", "TOURNAMENT"}
 
 
 @lru_cache(maxsize=1)
@@ -82,7 +85,7 @@ def player_factory(player_key):
     elif player_key[0] == "PLACEMENT_PLAYER":
         player = PlacementPlayer(color)
 
-    elif player_key[0] == "WEIGHTED_RANDOM_PLAYER":
+    elif player_key[0] in {"WEIGHTED_RANDOM", "WEIGHTED_RANDOM_PLAYER"}:
         player = WeightedRandomPlayer(color)
 
     elif player_key[0] == "RANDOM":
@@ -122,11 +125,42 @@ def player_factory(player_key):
 def post_game_endpoint():
     if not request.is_json or request.json is None or "players" not in request.json:
         abort(400, description="Missing or invalid JSON body: 'players' key required")
-    player_keys = request.json["players"]
-    players = list(map(player_factory, zip(player_keys, Color)))
 
-    game = Game(players=players)
+    player_keys = request.json["players"]
+    if not isinstance(player_keys, list) or not 2 <= len(player_keys) <= 4:
+        abort(400, description="'players' must be a list with 2 to 4 entries")
+
+    map_template = request.json.get("map_template", "BASE")
+    if map_template not in VALID_MAP_TEMPLATES:
+        abort(
+            400,
+            description="'map_template' must be one of BASE, MINI, or TOURNAMENT",
+        )
+
+    discard_limit = request.json.get("discard_limit", 7)
+    if not isinstance(discard_limit, int) or not 5 <= discard_limit <= 20:
+        abort(400, description="'discard_limit' must be an integer between 5 and 20")
+
+    vps_to_win = request.json.get("vps_to_win", 10)
+    if not isinstance(vps_to_win, int) or not 3 <= vps_to_win <= 20:
+        abort(400, description="'vps_to_win' must be an integer between 3 and 20")
+
+    friendly_robber = request.json.get("friendly_robber", False)
+    if not isinstance(friendly_robber, bool):
+        abort(400, description="'friendly_robber' must be a boolean")
+
+    players = list(map(player_factory, zip(player_keys, Color)))
+    catan_map = build_map(map_template)
+
+    game = Game(
+        players=players,
+        discard_limit=discard_limit,
+        friendly_robber=friendly_robber,
+        vps_to_win=vps_to_win,
+        catan_map=catan_map,
+    )
     upsert_game_state(game)
+    log_game_start(request)
     return jsonify({"game_id": game.id})
 
 

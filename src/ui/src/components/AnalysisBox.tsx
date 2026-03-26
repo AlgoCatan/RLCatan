@@ -7,15 +7,20 @@ import "./AnalysisBox.scss";
 import { store } from "../store";
 
 type AnalysisBoxProps = {
-    stateIndex: StateIndex;
-}
+  stateIndex: StateIndex;
+  companionAction?: React.ReactNode;
+};
 
-export default function AnalysisBox( { stateIndex }: AnalysisBoxProps ) {
+export default function AnalysisBox({
+  stateIndex,
+  companionAction,
+}: AnalysisBoxProps) {
   const { gameId } = useParams();
   const { state } = useContext(store);
   const [mctsResults, setMctsResults] = useState<MCTSProbabilities | undefined>(undefined);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const hasResults = !!mctsResults && !loading && !error;
 
   const handleAnalyzeClick = async () => {
     if (!gameId || !state.gameState || state.gameState.winning_color) return;
@@ -64,6 +69,7 @@ export default function AnalysisBox( { stateIndex }: AnalysisBoxProps ) {
           >
             {loading ? "Analyzing..." : "Analyze"}
           </Button>
+          {companionAction}
         </div>
       </div>
 
@@ -73,11 +79,16 @@ export default function AnalysisBox( { stateIndex }: AnalysisBoxProps ) {
         </div>
       )}
 
-      {mctsResults && !loading && !error && (
+      {hasResults && (
         <div className="probability-bars">
           {Object.entries(mctsResults).map(([color, probability]) => (
             <div key={color} className={`probability-row ${color.toLowerCase()}`}>
-              <span className="player-color">{color}</span>
+              <span className="player-color">
+                <span className={`player-dot ${color.toLowerCase()}`} />
+                <span className="player-color-label">
+                  {color.charAt(0) + color.slice(1).toLowerCase()}
+                </span>
+              </span>
               <span className="probability-bar">
                 <div
                   className="bar-fill"

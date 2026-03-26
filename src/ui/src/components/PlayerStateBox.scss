@@ -203,11 +203,16 @@
 
     // Prefer compact/small resource cards on mobile; hide large visuals.
     .resource-cards {
-      gap: 6px;
+      gap: 3px;
       margin-bottom: 4px !important;
       margin-left: auto;
+      justify-content: flex-end;
+      flex-wrap: nowrap;
+      width: 50%;
+      max-width: 50%;
+      overflow: hidden;
       &.large { display: none !important; }
-      &.small { display: flex !important; height: 28px; }
+      &.small { display: flex !important; height: 24px; }
     }
 
     .bot-name {
@@ -215,7 +220,8 @@
       margin: 0 !important;
       width: auto;
       text-align: left;
-      flex: 1;
+      flex: 1 1 50%;
+      max-width: 50%;
       min-width: 0;
 
       small {
@@ -247,12 +253,18 @@
     // Ensure small resource card visuals are compact
     .resource-cards.small {
       .resource-card-container {
-        width: 20px;
-        height: 28px;
+        width: 16px;
+        height: 24px;
+        min-width: 16px;
         .card-visual {
           width: 100%;
           height: 100%;
-          .count { font-size: 0.9rem; top: 4px; left: 6px; }
+          font-size: 0.72rem;
+          .count { font-size: 0.72rem; top: 3px; left: 4px; }
+        }
+
+        .short-label {
+          font-size: 0.5rem;
         }
       }
     }

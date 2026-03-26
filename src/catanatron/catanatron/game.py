@@ -91,6 +91,7 @@ class Game:
         players: Sequence[Player],
         seed: Optional[int] = None,
         discard_limit: int = 7,
+        friendly_robber: bool = False,
         vps_to_win: int = 10,
         catan_map: Optional[CatanMap] = None,
         initialize: bool = True,
@@ -111,7 +112,13 @@ class Game:
 
             self.id = str(uuid.uuid4())
             self.vps_to_win = vps_to_win
-            self.state = State(players, catan_map, discard_limit=discard_limit)
+            self.friendly_robber = friendly_robber
+            self.state = State(
+                players,
+                catan_map,
+                discard_limit=discard_limit,
+                friendly_robber=friendly_robber,
+            )
 
     def play(self, accumulators=[], decide_fn=None):
         """Executes game until a player wins or exceeded TURNS_LIMIT.
@@ -195,5 +202,6 @@ class Game:
         game_copy.seed = self.seed
         game_copy.id = self.id
         game_copy.vps_to_win = self.vps_to_win
+        game_copy.friendly_robber = self.friendly_robber
         game_copy.state = self.state.copy()
         return game_copy

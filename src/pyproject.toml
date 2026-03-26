@@ -27,6 +27,7 @@ web = [
     "flask_sqlalchemy",
     "sqlalchemy",
     "psycopg2-binary",
+    "pymongo",
 ]
 dev = [
     "black",

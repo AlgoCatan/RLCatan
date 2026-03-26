@@ -119,10 +119,19 @@ $dark-divider: rgb(0 0 0 / 80%);
     .watch-replay-button,
     .explain-move-button {
       width: 100%;
-      height: 48px;
       border-radius: 8px;
+      font-size: 0.74rem;
       font-weight: 700;
+      letter-spacing: 0.04em;
       text-transform: uppercase;
+    }
+
+    .watch-replay-button {
+      height: 40px;
+    }
+
+    .explain-move-button {
+      height: 48px;
     }
 
     /* Distinct visual for explain active state */
@@ -308,11 +317,12 @@ $dark-divider: rgb(0 0 0 / 80%);
   .explain-move-button,
   /* fallback to also target AnalysisBox's button when rendered inline */
   .analysis-button.MuiButton-root {
-    font-size: $mobile-action-btn-font !important;
+    font-size: 0.5rem !important;
     line-height: 1.05 !important;
-    padding: 6px 10px !important;
+    padding: 4px 6px !important;
     text-transform: uppercase;
     font-weight: 700;
+    letter-spacing: 0.02em !important;
   }
 
   /* normalize icon sizing and spacing in these buttons */

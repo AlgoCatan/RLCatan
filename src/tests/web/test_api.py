@@ -1,7 +1,27 @@
 import pytest
 import json
+import sys
+from unittest.mock import MagicMock
+
+try:
+    import sb3_contrib
+except ImportError:
+    m = MagicMock()
+    sys.modules["sb3_contrib"] = m
+    sys.modules["sb3_contrib.common"] = m
+    sys.modules["sb3_contrib.common.maskable.utils"] = m
+    sys.modules["sb3_contrib.ppo_mask"] = m
+
+try:
+    import stable_baselines3
+except ImportError:
+    m = MagicMock()
+    sys.modules["stable_baselines3"] = m
+    sys.modules["stable_baselines3.common"] = m
+    sys.modules["stable_baselines3.common.env_util"] = m
+
 from catanatron.web import create_app
-from catanatron.web.models import db, GameState
+from catanatron.web.models import db, GameState, get_game_state
 
 
 @pytest.fixture
@@ -44,6 +64,31 @@ def test_post_game_endpoint(client):
             db.session.query(GameState).filter_by(uuid=data["game_id"]).first()
             is not None
         )
+
+
+def test_post_game_endpoint_honors_configuration(client):
+    response = client.post(
+        "/api/games",
+        json={
+            "players": ["WEIGHTED_RANDOM", "HUMAN"],
+            "map_template": "MINI",
+            "discard_limit": 9,
+            "vps_to_win": 12,
+            "friendly_robber": True,
+        },
+    )
+    assert response.status_code == 200
+
+    game_id = json.loads(response.data)["game_id"]
+    with client.application.app_context():
+        game = get_game_state(game_id)
+
+    assert game is not None
+    assert game.vps_to_win == 12
+    assert game.friendly_robber is True
+    assert game.state.friendly_robber is True
+    assert game.state.discard_limit == 9
+    assert len(game.state.board.map.land_tiles) == 7
 
 
 def test_get_game_endpoint(client):

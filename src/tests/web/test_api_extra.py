@@ -29,6 +29,7 @@ except ImportError:
 from catanatron.web import create_app
 from catanatron.web.models import db, GameState
 from catanatron.web.api import _resolve_model_path
+from catanatron.web.audit import get_request_ip, log_game_start, _get_collection
 
 @pytest.fixture
 def app():
@@ -149,6 +150,31 @@ def test_mcts_analysis_endpoint_not_found(client):
     response = client.get("/api/games/99999/states/latest/mcts-analysis")
     # Current implementation catches abort(404) as Exception and returns 500
     assert response.status_code in [404, 500]
+
+
+def test_get_request_ip_prefers_forwarded_header():
+    request = MagicMock()
+    request.headers = {"X-Forwarded-For": "203.0.113.10, 10.0.0.1"}
+    request.remote_addr = "127.0.0.1"
+
+    assert get_request_ip(request) == "203.0.113.10"
+
+
+@patch("catanatron.web.audit._get_collection")
+def test_log_game_start_writes_timestamp_and_ip(mock_get_collection):
+    mock_collection = MagicMock()
+    mock_get_collection.return_value = mock_collection
+
+    request = MagicMock()
+    request.headers = {"X-Forwarded-For": "198.51.100.7"}
+    request.remote_addr = "127.0.0.1"
+
+    log_game_start(request)
+
+    mock_collection.insert_one.assert_called_once()
+    document = mock_collection.insert_one.call_args.args[0]
+    assert document["ip"] == "198.51.100.7"
+    assert document["_id"] == document["timestamp"]
 
 
 

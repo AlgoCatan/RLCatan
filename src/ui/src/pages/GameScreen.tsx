@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext, useRef, useCallback } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import PropTypes from "prop-types";
 import { GridLoader } from "react-spinners";
 import { useSnackbar } from "notistack";
@@ -12,16 +12,26 @@ import LeftDrawer from "../components/LeftDrawer";
 import RightDrawer from "../components/RightDrawer";
 import { store } from "../store";
 import ACTIONS from "../actions";
-import { type StateIndex, getState, postAction, getMoveExplanation } from "../utils/apiClient";
-import { dispatchSnackbar } from "../components/Snackbar";
-import { getHumanColor } from "../utils/stateUtils";
+import { type StateIndex, createGame, getState, postAction, getMoveExplanation } from "../utils/apiClient";
+import { playerKey } from "../utils/stateUtils";
 import AnalysisBox from "../components/AnalysisBox";
-import { Divider, Button, useTheme, useMediaQuery } from "@mui/material";
+import { loadAutoGameConfig } from "../utils/autoMode";
+import {
+  Divider,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogActions,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
 import PlayerStats from "../components/PlayerStats";
 import ActionLog from "../components/ActionLog";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import cn from "classnames";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 const ROBOT_THINKING_TIME = 300;
 
@@ -29,6 +39,7 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
   const theme = useTheme();
   // true when viewport width is <= md breakpoint
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const [searchParams] = useSearchParams();
   const { gameId, stateIndex } = useParams();
   const navigate = useNavigate();
   const { state, dispatch } = useContext(store);
@@ -40,6 +51,10 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
   const [isExplainMode, setIsExplainMode] = useState(false);
   const [explanation, setExplanation] = useState<string | null>(null);
   const [isExplainingLoading, setIsExplainingLoading] = useState(false);
+  const [isWinnerModalOpen, setIsWinnerModalOpen] = useState(false);
+  const [isMobilePlayerInfoCollapsed, setIsMobilePlayerInfoCollapsed] = useState(false);
+  const [isAutoRestarting, setIsAutoRestarting] = useState(false);
+  const isAutoMode = searchParams.get("auto") === "1";
 
   const handleActionClick = async (index: number) => {
     if (!isExplainMode || !gameId) return;
@@ -113,25 +128,89 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
     closeSnackbar,
   ]);
 
+  useEffect(() => {
+    if (state.gameState?.winning_color && !replayMode && !isAutoMode) {
+      setIsWinnerModalOpen(true);
+    }
+  }, [state.gameState?.winning_color, replayMode, isAutoMode]);
+
+  useEffect(() => {
+    if (!state.gameState?.winning_color || replayMode || !isAutoMode || isAutoRestarting) {
+      return;
+    }
+
+    const config = loadAutoGameConfig();
+    if (!config) {
+      setIsWinnerModalOpen(true);
+      return;
+    }
+
+    let isCancelled = false;
+    setIsAutoRestarting(true);
+
+    (async () => {
+      try {
+        const nextGameId = await createGame(config);
+        if (!isCancelled) {
+          navigate(`/games/${nextGameId}?auto=1`, { replace: true });
+        }
+      } catch (err) {
+        console.error("Failed to auto-start next game", err);
+        if (!isCancelled) {
+          setIsWinnerModalOpen(true);
+          setIsAutoRestarting(false);
+        }
+      }
+    })();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [state.gameState?.winning_color, replayMode, isAutoMode, isAutoRestarting, navigate]);
+
+  useEffect(() => {
+    setIsMobilePlayerInfoCollapsed(false);
+  }, [isMobile]);
+
+  useEffect(() => {
+    setIsAutoRestarting(false);
+  }, [gameId]);
+
   // Update rightDrawerContent to original AnalysisBox + Watch Replay + Explain Move
   const rightDrawerContent = (
-    <div className="right-drawer-card">
+    <div className="right-drawer-card game-analysis-panel">
       <div className="right-drawer-card-body" style={{ display: "flex", flexDirection: "column", height: "100%" }}>
         {/* original AnalysisBox (contains its own Analyze button) */}
-        <AnalysisBox stateIndex={"latest"} />
+        <AnalysisBox
+          stateIndex={"latest"}
+          companionAction={
+            isMobile ? (
+              <Button
+                className="watch-replay-button analysis-button analysis-companion-button"
+                variant="contained"
+                fullWidth
+                onClick={() => navigate(`/replays/${gameId}`)}
+              >
+                WATCH REPLAY
+              </Button>
+            ) : undefined
+          }
+        />
 
         <Divider style={{ margin: "12px 0" }} />
 
-        {/* Watch Replay + Explain Move stacked */}
+        {/* Desktop: Watch Replay + Explain Move stacked. Mobile: Explain Move only. */}
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          <Button
-            className="watch-replay-button"
-            variant="contained"
-            fullWidth
-            onClick={() => navigate(`/replays/${gameId}`)}
-          >
-            WATCH REPLAY
-          </Button>
+          {!isMobile && (
+            <Button
+              className="watch-replay-button analysis-button"
+              variant="contained"
+              fullWidth
+              onClick={() => navigate(`/replays/${gameId}`)}
+            >
+              WATCH REPLAY
+            </Button>
+          )}
 
           <Button
             className={`explain-move-button ${isExplainMode ? "active" : ""}`}
@@ -154,7 +233,7 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
         <div style={{ marginTop: 12, flex: 1, minHeight: 0, overflow: "auto" }}>
           {isExplainMode && !explanation ? (
             <div className="llm-explain-hint">
-              Please select a move from the list of moves taken
+              Select a Move
             </div>
           ) : explanation ? (
             <div className="llm-output-card">
@@ -166,10 +245,6 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
       </div>
     </div>
   );
-
-  const openRightDrawer = useCallback(() => {
-    dispatch({ type: ACTIONS.SET_RIGHT_DRAWER_OPENED, data: true });
-  }, [dispatch]);
 
   if (!state.gameState) {
     return (
@@ -183,8 +258,72 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
     );
   }
 
+  const winnerColor = state.gameState.winning_color;
+  const winnerKey =
+    winnerColor !== undefined ? playerKey(state.gameState, winnerColor) : null;
+  const winnerName =
+    winnerColor && state.gameState.player_models?.[winnerColor]
+      ? state.gameState.player_models[winnerColor]
+      : winnerColor;
+  const winnerStats =
+    winnerKey && winnerColor
+      ? {
+          knights: state.gameState.player_state[`${winnerKey}_PLAYED_KNIGHT`],
+          roads: state.gameState.player_state[`${winnerKey}_LONGEST_ROAD_LENGTH`],
+          vps: state.gameState.player_state[`${winnerKey}_ACTUAL_VICTORY_POINTS`],
+        }
+      : null;
+
   return (
     <main className={cn("game-screen-main", { "right-drawer-open": state.isRightDrawerOpen })}>
+      <Dialog
+        open={isWinnerModalOpen && Boolean(winnerColor)}
+        onClose={() => setIsWinnerModalOpen(false)}
+        fullWidth
+        maxWidth="xs"
+        PaperProps={{ className: "winner-modal-paper" }}
+      >
+        <DialogContent className="winner-modal-content">
+          <div className="winner-modal-icon">
+            <EmojiEventsIcon fontSize="inherit" />
+          </div>
+          <div className="winner-modal-title">Winner</div>
+          <div className="winner-modal-name">
+            {winnerName}
+            {winnerColor ? (
+              <span className={`winner-modal-color ${winnerColor.toLowerCase()}`}>
+                {winnerColor}
+              </span>
+            ) : null}
+          </div>
+          {winnerStats && (
+            <div className="winner-modal-stats">
+              <div className="winner-stat">
+                <strong>{winnerStats.knights}</strong>
+                <span>Knights</span>
+              </div>
+              <div className="winner-stat">
+                <strong>{winnerStats.roads}</strong>
+                <span>Roads</span>
+              </div>
+              <div className="winner-stat">
+                <strong>{winnerStats.vps}</strong>
+                <span>VPs</span>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+        <DialogActions className="winner-modal-actions">
+          <Button onClick={() => setIsWinnerModalOpen(false)}>Close</Button>
+          <Button onClick={() => navigate("/")}>Play Again</Button>
+          <Button
+            variant="contained"
+            onClick={() => navigate(`/replays/${gameId}`)}
+          >
+            Watch Replay
+          </Button>
+        </DialogActions>
+      </Dialog>
       {/* Explanation is shown in the RightDrawer (see rightDrawerContent) */}
 
       <div className="desktop-layout">
@@ -250,8 +389,24 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
           {/* Two-column bottom row: left = PlayerStats + ActionLog (stacked), right = right-drawer content */}
           <div className="mobile-drawers-row">
             <div className="mobile-left-drawer-content">
-              <div className="mobile-left-top">
-                <PlayerStats gameState={state.gameState} />
+              <div className={cn("mobile-left-top", { collapsed: isMobilePlayerInfoCollapsed })}>
+                <button
+                  type="button"
+                  className="mobile-player-toggle"
+                  aria-expanded={!isMobilePlayerInfoCollapsed}
+                  aria-label={isMobilePlayerInfoCollapsed ? "Show player info" : "Hide player info"}
+                  onClick={() => setIsMobilePlayerInfoCollapsed((current) => !current)}
+                >
+                  <span>Player Info</span>
+                  <KeyboardArrowDownIcon
+                    className={cn("mobile-player-toggle-icon", {
+                      open: !isMobilePlayerInfoCollapsed,
+                    })}
+                  />
+                </button>
+                <div className="mobile-player-panel">
+                  <PlayerStats gameState={state.gameState} />
+                </div>
               </div>
               <div className="mobile-left-bottom">
                 <ActionLog

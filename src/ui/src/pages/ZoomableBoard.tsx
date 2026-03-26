@@ -15,6 +15,14 @@ import ACTIONS from "../actions";
 import Board from "./Board";
 import type { GameAction, TileCoordinate } from "../utils/api.types";
 
+function getMoveRobberCoordinate(action: GameAction): TileCoordinate | null {
+  if (action[1] !== "MOVE_ROBBER") {
+    return null;
+  }
+
+  return action[2][0];
+}
+
 /**
  * Returns object representing actions to be taken if click on node.
  * @returns {3 => ["BLUE", "BUILD_CITY", 3], ...}
@@ -152,6 +160,14 @@ export default function ZoomableBoard({ replayMode }: ZoomableBoardProps) {
 
   const nodeActions = replayMode ? {} : buildNodeActions(state);
   const edgeActions = replayMode ? {} : buildEdgeActions(state);
+  const validRobberCoordinates = new Set(
+    state.isMovingRobber
+      ? gameState.current_playable_actions
+          .map(getMoveRobberCoordinate)
+          .filter((coordinate): coordinate is TileCoordinate => coordinate !== null)
+          .map((coordinate) => coordinate.join(","))
+      : []
+  );
 
   useEffect(() => {
     setTimeout(() => {
@@ -188,6 +204,7 @@ export default function ZoomableBoard({ replayMode }: ZoomableBoardProps) {
             gameState={gameState}
             isMobile={isMobile}
             isMovingRobber={state.isMovingRobber}
+            validRobberCoordinates={validRobberCoordinates}
           />
         </TransformComponent>
       </div>
