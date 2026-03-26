@@ -16,6 +16,7 @@ import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
 import { GridLoader } from "react-spinners";
 import {
   createGame,
+  logUserStart,
   type MapTemplate,
   type PlayerArchetype,
 } from "../utils/apiClient";
@@ -123,15 +124,24 @@ export default function HomePage() {
 
     clearAutoGameConfig();
     setLoading(true);
-    const gameId = await createGame({
-      players,
-      mapTemplate,
-      vpsToWin,
-      discardLimit,
-      friendlyRobber: FRIENDLY_ROBBER_SUPPORTED ? friendlyRobber : false,
-    });
-    setLoading(false);
-    navigate("/games/" + gameId);
+    try {
+      try {
+        await logUserStart();
+      } catch (error) {
+        console.error("Failed to log start analytics", error);
+      }
+
+      const gameId = await createGame({
+        players,
+        mapTemplate,
+        vpsToWin,
+        discardLimit,
+        friendlyRobber: FRIENDLY_ROBBER_SUPPORTED ? friendlyRobber : false,
+      });
+      navigate("/games/" + gameId);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCreateAutoGame = async () => {

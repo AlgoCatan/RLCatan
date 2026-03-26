@@ -1,5 +1,5 @@
 import { useEffect, useContext, useState, useCallback } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { GridLoader } from "react-spinners";
 import { Button, useTheme, useMediaQuery } from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
@@ -23,6 +23,7 @@ import ActionLog from "../components/ActionLog";
 
 function ReplayScreen() {
   const { gameId } = useParams();
+  const navigate = useNavigate();
   const { state, dispatch } = useContext(store);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -143,6 +144,15 @@ function ReplayScreen() {
 
   return (
     <main className="replay-screen-main">
+      <button
+        type="button"
+        className="hidden-admin-button"
+        aria-label="Open admin panel"
+        onClick={() => navigate("/admin")}
+      >
+        analytics
+      </button>
+
       <div className="desktop-layout">
         <h1 className="logo">Catan Arena</h1>
         {!isMobile && !state.isRightDrawerOpen && (

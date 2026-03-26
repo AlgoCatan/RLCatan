@@ -8,7 +8,7 @@ from pathlib import Path
 
 from flask import Response, Blueprint, jsonify, abort, request
 
-from catanatron.web.models import upsert_game_state, get_game_state
+from catanatron.web.models import db, upsert_game_state, get_game_state, UserStart
 from catanatron.web.audit import log_game_start
 from catanatron.web.mcts_analysis import GameAnalyzer
 from catanatron.json import GameEncoder, action_from_json
@@ -160,8 +160,38 @@ def post_game_endpoint():
         catan_map=catan_map,
     )
     upsert_game_state(game)
-    log_game_start(request)
     return jsonify({"game_id": game.id})
+
+
+@bp.route("/analytics/start", methods=("POST",))
+def post_start_analytics_endpoint():
+    logged = log_game_start(request)
+    return jsonify({"logged": logged}), (200 if logged else 500)
+
+
+@bp.route("/admin/user-starts", methods=("GET",))
+def get_user_starts_endpoint():
+    try:
+        limit = int(request.args.get("limit", 50))
+    except ValueError:
+        abort(400, description="'limit' must be an integer")
+
+    limit = max(1, min(limit, 200))
+    rows = (
+        db.session.query(UserStart)
+        .order_by(UserStart.timestamp.desc())
+        .limit(limit)
+        .all()
+    )
+    payload = [
+        {
+            "id": row.id,
+            "ip": row.ip,
+            "timestamp": row.timestamp.isoformat(),
+        }
+        for row in rows
+    ]
+    return jsonify(payload)
 
 
 @bp.route("/games/<string:game_id>/states/<string:state_index>", methods=("GET",))

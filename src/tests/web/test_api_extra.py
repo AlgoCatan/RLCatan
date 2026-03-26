@@ -1,5 +1,4 @@
 import json
-import os
 import sys
 import pytest
 from unittest.mock import patch, MagicMock
@@ -27,9 +26,9 @@ except ImportError:
     sys.modules["stable_baselines3.common.env_util"] = m
 
 from catanatron.web import create_app
-from catanatron.web.models import db, GameState
+from catanatron.web.models import db, GameState, UserStart
 from catanatron.web.api import _resolve_model_path
-from catanatron.web.audit import get_request_ip, log_game_start, _get_collection
+from catanatron.web.audit import get_request_ip, log_game_start
 
 @pytest.fixture
 def app():
@@ -160,21 +159,44 @@ def test_get_request_ip_prefers_forwarded_header():
     assert get_request_ip(request) == "203.0.113.10"
 
 
-@patch("catanatron.web.audit._get_collection")
-def test_log_game_start_writes_timestamp_and_ip(mock_get_collection):
-    mock_collection = MagicMock()
-    mock_get_collection.return_value = mock_collection
-
+def test_log_game_start_writes_timestamp_and_ip(app):
     request = MagicMock()
     request.headers = {"X-Forwarded-For": "198.51.100.7"}
     request.remote_addr = "127.0.0.1"
 
-    log_game_start(request)
+    with app.app_context():
+        assert log_game_start(request) is True
+        row = db.session.query(UserStart).order_by(UserStart.id.desc()).first()
 
-    mock_collection.insert_one.assert_called_once()
-    document = mock_collection.insert_one.call_args.args[0]
-    assert document["ip"] == "198.51.100.7"
-    assert document["_id"] == document["timestamp"]
+    assert row is not None
+    assert row.ip == "198.51.100.7"
+    assert row.timestamp is not None
+
+
+def test_admin_user_starts_endpoint_returns_rows(app, client):
+    with app.app_context():
+        db.session.add(UserStart.from_ip("198.51.100.7"))
+        db.session.add(UserStart.from_ip("203.0.113.10"))
+        db.session.commit()
+
+    response = client.get("/api/admin/user-starts?limit=2")
+
+    assert response.status_code == 200
+    rows = json.loads(response.data)
+    assert len(rows) == 2
+    assert rows[0]["ip"] == "203.0.113.10"
+    assert rows[1]["ip"] == "198.51.100.7"
+
+
+@patch("catanatron.web.api.log_game_start")
+def test_start_analytics_endpoint_logs_once(mock_log_game_start, client):
+    mock_log_game_start.return_value = True
+
+    response = client.post("/api/analytics/start")
+
+    assert response.status_code == 200
+    assert json.loads(response.data) == {"logged": True}
+    mock_log_game_start.assert_called_once()
 
 
 

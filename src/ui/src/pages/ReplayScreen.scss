@@ -10,6 +10,33 @@ $game-surface-gradient:
   height: 100%;
   display: flex;
   flex-direction: column;
+  position: relative;
+
+  .hidden-admin-button {
+    position: fixed;
+    left: 10px;
+    bottom: 10px;
+    z-index: 1400;
+    border: 0;
+    border-radius: 999px;
+    padding: 4px 8px;
+    background: transparent;
+    color: transparent;
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    opacity: 0.02;
+    transition: opacity 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+
+    &:hover,
+    &:focus-visible {
+      opacity: 0.82;
+      color: rgb(255 255 255 / 72%);
+      background: rgb(255 255 255 / 10%);
+      outline: none;
+    }
+  }
 
   .logo {
     margin: 5px 20px 0 20px;
@@ -105,6 +132,13 @@ $game-surface-gradient:
     .board-container {
       margin-right: 0 !important;
       margin-left: 0 !important;
+    }
+
+    .hidden-admin-button {
+      left: 8px;
+      bottom: 8px;
+      padding: 3px 7px;
+      font-size: 0.52rem;
     }
   }
 

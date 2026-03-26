@@ -1,27 +1,9 @@
 import logging
-import os
-from datetime import datetime, timezone
-from functools import lru_cache
 
-try:
-    from pymongo import MongoClient
-except ImportError:  # pragma: no cover - handled gracefully when dependency is absent
-    MongoClient = None
+from catanatron.web.models import UserStart, db
 
 
 LOGGER = logging.getLogger(__name__)
-MONGODB_DATABASE = "CatanArena"
-MONGODB_COLLECTION = "users"
-
-
-@lru_cache(maxsize=1)
-def _get_collection():
-    uri = os.environ.get("MONGODB_URI")
-    if not uri or MongoClient is None:
-        return None
-
-    client = MongoClient(uri, serverSelectionTimeoutMS=3000)
-    return client[MONGODB_DATABASE][MONGODB_COLLECTION]
 
 
 def get_request_ip(request) -> str | None:
@@ -38,19 +20,14 @@ def get_request_ip(request) -> str | None:
     return request.remote_addr
 
 
-def log_game_start(request):
-    collection = _get_collection()
-    if collection is None:
-        return
-
-    timestamp = datetime.now(timezone.utc)
-    document = {
-        "_id": timestamp,
-        "ip": get_request_ip(request),
-        "timestamp": timestamp,
-    }
+def log_game_start(request) -> bool:
+    ip_address = get_request_ip(request) or "unknown"
 
     try:
-        collection.insert_one(document)
+        db.session.add(UserStart.from_ip(ip_address))
+        db.session.commit()
+        return True
     except Exception:
+        db.session.rollback()
         LOGGER.exception("Failed to write game start audit log")
+        return False
