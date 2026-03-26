@@ -10,6 +10,7 @@ import { StateProvider } from "./store";
 
 import "./App.scss";
 import ReplayScreen from "./pages/ReplayScreen";
+import AdminPage from "./pages/AdminPage";
 
 import BotSelectPlay from "./pages/BotSelectPlay";
 import BotSelectBattle from "./pages/BotSelectBattle";
@@ -58,6 +59,7 @@ function App() {
                 path="/games/:gameId"
                 element={<GameScreen replayMode={false} />}
               />
+              <Route path="/admin" element={<AdminPage />} />
               <Route path="/" element={<HomePage />} />
             </Routes>
           </Router>

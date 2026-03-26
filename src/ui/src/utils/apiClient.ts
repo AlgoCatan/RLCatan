@@ -25,6 +25,24 @@ export type CreateGameOptions = {
   friendlyRobber: boolean;
 };
 
+export type UserStartRow = {
+  id: number;
+  ip: string;
+  timestamp: string;
+};
+
+export async function logUserStart() {
+  const response = await axios.post(API_URL + "/api/analytics/start");
+  return response.data;
+}
+
+export async function getUserStarts(limit = 50): Promise<UserStartRow[]> {
+  const response = await axios.get(`${API_URL}/api/admin/user-starts`, {
+    params: { limit },
+  });
+  return response.data;
+}
+
 export async function createGame({
   players,
   mapTemplate,
