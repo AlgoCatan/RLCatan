@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import os.path
 from pathlib import Path
 from typing import Iterable, List, Optional, cast
 
@@ -64,6 +63,9 @@ class PPOPlayer(Player):
             PLAYER_TRADING_ACTION_TYPES,
         ]
         """
+
+        # Stores the info to pass to the LLM move explainer. Updated on each decide() call
+        self._pending_decision_details = None
 
     def _build_observation(self, game) -> np.ndarray:
         """
@@ -160,11 +162,28 @@ class PPOPlayer(Player):
         #    normalized (action_type, value) matches ACTIONS_ARRAY[chosen_index].
         chosen_action = from_action_space(chosen_index, list(playable_actions))
 
+        # 7. Store info for move explanation (LLM)
+        self._pending_decision_details = {
+            # Observation data and actions presented/chosen. Knowing what the other move options were is important for explaining why a move was chosen
+            "obs": obs.tolist(),
+            "all_valid_indices": all_valid_indices,
+            "filtered_indices": filtered_indices,
+            "chosen_index": chosen_index,
+            "deterministic": self.deterministic,
+        }
+
         return chosen_action
+
+    def get_decision_details(self, game, playable_actions, chosen_action):
+        """Return the details of the last decision, for use in LLM move explanation."""
+        details = getattr(self, "_pending_decision_details", {})
+        self._pending_decision_details = {}
+
+        return details
 
     def reset_state(self):
         """
-        We can mess with this if we want to reset any internal
-        per-game state. For now, it just defers to the base class.
+        Reset any internal state between games. For PPOPlayer, that's just clearing the last_decision_info for now.
         """
+        self._pending_decision_details = None
         super().reset_state()

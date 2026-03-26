@@ -34,6 +34,7 @@ const PLAYER_ARCHETYPES: Array<{
   { value: "HUMAN", label: "Human" },
   { value: "FINAL_BOSS", label: "Final Boss" },
   { value: "CATANATRON", label: "Alpha Beta" },
+  { value: "PPO_PLAYER", label: "PPO Player" },
   { value: "VALUE_FUNCTION", label: "Value Function Bot" },
   { value: "MCTS_PLAYER", label: "MCTS" },
   { value: "GREEDY_PLAYER", label: "Greedy Playouts" },
