@@ -8,6 +8,7 @@ export type PlayerArchetype =
   | "RANDOM"
   | "CATANATRON"
   | "FINAL_BOSS"
+  | "PPO_PLAYER"
   | "VALUE_FUNCTION"
   | "MCTS_PLAYER"
   | "GREEDY_PLAYER"

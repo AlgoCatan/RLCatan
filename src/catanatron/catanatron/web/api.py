@@ -30,7 +30,6 @@ from catanatron.players.mcts import MCTSPlayer
 from catanatron.players.playouts import GreedyPlayoutsPlayer
 from catanatron.players.weighted_random import WeightedRandomPlayer
 from catanatron.players.placement import PlacementPlayer
-from catanatron.players.ppo_player import PPOPlayer
 from werkzeug.exceptions import HTTPException
 
 bp = Blueprint("api", __name__, url_prefix="/api")
@@ -107,8 +106,15 @@ def player_factory(player_key):
     elif player_key[0] == "HUMAN":
         player = ValueFunctionPlayer(color, is_bot=False)
 
+    elif player_key[0] in {"PPO_PLAYER", "PPOP"}:
+        from catanatron.players.ppo_player import PPOPlayer
+
+        player = PPOPlayer(color=color, device="cpu", deterministic=True)
+
     # load bots by name from league.json (Their keys are expected to be in the format "BOT:bot_name")
     elif isinstance(key, str) and key.startswith("BOT:"):
+        from catanatron.players.ppo_player import PPOPlayer
+
         bot_name = key.split(":", 1)[1]
         bots = _load_league_bots_by_name()
         bot = bots.get(bot_name)
@@ -418,6 +424,7 @@ def _load_bots():
             "elo": 1400,
             "key": "VALUE_FUNCTION",
         },
+        {"id": "ppo_player", "name": "PPO Player", "elo": 1475, "key": "PPO_PLAYER"},
         {"id": "mcts", "name": "MCTS", "elo": 1450, "key": "MCTS_PLAYER"},
         {
             "id": "greedy",
