@@ -1,6 +1,12 @@
 from typing import Protocol, Any
 import os
 import re
+import time
+import random
+import threading
+import hashlib
+import json
+from collections import deque
 
 from catanatron.explanations.deterministic_explainers import explain_packet
 from catanatron.explanations.prompt_builder import build_llm_prompt
@@ -84,8 +90,24 @@ class ExplanationService:
     def __init__(self, accumulator, llm: PromptLLM):
         self.accumulator = accumulator
         self.llm = llm
-        # Avoid repeated LLM calls for the same action index during timeline scrubbing.
-        self._cache: dict[int, str] = {}
+
+        # Stable cache across repeated timeline scrubbing.
+        self._cache: dict[str, str] = {}
+
+        # In-flight dedup for concurrent identical requests.
+        self._inflight: dict[str, threading.Event] = {}
+        self._lock = threading.Lock()
+
+        # Built-in sensible defaults (no env vars needed, but could add later if needed).
+        self._rpm_limit = 30  # ~2 requests/second
+        self._min_interval_sec = 0.1  # 100ms min between calls
+        self._retry_attempts = 2  # up to 3 total attempts on transient quota
+        self._retry_base_ms = 250  # exponential backoff base
+        self._prompt_version = "v1"
+
+        # Track request timestamps for rolling RPM control.
+        self._request_times: deque[float] = deque()
+        self._last_request_time = 0.0
 
     def _deterministic_fallback(self, action_index: int, det: Any, reason: str) -> str:
         return (
@@ -111,16 +133,91 @@ class ExplanationService:
         turn_numbers = re.findall(r"\bturn\s*(\d+)\b", lower)
         return not turn_numbers or all(int(n) == action_index for n in turn_numbers)
 
-    def explain_action(self, action_index: int) -> str:
-        if action_index in self._cache:
-            return self._cache[action_index]
+    def _make_cache_key(self, action_index: int, det: Any) -> str:
+        """Generate stable cache key including model, prompt version, and content hash."""
+        model_name = getattr(self.llm, "_model", self.llm.__class__.__name__)
+        det_hash = hashlib.sha256(
+            json.dumps(det, sort_keys=True, ensure_ascii=True, default=str).encode("ascii")
+        ).hexdigest()
+        return f"{self._prompt_version}|{model_name}|{action_index}|{det_hash}"
 
+    def _acquire_rate_slot(self) -> None:
+        """Block until rate limits allow a new request (RPM + min interval)."""
+        while True:
+            now = time.monotonic()
+            with self._lock:
+                # Prune timestamps outside 60s window.
+                window_start = now - 60.0
+                while self._request_times and self._request_times[0] < window_start:
+                    self._request_times.popleft()
+
+                # Compute how long to wait for min interval.
+                interval_wait = max(0.0, self._min_interval_sec - (now - self._last_request_time))
+
+                # Compute how long to wait for RPM slot.
+                rpm_wait = 0.0
+                if len(self._request_times) >= self._rpm_limit:
+                    rpm_wait = max(0.0, self._request_times[0] + 60.0 - now)
+
+                wait_for = max(interval_wait, rpm_wait)
+                if wait_for <= 0.0:
+                    self._request_times.append(now)
+                    self._last_request_time = now
+                    return
+
+            time.sleep(min(wait_for, 0.5))
+
+    def _call_llm_with_retries(self, prompt: str) -> str:
+        """Call LLM with bounded exponential backoff retry on transient quota errors."""
+        attempts = self._retry_attempts + 1
+        for attempt in range(attempts):
+            self._acquire_rate_slot()
+            try:
+                return self.llm.explain_prompt(prompt)
+            except LLMQuotaExceededError:
+                if attempt >= self._retry_attempts:
+                    raise
+                # Exponential backoff with jitter for transient throttling.
+                delay = (self._retry_base_ms / 1000.0) * (2 ** attempt) + random.uniform(0.0, 0.15)
+                time.sleep(delay)
+
+        raise RuntimeError("Unreachable retry state")
+
+    def explain_action(self, action_index: int) -> str:
         packet = self.accumulator.get_packet(action_index)
         det = explain_packet(packet)
+        key = self._make_cache_key(action_index, det)
+
+        # Check cache and register in-flight request.
+        with self._lock:
+            cached = self._cache.get(key)
+            if cached is not None:
+                return cached
+
+            existing_event = self._inflight.get(key)
+            if existing_event is None:
+                event = threading.Event()
+                self._inflight[key] = event
+                is_owner = True
+            else:
+                event = existing_event
+                is_owner = False
+
+        # If not owner, wait for owner to finish.
+        if not is_owner:
+            event.wait(timeout=15.0)
+            with self._lock:
+                cached = self._cache.get(key)
+            if cached is not None:
+                return cached
+            # Owner may have failed; continue as fallback.
+
+        # Owner path: call LLM.
         prompt = build_llm_prompt(det, action_index)
+        explanation_text = None
 
         try:
-            explanation_text = self.llm.explain_prompt(prompt)
+            explanation_text = self._call_llm_with_retries(prompt)
             if not self._response_is_grounded(explanation_text, action_index):
                 explanation_text = self._deterministic_fallback(
                     action_index,
@@ -139,6 +236,17 @@ class ExplanationService:
                 det,
                 "LLM request failed",
             )
+        finally:
+            if explanation_text is None:
+                explanation_text = self._deterministic_fallback(
+                    action_index,
+                    det,
+                    "unexpected error (no explanation generated)",
+                )
+            with self._lock:
+                self._cache[key] = explanation_text
+                inflight_event = self._inflight.pop(key, None)
+                if inflight_event is not None:
+                    inflight_event.set()
 
-        self._cache[action_index] = explanation_text
         return explanation_text
