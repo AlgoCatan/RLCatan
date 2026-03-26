@@ -54,6 +54,7 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
   const [isWinnerModalOpen, setIsWinnerModalOpen] = useState(false);
   const [isMobilePlayerInfoCollapsed, setIsMobilePlayerInfoCollapsed] = useState(false);
   const [isAutoRestarting, setIsAutoRestarting] = useState(false);
+  const autoRestartedGameId = useRef<string | null>(null);
   const isAutoMode = searchParams.get("auto") === "1";
 
   const handleActionClick = async (index: number) => {
@@ -81,11 +82,22 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
       return;
     }
     lastProcessedStateIndex.current = -1;
+    autoRestartedGameId.current = null;
+    dispatch({ type: ACTIONS.SET_GAME_STATE, data: null });
+
+    let isCancelled = false;
 
     (async () => {
       const gameState = await getState(gameId, stateIndex as StateIndex);
-      dispatch({ type: ACTIONS.SET_GAME_STATE, data: gameState });
+      if (!isCancelled) {
+        dispatch({ type: ACTIONS.SET_GAME_STATE, data: gameState });
+        setIsAutoRestarting(false);
+      }
     })();
+
+    return () => {
+      isCancelled = true;
+    };
   }, [gameId, stateIndex, dispatch]);
 
   // Maybe kick off next query?
@@ -135,7 +147,10 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
   }, [state.gameState?.winning_color, replayMode, isAutoMode]);
 
   useEffect(() => {
-    if (!state.gameState?.winning_color || replayMode || !isAutoMode || isAutoRestarting) {
+    if (!state.gameState?.winning_color || replayMode || !isAutoMode || !gameId) {
+      return;
+    }
+    if (autoRestartedGameId.current === gameId) {
       return;
     }
 
@@ -146,6 +161,7 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
     }
 
     let isCancelled = false;
+    autoRestartedGameId.current = gameId;
     setIsAutoRestarting(true);
 
     (async () => {
@@ -157,6 +173,7 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
       } catch (err) {
         console.error("Failed to auto-start next game", err);
         if (!isCancelled) {
+          autoRestartedGameId.current = null;
           setIsWinnerModalOpen(true);
           setIsAutoRestarting(false);
         }
@@ -166,15 +183,11 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
     return () => {
       isCancelled = true;
     };
-  }, [state.gameState?.winning_color, replayMode, isAutoMode, isAutoRestarting, navigate]);
+  }, [state.gameState?.winning_color, replayMode, isAutoMode, gameId, navigate]);
 
   useEffect(() => {
     setIsMobilePlayerInfoCollapsed(false);
   }, [isMobile]);
-
-  useEffect(() => {
-    setIsAutoRestarting(false);
-  }, [gameId]);
 
   // Update rightDrawerContent to original AnalysisBox + Watch Replay + Explain Move
   const rightDrawerContent = (

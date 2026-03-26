@@ -374,6 +374,10 @@ export default function HomePage() {
                 >
                   Start
                 </Button>
+              </div>
+            </div>
+            {!isMobile && (
+              <div className="auto-hover-anchor">
                 <Button
                   variant="contained"
                   color="primary"
@@ -384,12 +388,7 @@ export default function HomePage() {
                   Auto
                 </Button>
               </div>
-              {hasHumanPlayer && (
-                <div className="auto-mode-note">
-                  Auto mode requires all selected players to be bots.
-                </div>
-              )}
-            </div>
+            )}
           </>
         ) : (
           <GridLoader
