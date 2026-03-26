@@ -3,8 +3,9 @@ from typing import Any, Iterable, Dict, cast, SupportsFloat
 
 import gymnasium as gym
 from typing import Iterable, List, Dict, Any
+from catanatron.action_space import to_action_space
 from catanatron.models.enums import ActionType, RESOURCES
-from catanatron.gym.envs.catanatron_env import CatanatronEnv, to_action_space
+from catanatron.gym.envs.catanatron_env import CatanatronEnv
 
 
 class RLCatanEnvWrapper(gym.Wrapper):
