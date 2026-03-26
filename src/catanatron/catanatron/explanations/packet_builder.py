@@ -6,7 +6,8 @@ from catanatron.state_functions import (
     get_dev_cards_in_hand,
     get_largest_army,
     get_longest_road_color,
-    get_player_buildings, get_player_freqdeck,
+    get_player_buildings,
+    get_player_freqdeck,
 )
 from catanatron.models.enums import (
     SETTLEMENT,
@@ -18,6 +19,7 @@ from catanatron.models.board import get_node_distances
 from catanatron.models.map import number_probability
 from catanatron.features import get_player_expandable_nodes, get_node_production
 from catanatron.state_functions import get_visible_victory_points
+
 
 class ExplanationPacketBuilder:
     """
@@ -42,7 +44,7 @@ class ExplanationPacketBuilder:
 
     ACTION_VISIBLE_VP_DELTA = {
         "BUILD_SETTLEMENT": 1,
-        "BUILD_CITY": 1, # City replaces settlement, so net visible VP gain is also 1
+        "BUILD_CITY": 1,  # City replaces settlement, so net visible VP gain is also 1
     }
 
     def __init__(self, recent_action_count=5):
@@ -59,29 +61,35 @@ class ExplanationPacketBuilder:
             decision_info = {}
 
         player_summary = self._build_player_summary(state, actor)
-        board_context = self._build_board_context(snapshot, decision_info, player_summary)
-        action_context = self._build_action_context(snapshot, decision_info, player_summary, board_context)
+        board_context = self._build_board_context(
+            snapshot, decision_info, player_summary
+        )
+        action_context = self._build_action_context(
+            snapshot, decision_info, player_summary, board_context
+        )
 
         return {
             # Basic info about the game state. Info on the action comes from the player making the decision (decision_info)
             "game_id": snapshot.id,
             "decision_index": len(state.actions),
-            "recent_actions": [serialize_action(a) for a in state.actions[-self.recent_action_count:]],
-
+            "recent_actions": [
+                serialize_action(a) for a in state.actions[-self.recent_action_count :]
+            ],
             # Expanded context constructed above
             "player_summary": player_summary,
             "board_context": board_context,
             "action_context": action_context,
-
             # Any additional info provided by the specific Player subclass about the decision
-            **decision_info
+            **decision_info,
         }
 
     def _build_player_summary(self, state, actor):
         """Build a compact summary of the player's current position in the game, for use in explanation."""
         settlements = sorted(get_player_buildings(state, actor, SETTLEMENT))
         cities = sorted(get_player_buildings(state, actor, CITY))
-        roads = sorted(tuple(sorted(edge)) for edge in get_player_buildings(state, actor, ROAD))
+        roads = sorted(
+            tuple(sorted(edge)) for edge in get_player_buildings(state, actor, ROAD)
+        )
 
         total_prod, effective_prod = self._get_player_production(state, actor)
 
@@ -91,12 +99,14 @@ class ExplanationPacketBuilder:
             resource: count for resource, count in zip(RESOURCES, freqdeck)
         }
 
-        owned_ports = sorted({
-            port
-            for node_id in settlements + cities
-            for port in [self._get_port_at_node(state.board.map, node_id)]
-            if port is not None
-        })
+        owned_ports = sorted(
+            {
+                port
+                for node_id in settlements + cities
+                for port in [self._get_port_at_node(state.board.map, node_id)]
+                if port is not None
+            }
+        )
 
         return {
             "actual_victory_points": get_actual_victory_points(state, actor),
@@ -133,9 +143,12 @@ class ExplanationPacketBuilder:
 
         buildable_nodes = list(state.board.buildable_node_ids(actor))
         buildable_node_summaries = [
-            self._summarize_node(snapshot, node_id, actor) for node_id in buildable_nodes
+            self._summarize_node(snapshot, node_id, actor)
+            for node_id in buildable_nodes
         ]
-        buildable_node_summaries.sort(key=lambda x: (x["pip_total"], x["total_production"]), reverse=True)
+        buildable_node_summaries.sort(
+            key=lambda x: (x["pip_total"], x["total_production"]), reverse=True
+        )
 
         robber_tile = state.board.map.tiles[state.board.robber_coordinate]
         robber_tile_summary = self._summarize_tile(state, robber_tile)
@@ -148,7 +161,9 @@ class ExplanationPacketBuilder:
                 continue
 
             opp_summary = self._build_player_summary(state, color)
-            opp_summary.pop("actual_victory_points", None)  # Don't include opponents' hidden VP in the summary
+            opp_summary.pop(
+                "actual_victory_points", None
+            )  # Don't include opponents' hidden VP in the summary
             opp_summary["visible_victory_points"] = known_scores[color.value]
             opponents.append(opp_summary)
 
@@ -158,15 +173,21 @@ class ExplanationPacketBuilder:
             "leader_visible_vp": leader_score,
             "actor_visible_vp_gap_to_leader": leader_score - actor_score,
             "opponents": opponents,
-            "actor_expandable_nodes_count": len(get_player_expandable_nodes(snapshot, actor)),
+            "actor_expandable_nodes_count": len(
+                get_player_expandable_nodes(snapshot, actor)
+            ),
             "actor_buildable_nodes_count": len(buildable_nodes),
-            "actor_best_buildable_nodes": buildable_node_summaries[:5], # limited to top 5 for brevity
+            "actor_best_buildable_nodes": buildable_node_summaries[
+                :5
+            ],  # limited to top 5 for brevity
             "actor_port_distances": self._get_player_port_distances(snapshot, actor),
             "robber_tile": robber_tile_summary,
             "robber_affected_buildings": robber_affected_buildings,
         }
 
-    def _build_action_context(self, snapshot, decision_info, player_summary, board_context):
+    def _build_action_context(
+        self, snapshot, decision_info, player_summary, board_context
+    ):
         """Build a detailed interpretation of the chosen action, its alternatives, and its expected impact, for use in explanation."""
         state = snapshot.state
         actor = state.current_color()
@@ -185,7 +206,8 @@ class ExplanationPacketBuilder:
 
         # In situations such as having multiple positions to build a settlement, it's nice to see what alternative relevant actions there were
         same_type_options = [
-            action for action in playable_actions
+            action
+            for action in playable_actions
             if action.get("action_type") == action_type
         ]
 
@@ -201,10 +223,14 @@ class ExplanationPacketBuilder:
             "legal_action_type_counts": dict(action_type_counts),
             "num_legal_actions": len(playable_actions),
             "same_type_option_count": len(same_type_options),
-            "alternative_same_type_values": alternative_same_type_values[:8], # limited to 8 alternatives for brevity
+            "alternative_same_type_values": alternative_same_type_values[
+                :8
+            ],  # limited to 8 alternatives for brevity
             "is_only_action_of_this_type": len(same_type_options) == 1,
             "is_only_legal_action": len(playable_actions) == 1,
-            "expected_visible_vp_delta": self.ACTION_VISIBLE_VP_DELTA.get(action_type, 0),
+            "expected_visible_vp_delta": self.ACTION_VISIBLE_VP_DELTA.get(
+                action_type, 0
+            ),
             "action_cost": self.ACTION_COSTS.get(action_type, {}),
         }
 
@@ -213,24 +239,33 @@ class ExplanationPacketBuilder:
 
             node_summary = self._summarize_node(snapshot, target_node, actor)
 
-            blocked_opponents = [ # Other players who could have built here but now can't
-                color.value
-                for color in state.colors
-                if color != actor and action_value in state.board.buildable_node_ids(color)
-            ]
+            blocked_opponents = (
+                [  # Other players who could have built here but now can't
+                    color.value
+                    for color in state.colors
+                    if color != actor
+                    and action_value in state.board.buildable_node_ids(color)
+                ]
+            )
 
-            context.update({
-                "target_node_id": target_node,
-                "target_node_summary": node_summary,
-                "blocked_opponents": blocked_opponents,
-                "production_gain_by_resource": node_summary["production_by_resource"],
-                "production_gain_total": node_summary["total_production"],
-            })
+            context.update(
+                {
+                    "target_node_id": target_node,
+                    "target_node_summary": node_summary,
+                    "blocked_opponents": blocked_opponents,
+                    "production_gain_by_resource": node_summary[
+                        "production_by_resource"
+                    ],
+                    "production_gain_total": node_summary["total_production"],
+                }
+            )
 
         elif action_type == "BUILD_ROAD":
             edge = tuple(sorted(action_value))  # Normalize edge representation
 
-            endpoint_summaries = [self._summarize_node(snapshot, node_id, actor) for node_id in edge]
+            endpoint_summaries = [
+                self._summarize_node(snapshot, node_id, actor) for node_id in edge
+            ]
             buildable_now = set(state.board.buildable_node_ids(actor))
 
             # How valuable are the buildable nodes near this road, and therefore how much does this road support expansion towards valuable locations?
@@ -243,20 +278,32 @@ class ExplanationPacketBuilder:
                 node_summary["distance_from_edge"] = dist
                 nearby_buildable.append(node_summary)
 
-            nearby_buildable.sort(key=lambda x: (x["distance_from_edge"], -x["pip_total"], -x["total_production"]))
+            nearby_buildable.sort(
+                key=lambda x: (
+                    x["distance_from_edge"],
+                    -x["pip_total"],
+                    -x["total_production"],
+                )
+            )
 
             actor_network_nodes = set()
             for component in state.board.connected_components[actor]:
                 actor_network_nodes.update(component)
 
-            context.update({
-                "target_edge": edge,
-                "endpoint_nodes": list(edge),
-                "endpoint_summaries": endpoint_summaries,
-                "nearby_buildable_count": len(nearby_buildable),
-                "nearby_buildable_nodes": nearby_buildable[:5], # limited to top 5 for brevity
-                "connected_to_actor_network": any(node_id in actor_network_nodes for node_id in edge),
-            })
+            context.update(
+                {
+                    "target_edge": edge,
+                    "endpoint_nodes": list(edge),
+                    "endpoint_summaries": endpoint_summaries,
+                    "nearby_buildable_count": len(nearby_buildable),
+                    "nearby_buildable_nodes": nearby_buildable[
+                        :5
+                    ],  # limited to top 5 for brevity
+                    "connected_to_actor_network": any(
+                        node_id in actor_network_nodes for node_id in edge
+                    ),
+                }
+            )
 
         elif action_type == "MOVE_ROBBER":
             target_coordinate = None
@@ -280,16 +327,28 @@ class ExplanationPacketBuilder:
                 affected_buildings = self._buildings_touching_tile(state, target_tile)
 
                 leader_color = board_context["leader_color"]
-                blocks_leader = any(building["color"] == leader_color for building in affected_buildings)
+                blocks_leader = any(
+                    building["color"] == leader_color for building in affected_buildings
+                )
 
-                context.update({
-                    "target_tile_coordinate": target_coordinate,
-                    "target_tile_summary": tile_summary,
-                    "affected_buildings": affected_buildings,
-                    "blocks_leader": blocks_leader,
-                    "target_player": target_player.value if hasattr(target_player, "value") else target_player,
-                    "stolen_resource": stolen_resource.value if hasattr(stolen_resource, "value") else stolen_resource,
-                })
+                context.update(
+                    {
+                        "target_tile_coordinate": target_coordinate,
+                        "target_tile_summary": tile_summary,
+                        "affected_buildings": affected_buildings,
+                        "blocks_leader": blocks_leader,
+                        "target_player": (
+                            target_player.value
+                            if hasattr(target_player, "value")
+                            else target_player
+                        ),
+                        "stolen_resource": (
+                            stolen_resource.value
+                            if hasattr(stolen_resource, "value")
+                            else stolen_resource
+                        ),
+                    }
+                )
 
         elif action_type == "DISCARD":
             # As far as I'm aware this is random right now, but if that changes we can uncomment it
@@ -302,17 +361,21 @@ class ExplanationPacketBuilder:
 
         elif action_type == "END_TURN":
             non_end_turn_actions = [
-                action for action in playable_actions
+                action
+                for action in playable_actions
                 if action.get("action_type") != "END_TURN"
             ]
 
-            context.update({
-                "had_other_options": len(non_end_turn_actions) > 0,
-                "other_options": non_end_turn_actions[:8], # limited to 8 for brevity
-            })
+            context.update(
+                {
+                    "had_other_options": len(non_end_turn_actions) > 0,
+                    "other_options": non_end_turn_actions[
+                        :8
+                    ],  # limited to 8 for brevity
+                }
+            )
 
         return context
-
 
     # Helpers
     def _get_player_production(self, state, color):
@@ -326,7 +389,10 @@ class ExplanationPacketBuilder:
                     for node_id in get_player_buildings(state, color, SETTLEMENT)
                 )
                 + sum(
-                    2 * get_node_production(board.map, node_id, resource, robber_coordinate)
+                    2
+                    * get_node_production(
+                        board.map, node_id, resource, robber_coordinate
+                    )
                     for node_id in get_player_buildings(state, color, CITY)
                 )
                 for resource in RESOURCES
@@ -343,7 +409,9 @@ class ExplanationPacketBuilder:
             "tile_id": tile.id,
             "resource": "DESERT" if tile.resource is None else tile.resource,
             "number": None if tile.resource is None else tile.number,
-            "probability": 0 if tile.resource is None else number_probability(tile.number),
+            "probability": (
+                0 if tile.resource is None else number_probability(tile.number)
+            ),
             "has_robber": state.board.map.tiles[state.board.robber_coordinate] == tile,
         }
 
@@ -352,12 +420,14 @@ class ExplanationPacketBuilder:
         state = snapshot.state
         board_map = state.board.map
 
-        adjacent_tiles = [self._summarize_tile(state, tile) for tile in board_map.adjacent_tiles[node_id]]
+        adjacent_tiles = [
+            self._summarize_tile(state, tile)
+            for tile in board_map.adjacent_tiles[node_id]
+        ]
         production_counter = Counter(board_map.node_production[node_id])
 
         production_by_resource = {
-            resource: production_counter.get(resource, 0)
-            for resource in RESOURCES
+            resource: production_counter.get(resource, 0) for resource in RESOURCES
         }
 
         total_production = sum(production_by_resource.values())
@@ -371,7 +441,11 @@ class ExplanationPacketBuilder:
         occupied_by = None
         if building is not None:
             occupied_by = {
-                "color": building[0].value if hasattr(building[0], "value") else str(building[0]),
+                "color": (
+                    building[0].value
+                    if hasattr(building[0], "value")
+                    else str(building[0])
+                ),
                 "building_type": building[1],
             }
 
@@ -398,11 +472,13 @@ class ExplanationPacketBuilder:
 
             color, building_type = building
 
-            result.append({
-                "color": color.value if hasattr(color, "value") else str(color),
-                "node_id": node_id,
-                "building_type": building_type,
-            })
+            result.append(
+                {
+                    "color": color.value if hasattr(color, "value") else str(color),
+                    "node_id": node_id,
+                    "building_type": building_type,
+                }
+            )
 
         return result
 
@@ -428,7 +504,9 @@ class ExplanationPacketBuilder:
                 port_distances[port_name] = None
 
             else:
-                port_distances[port_name] = min(distances[node_id][port_node] for port_node in port_nodes)
+                port_distances[port_name] = min(
+                    distances[node_id][port_node] for port_node in port_nodes
+                )
 
         return port_distances
 

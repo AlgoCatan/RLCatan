@@ -343,7 +343,7 @@ def inner_maritime_trade_possibilities(hand_freqdeck, bank_freqdeck, port_resour
 
 def _serialize_value(value: Any) -> Any:
     """Actions can come in various types based on what they represent.
-       This helper function recursively converts them into serializable formats."""
+    This helper function recursively converts them into serializable formats."""
 
     if isinstance(value, Enum):
         return value.value

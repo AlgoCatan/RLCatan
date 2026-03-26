@@ -357,10 +357,12 @@ def explain_move_endpoint(game_id, move_index):
     except ValueError as exc:
         abort(409, description=str(exc))
 
-    return jsonify({
-        "move_index": move_index,
-        "explanation": explanation,
-    })
+    return jsonify(
+        {
+            "move_index": move_index,
+            "explanation": explanation,
+        }
+    )
 
 
 def _parse_state_index(state_index_str: str):

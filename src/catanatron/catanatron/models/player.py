@@ -31,7 +31,7 @@ class Player:
         """
         self.color = color
         self.is_bot = is_bot
-        self.last_decision_info = None # For LLM move explanations.
+        self.last_decision_info = None  # For LLM move explanations.
 
     def decide(self, game, playable_actions):
         """Should return one of the playable_actions or
@@ -65,18 +65,15 @@ class Player:
             "actor": game.state.current_color().value,
             "current_player_index": game.state.current_player_index,
             "current_turn_index": game.state.current_turn_index,
-
             # Prompt is deprecated, but still useful for now. The is_* flags are its replacement, so they're included too
-            "prompt": game.state.current_prompt.value, # Current prompt (e.g. "BUILD_INITIAL_SETTLEMENT", "PLAY_TURN", etc.)
+            "prompt": game.state.current_prompt.value,  # Current prompt (e.g. "BUILD_INITIAL_SETTLEMENT", "PLAY_TURN", etc.)
             "is_initial_build_phase": game.state.is_initial_build_phase,
             "is_discarding": game.state.is_discarding,
             "is_moving_knight": game.state.is_moving_knight,
             "is_road_building": game.state.is_road_building,
-
             # Information about the options available to the player and the choice they made
             "playable_actions": [serialize_action(a) for a in playable_actions],
             "chosen_action": serialize_action(chosen_action),
-
             # Any additional info provided by the specific Player subclass about the decision
             **self.get_decision_details(game, playable_actions, chosen_action),
         }

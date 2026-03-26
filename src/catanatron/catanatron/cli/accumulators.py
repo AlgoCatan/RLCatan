@@ -150,7 +150,7 @@ class ExplanationAccumulator(GameAccumulator):
         super().__init__(*args, **kwargs)
 
         self.output_dir = output_dir
-        self.recent_action_count = recent_action_count # How many recent actions to include in the explanation packet for context
+        self.recent_action_count = recent_action_count  # How many recent actions to include in the explanation packet for context
         self.packets = []
         self.current_game_id = None
 
@@ -188,7 +188,9 @@ class ExplanationAccumulator(GameAccumulator):
 
         # Adding the option to write to disk in case we want to do analysis on the packets for debugging
         if self.output_dir is not None:
-            filepath = os.path.join(self.output_dir, f"{self.current_game_id}_explanations.jsonl")
+            filepath = os.path.join(
+                self.output_dir, f"{self.current_game_id}_explanations.jsonl"
+            )
 
             with open(filepath, "a", encoding="utf-8") as f:
                 f.write(json.dumps(packet) + "\n")

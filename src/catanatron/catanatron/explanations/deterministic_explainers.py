@@ -35,7 +35,9 @@ def _format_resource_mix(prod_dict: dict[str, int] | None) -> str:
     if not nonzero:
         return "none"
 
-    return ", ".join(f"{resource} ({_format_num(value)})" for resource, value in nonzero)
+    return ", ".join(
+        f"{resource} ({_format_num(value)})" for resource, value in nonzero
+    )
 
 
 def _format_tile(tile: dict[str, Any]) -> str:
@@ -50,7 +52,9 @@ def _format_tile(tile: dict[str, Any]) -> str:
     if resource == "DESERT":
         return "desert"
 
-    return f"{str(resource).lower()} on {number} (pip weight {_format_num(probability)})"
+    return (
+        f"{str(resource).lower()} on {number} (pip weight {_format_num(probability)})"
+    )
 
 
 def _format_tile_list(adjacent_tiles: list[dict[str, Any]] | None) -> str:
@@ -135,7 +139,6 @@ def extract_common_facts(packet: dict) -> dict:
         "chosen_value": chosen.get("value"),
         "num_legal_actions": len(playable),
         "is_forced": len(playable) == 1,
-
         "actual_vp": player_summary.get("actual_victory_points"),
         "settlements": player_summary.get("settlements"),
         "cities": player_summary.get("cities"),
@@ -147,7 +150,6 @@ def extract_common_facts(packet: dict) -> dict:
         "dev_cards_in_hand": player_summary.get("dev_cards_in_hand"),
         "total_prod": player_summary.get("total_production_by_resource", {}),
         "effective_prod": player_summary.get("effective_production_by_resource", {}),
-
         "leader_color": board_context.get("leader_color"),
         "leader_visible_vp": board_context.get("leader_visible_vp"),
         "vp_gap_to_leader": board_context.get("actor_visible_vp_gap_to_leader"),
@@ -159,40 +161,40 @@ def extract_common_facts(packet: dict) -> dict:
         "robber_tile": board_context.get("robber_tile"),
         "robber_affected_buildings": board_context.get("robber_affected_buildings", []),
         "opponents": board_context.get("opponents", []),
-
         "action_type": action_context.get("action_type"),
         "action_value": action_context.get("action_value"),
         "only_action_of_type": action_context.get("is_only_action_of_this_type"),
         "same_type_option_count": action_context.get("same_type_option_count"),
-        "alternatives_of_same_type": action_context.get("alternative_same_type_values", []),
-        "alternative_same_type_values": action_context.get("alternative_same_type_values", []),
+        "alternatives_of_same_type": action_context.get(
+            "alternative_same_type_values", []
+        ),
+        "alternative_same_type_values": action_context.get(
+            "alternative_same_type_values", []
+        ),
         "legal_action_type_counts": action_context.get("legal_action_type_counts", {}),
         "num_same_type_options": action_context.get("same_type_option_count"),
         "expected_visible_vp_delta": action_context.get("expected_visible_vp_delta"),
         "action_cost": action_context.get("action_cost"),
-
         # Unique to settlement or city building actions
         "target_node_summary": action_context.get("target_node_summary", {}),
         "blocked_opponents": action_context.get("blocked_opponents", []),
-        "production_gain_by_resource": action_context.get("production_gain_by_resource"),
-
+        "production_gain_by_resource": action_context.get(
+            "production_gain_by_resource"
+        ),
         # Unique to road building actions
         "target_edge": action_context.get("target_edge"),
         "endpoint_summaries": action_context.get("endpoint_summaries", []),
         "nearby_buildable_count": action_context.get("nearby_buildable_count"),
         "nearby_buildable_nodes": action_context.get("nearby_buildable_nodes", []),
-
         # Unique to robber moving actions
         "target_tile_summary": action_context.get("target_tile_summary"),
         "target_player": action_context.get("target_player"),
-        #"stolen_resource": action_context.get("stolen_resource"), Currently random so not useful
+        # "stolen_resource": action_context.get("stolen_resource"), Currently random so not useful
         "affected_buildings": action_context.get("affected_buildings", []),
         "blocks_leader": action_context.get("blocks_leader"),
-
         # Unique to end turn actions
         "had_other_options": action_context.get("had_other_options"),
         "other_options": action_context.get("other_options", []),
-
         # Data specific to the PPO bot. Won't be included for other bots.
         "ppo_all_valid_indices": all_valid_indices,
         "ppo_filtered_indices": filtered_indices,
@@ -214,43 +216,75 @@ def explain_common(facts: dict[str, Any]) -> list[str]:
     action_type = facts["chosen_type"]
 
     if prompt == "BUILD_INITIAL_SETTLEMENT":
-        reasons.append("This was an opening placement decision, so early board position and future resource access matter most.")
+        reasons.append(
+            "This was an opening placement decision, so early board position and future resource access matter most."
+        )
     elif prompt == "BUILD_INITIAL_ROAD":
-        reasons.append("This was an opening road placement, so the move mainly affects future expansion paths.")
+        reasons.append(
+            "This was an opening road placement, so the move mainly affects future expansion paths."
+        )
     elif prompt == "PLAY_TURN":
-        reasons.append("This was a normal turn decision, so the bot was choosing among its currently legal tactical options.")
+        reasons.append(
+            "This was a normal turn decision, so the bot was choosing among its currently legal tactical options."
+        )
     elif prompt == "MOVE_ROBBER":
-        reasons.append("This was a robber decision, so disruption and denial are likely important.")
+        reasons.append(
+            "This was a robber decision, so disruption and denial are likely important."
+        )
     elif prompt == "DISCARD":
-        reasons.append("This was a discard decision, so the main concern is minimizing lost value while keeping future options open.")
+        reasons.append(
+            "This was a discard decision, so the main concern is minimizing lost value while keeping future options open."
+        )
     elif prompt == "DECIDE_TRADE":
-        reasons.append("This was a trade decision, so the bot was weighing short-term conversion against future flexibility.")
+        reasons.append(
+            "This was a trade decision, so the bot was weighing short-term conversion against future flexibility."
+        )
     elif prompt == "DECIDE_ACCEPTEES":
-        reasons.append("This was a response to a proposed trade, so the bot was weighing whether the exchange improved its position.")
+        reasons.append(
+            "This was a response to a proposed trade, so the bot was weighing whether the exchange improved its position."
+        )
 
     if action_type == "BUILD_CITY":
-        reasons.append("Upgrading to a city usually strengthens resource production at an already valuable location.")
+        reasons.append(
+            "Upgrading to a city usually strengthens resource production at an already valuable location."
+        )
     elif action_type == "BUILD_SETTLEMENT":
-        reasons.append("Building a settlement usually improves expansion, resource access, and victory point progress.")
+        reasons.append(
+            "Building a settlement usually improves expansion, resource access, and victory point progress."
+        )
     elif action_type == "BUILD_ROAD":
-        reasons.append("Building a road usually supports expansion, connectivity, or longest road pressure.")
+        reasons.append(
+            "Building a road usually supports expansion, connectivity, or longest road pressure."
+        )
     elif action_type == "BUY_DEVELOPMENT_CARD":
-        reasons.append("Buying a development card usually means the bot preferred hidden value or future tactical flexibility over an immediate board commitment.")
+        reasons.append(
+            "Buying a development card usually means the bot preferred hidden value or future tactical flexibility over an immediate board commitment."
+        )
     elif action_type == "MOVE_ROBBER":
-        reasons.append("Moving the robber usually disrupts an opponent's resource production and may yield a card steal.")
+        reasons.append(
+            "Moving the robber usually disrupts an opponent's resource production and may yield a card steal."
+        )
     elif action_type == "END_TURN":
-        reasons.append("Ending the turn suggests the bot judged that no available action was worth taking immediately.")
+        reasons.append(
+            "Ending the turn suggests the bot judged that no available action was worth taking immediately."
+        )
 
     actual_vp = facts["actual_vp"]
     if actual_vp is not None:
         reasons.append(f"The bot had {actual_vp} victory points.")
 
         if actual_vp >= 8:
-            reasons.append("The bot was close to winning, so it likely prioritized high-impact actions that could secure victory.")
+            reasons.append(
+                "The bot was close to winning, so it likely prioritized high-impact actions that could secure victory."
+            )
         elif actual_vp <= 2:
-            reasons.append("This is still an early position, so building future production and expansion tends to matter more.")
+            reasons.append(
+                "This is still an early position, so building future production and expansion tends to matter more."
+            )
         else:
-            reasons.append("This looks like a mid-game position, where the bot likely balanced development with immediate tactical gains.")
+            reasons.append(
+                "This looks like a mid-game position, where the bot likely balanced development with immediate tactical gains."
+            )
 
     resource_hand = facts["resource_hand"]
     if resource_hand:
@@ -262,7 +296,9 @@ def explain_common(facts: dict[str, Any]) -> list[str]:
             reasons.append(f"The bot had the following resource hand: {resource_hand}")
 
         if hand_size >= 7:
-            reasons.append("The bot had 7 or more cards, so it may have been trying to avoid losing half of them to the robber.")
+            reasons.append(
+                "The bot had 7 or more cards, so it may have been trying to avoid losing half of them to the robber."
+            )
 
     return reasons
 
@@ -281,16 +317,22 @@ def explain_board_context(facts: dict[str, Any]) -> list[str]:
 
     if leader_gap is not None:
         if leader_gap == 0:
-            reasons.append("The bot was currently in the lead (or tied), so it may have prioritized solidifying its position and securing victory.")
+            reasons.append(
+                "The bot was currently in the lead (or tied), so it may have prioritized solidifying its position and securing victory."
+            )
         else:
-            reasons.append(f"The bot was {leader_gap} point(s) behind the current known leader ({leader_color}).")
+            reasons.append(
+                f"The bot was {leader_gap} point(s) behind the current known leader ({leader_color})."
+            )
 
     total_prod = facts["total_prod"]
     effective_prod = facts["effective_prod"]
     if total_prod:
         reasons.append(f"Total production profile: {_format_resource_mix(total_prod)}.")
     if effective_prod and effective_prod != total_prod:
-        reasons.append(f"Effective production after robber impact: {_format_resource_mix(effective_prod)}.")
+        reasons.append(
+            f"Effective production after robber impact: {_format_resource_mix(effective_prod)}."
+        )
 
     if facts["has_longest_road"]:
         reasons.append("The bot currently holds Longest Road.")
@@ -309,15 +351,21 @@ def explain_board_context(facts: dict[str, Any]) -> list[str]:
 
     port_distances = facts["port_distances"]
     if port_distances:
-        reasons.append(f"Nearest ports from the bot's expandable network are {_format_port_distances(port_distances)}.")
+        reasons.append(
+            f"Nearest ports from the bot's expandable network are {_format_port_distances(port_distances)}."
+        )
 
     expandable_count = facts["expandable_nodes_count"]
     if expandable_count is not None:
-        reasons.append(f"The bot currently has {expandable_count} expandable node(s) reachable from their network.")
+        reasons.append(
+            f"The bot currently has {expandable_count} expandable node(s) reachable from their network."
+        )
 
     buildable_count = facts["buildable_nodes_count"]
     if buildable_count is not None:
-        reasons.append(f"There are {buildable_count} currently legal node(s) where the bot could build a settlement.")
+        reasons.append(
+            f"There are {buildable_count} currently legal node(s) where the bot could build a settlement."
+        )
 
     best_nodes = facts["best_buildable_nodes"]
     if best_nodes:
@@ -334,7 +382,9 @@ def explain_board_context(facts: dict[str, Any]) -> list[str]:
 
         if robber_affected:
             affected_counts = _count_by_color(robber_affected)
-            reasons.append(f"The current robber placement is affecting adjacent buildings from {affected_counts}.")
+            reasons.append(
+                f"The current robber placement is affecting adjacent buildings from {affected_counts}."
+            )
 
     legal_action_type_counts = facts["legal_action_type_counts"]
     if legal_action_type_counts:
@@ -364,19 +414,27 @@ def explain_action_context(facts: dict[str, Any]) -> list[str]:
         return reasons
 
     if facts["only_action_of_type"]:
-        reasons.append(f"This was the only legal action of type {action_type.lower()} available.")
+        reasons.append(
+            f"This was the only legal action of type {action_type.lower()} available."
+        )
     else:
         same_type_count = facts["same_type_option_count"]
         if same_type_count is not None:
-            reasons.append(f"There were {same_type_count} legal action(s) of this same action type available")
+            reasons.append(
+                f"There were {same_type_count} legal action(s) of this same action type available"
+            )
 
         alternatives = facts["alternative_same_type_values"]
         if alternatives:
-            reasons.append(f"Other legal actions of the same type had values {alternatives}.")
+            reasons.append(
+                f"Other legal actions of the same type had values {alternatives}."
+            )
 
     expected_vp_delta = facts["expected_visible_vp_delta"]
     if expected_vp_delta:
-        reasons.append(f"This move is expected to change visible victory points by {expected_vp_delta} immediately.")
+        reasons.append(
+            f"This move is expected to change visible victory points by {expected_vp_delta} immediately."
+        )
 
     action_cost = facts["action_cost"]
     if action_cost:
@@ -392,20 +450,30 @@ def explain_action_context(facts: dict[str, Any]) -> list[str]:
             )
 
             if node_summary.get("port_at_node") is not None:
-                reasons.append(f"This node is on a {node_summary['port_at_node']} port.")
+                reasons.append(
+                    f"This node is on a {node_summary['port_at_node']} port."
+                )
             else:
-                reasons.append(f"Nearest ports from that node are {_format_port_distances(node_summary['nearest_ports'])}.")
+                reasons.append(
+                    f"Nearest ports from that node are {_format_port_distances(node_summary['nearest_ports'])}."
+                )
 
         blocked_opponents = facts["blocked_opponents"]
         if blocked_opponents:
-            reasons.append(f"Building here blocks opponent(s) {blocked_opponents} from expanding to this node.")
+            reasons.append(
+                f"Building here blocks opponent(s) {blocked_opponents} from expanding to this node."
+            )
 
         gain = facts["production_gain_by_resource"]
         if gain:
             if action_type == "BUILD_CITY":
-                reasons.append(f"This city upgrade adds production roughly equivalent to {_format_resource_mix(gain)}.")
+                reasons.append(
+                    f"This city upgrade adds production roughly equivalent to {_format_resource_mix(gain)}."
+                )
             else:
-                reasons.append(f"This settlement adds production roughly equivalent to {_format_resource_mix(gain)}.")
+                reasons.append(
+                    f"This settlement adds production roughly equivalent to {_format_resource_mix(gain)}."
+                )
 
     elif action_type == "BUILD_ROAD":
         endpoint_summaries = facts["endpoint_summaries"]
@@ -413,13 +481,19 @@ def explain_action_context(facts: dict[str, Any]) -> list[str]:
             endpoint_text = []
 
             for summary in endpoint_summaries:
-                endpoint_text.append(f"node {summary['node_id']} ({_format_tile_list(summary['adjacent_tiles'])})")
+                endpoint_text.append(
+                    f"node {summary['node_id']} ({_format_tile_list(summary['adjacent_tiles'])})"
+                )
 
-            reasons.append(f"The road connects endpoints " + "; ".join(endpoint_text) + ".")
+            reasons.append(
+                f"The road connects endpoints " + "; ".join(endpoint_text) + "."
+            )
 
         nearby_count = facts["nearby_buildable_count"]
         if nearby_count is not None:
-            reasons.append(f"There are {nearby_count} buildable settlement nodes near this road.")
+            reasons.append(
+                f"There are {nearby_count} buildable settlement nodes near this road."
+            )
 
         nearby_nodes = facts["nearby_buildable_nodes"]
         if nearby_nodes:
@@ -436,10 +510,14 @@ def explain_action_context(facts: dict[str, Any]) -> list[str]:
         affected = facts["affected_buildings"]
         if affected:
             affected_counts = _count_by_color(affected)
-            reasons.append(f"This move affects adjacent buildings from {affected_counts}.")
+            reasons.append(
+                f"This move affects adjacent buildings from {affected_counts}."
+            )
 
         if facts["blocks_leader"]:
-            reasons.append("This robber move also blocks the current leader, so it may have been intended to disrupt their production")
+            reasons.append(
+                "This robber move also blocks the current leader, so it may have been intended to disrupt their production"
+            )
 
         target_player = facts["target_player"]
         if target_player is not None:
@@ -447,14 +525,20 @@ def explain_action_context(facts: dict[str, Any]) -> list[str]:
 
     elif action_type == "END_TURN":
         if facts["had_other_options"]:
-            reasons.append("The bot ended the turn despite having other available moves.")
+            reasons.append(
+                "The bot ended the turn despite having other available moves."
+            )
         else:
             reasons.append("There were no other non-END_TURN actions available.")
 
         other_options = facts["other_options"]
         if other_options:
             other_types = sorted(
-                {option.get("action_type") for option in other_options if option.get("action_type")}
+                {
+                    option.get("action_type")
+                    for option in other_options
+                    if option.get("action_type")
+                }
             )
             reasons.append(f"Other available action types included: {other_types}.")
 
@@ -468,37 +552,56 @@ def explain_bot_specific(facts: dict[str, Any]) -> list[str]:
 
     # Don't have these for every bot yet, although it would be nice to have that implemented in the future
     if bot_class == "SimplePlayer":
-        reasons.append("This bot follows a simple rule-based policy and picks the first legal action in the list.")
+        reasons.append(
+            "This bot follows a simple rule-based policy and picks the first legal action in the list."
+        )
     elif bot_class == "RandomPlayer":
-        reasons.append("This bot chooses randomly from the legal actions, so the move is not based on strategic evaluation.")
+        reasons.append(
+            "This bot chooses randomly from the legal actions, so the move is not based on strategic evaluation."
+        )
     elif bot_class == "HumanPlayer":
         reasons.append(
             "This actually wasn't a bot, it was a human player. As such, avoid bot related terminology and"
-            "emphasize that this is just a prediction of why the player made that move.")
+            "emphasize that this is just a prediction of why the player made that move."
+        )
     elif bot_class == "PPOPlayer":
-        reasons.append("This bot uses a PPO policy, which evaluates the encoded game state and chooses among valid masked actions.")
+        reasons.append(
+            "This bot uses a PPO policy, which evaluates the encoded game state and chooses among valid masked actions."
+        )
 
         deterministic = facts["ppo_deterministic"]
         if deterministic:
-            reasons.append("The PPO policy was queried in deterministic mode, so it selected its highest-preference legal action rather than sampling.")
+            reasons.append(
+                "The PPO policy was queried in deterministic mode, so it selected its highest-preference legal action rather than sampling."
+            )
         else:
-            reasons.append("The PPO policy was queried in stochastic mode, so some randomness may have influenced the final choice.")
+            reasons.append(
+                "The PPO policy was queried in stochastic mode, so some randomness may have influenced the final choice."
+            )
 
         chosen_index = facts["ppo_chosen_index"]
         if chosen_index is not None:
-            reasons.append(f"The chosen action corresponded to policy action index {chosen_index}.")
+            reasons.append(
+                f"The chosen action corresponded to policy action index {chosen_index}."
+            )
 
         all_valid_indices = facts["ppo_all_valid_indices"]
         if all_valid_indices is not None:
-            reasons.append(f"There were {len(all_valid_indices)} valid action-space indices before filtering.")
+            reasons.append(
+                f"There were {len(all_valid_indices)} valid action-space indices before filtering."
+            )
 
         filtered_indices = facts["ppo_filtered_indices"]
         if filtered_indices is not None:
-            reasons.append(f"{len(filtered_indices)} legal policy actions remained after action filtering.")
+            reasons.append(
+                f"{len(filtered_indices)} legal policy actions remained after action filtering."
+            )
 
         obs = facts["obs"]
         if obs is not None:
-            reasons.append(f"The PPO policy received an observation vector of length {len(obs)} representing the game state.")
+            reasons.append(
+                f"The PPO policy received an observation vector of length {len(obs)} representing the game state."
+            )
 
     return reasons
 
@@ -519,7 +622,10 @@ def explain_packet(packet: dict) -> dict:
     if packet.get("bot_class") in {"SimplePlayer", "RandomPlayer"}:
         confidence_basis = "rule-based"
 
-    if packet.get("chosen_index") is not None or packet.get("filtered_indices") is not None:
+    if (
+        packet.get("chosen_index") is not None
+        or packet.get("filtered_indices") is not None
+    ):
         confidence_basis = "policy-metadata"
 
     return {

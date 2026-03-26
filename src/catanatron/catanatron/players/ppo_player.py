@@ -175,7 +175,7 @@ class PPOPlayer(Player):
         return chosen_action
 
     def get_decision_details(self, game, playable_actions, chosen_action):
-        """ Return the details of the last decision, for use in LLM move explanation."""
+        """Return the details of the last decision, for use in LLM move explanation."""
         details = getattr(self, "_pending_decision_details", {})
         self._pending_decision_details = {}
 

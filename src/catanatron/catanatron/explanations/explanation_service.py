@@ -8,10 +8,12 @@ from catanatron.explanations.prompt_builder import build_llm_prompt
 class LLMQuotaExceededError(RuntimeError):
     """Raised when Gemini quota/free-tier tokens are exhausted."""
 
+
 class PromptLLM(Protocol):
     def explain_prompt(self, prompt: str) -> str:
         """Given a prompt, return an explanation string."""
         ...
+
 
 class FakeLLM(PromptLLM):
     def explain_prompt(self, prompt: str) -> str:
