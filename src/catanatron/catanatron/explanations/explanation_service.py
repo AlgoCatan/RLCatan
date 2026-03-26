@@ -9,7 +9,7 @@ class PromptLLM(Protocol):
         """Given a prompt, return an explanation string."""
         ...
 
-class FakeLLM(Protocol):
+class FakeLLM(PromptLLM):
     def explain_prompt(self, prompt: str) -> str:
         """Just a random prompt response for testing purposes."""
 

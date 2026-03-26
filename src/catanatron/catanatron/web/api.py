@@ -8,6 +8,8 @@ from pathlib import Path
 
 from flask import Response, Blueprint, jsonify, abort, request
 
+from catanatron.cli.accumulators import ExplanationAccumulator
+from catanatron.explanations.explanation_service import ExplanationService, FakeLLM
 from catanatron.web.models import db, upsert_game_state, get_game_state, UserStart
 from catanatron.web.audit import log_game_start
 from catanatron.web.mcts_analysis import GameAnalyzer
@@ -29,6 +31,13 @@ from werkzeug.exceptions import HTTPException
 
 bp = Blueprint("api", __name__, url_prefix="/api")
 VALID_MAP_TEMPLATES = {"BASE", "MINI", "TOURNAMENT"}
+
+CURRENT_EXPLANATION_ACCUMULATOR = ExplanationAccumulator(recent_action_count=5)
+CURRENT_EXPLANATION_SERVICE = ExplanationService(
+    CURRENT_EXPLANATION_ACCUMULATOR,
+    FakeLLM(),
+)
+CURRENT_EXPLANATION_GAME_ID = None
 
 
 @lru_cache(maxsize=1)
@@ -123,6 +132,10 @@ def player_factory(player_key):
 
 @bp.route("/games", methods=("POST",))
 def post_game_endpoint():
+    global CURRENT_EXPLANATION_ACCUMULATOR
+    global CURRENT_EXPLANATION_SERVICE
+    global CURRENT_EXPLANATION_GAME_ID
+
     if not request.is_json or request.json is None or "players" not in request.json:
         abort(400, description="Missing or invalid JSON body: 'players' key required")
 
@@ -159,6 +172,12 @@ def post_game_endpoint():
         vps_to_win=vps_to_win,
         catan_map=catan_map,
     )
+    CURRENT_EXPLANATION_ACCUMULATOR = ExplanationAccumulator(recent_action_count=5)
+    CURRENT_EXPLANATION_SERVICE = ExplanationService(
+        CURRENT_EXPLANATION_ACCUMULATOR,
+        FakeLLM(),
+    )
+    CURRENT_EXPLANATION_GAME_ID = game.id
     upsert_game_state(game)
     return jsonify({"game_id": game.id})
 
@@ -225,7 +244,7 @@ def post_action_endpoint(game_id):
     # TODO: remove `or body_is_empty` when fully implement actions in FE
     body_is_empty = (not request.data) or request.json is None or request.json == {}
     if game.state.current_player().is_bot or body_is_empty:
-        game.play_tick()
+        game.play_tick(accumulators=[CURRENT_EXPLANATION_ACCUMULATOR])
         upsert_game_state(game)
     else:
         action = action_from_json(request.json)
@@ -314,11 +333,22 @@ def explain_move_endpoint(game_id, move_index):
     In future, use get_game_state(game_id, move_index) and pass the action/state
     into an LLM or analysis pipeline to produce a meaningful explanation.
     """
-    # Example mock response — replace with real LLM analysis later.
-    explanation = f"""Move {move_index} Explain test
-        """
+    global CURRENT_EXPLANATION_GAME_ID
 
-    return jsonify({"move_index": move_index, "explanation": explanation})
+    if CURRENT_EXPLANATION_GAME_ID != game_id:
+        abort(404, description="No explanation packets available for that game")
+
+    try:
+        explanation = CURRENT_EXPLANATION_SERVICE.explain_action(move_index)
+    except IndexError as exc:
+        abort(400, description=str(exc))
+    except ValueError as exc:
+        abort(409, description=str(exc))
+
+    return jsonify({
+        "move_index": move_index,
+        "explanation": explanation,
+    })
 
 
 def _parse_state_index(state_index_str: str):
