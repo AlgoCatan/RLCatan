@@ -341,19 +341,66 @@ def explain_move_endpoint(game_id, move_index):
     """
     Explain a move using the accumulated game state and LLM.
     """
-    global CURRENT_EXPLANATION_GAME_ID
-
-    if CURRENT_EXPLANATION_GAME_ID != game_id:
-        abort(404, description="No explanation packets available for that game")
+    explanation = None
+    game = None
 
     try:
-        explanation = CURRENT_EXPLANATION_SERVICE.explain_action(game_id, move_index)
+        # Load the current game state with full history
+        game = get_game_state(game_id)
+        if game is None:
+            abort(404, description="Game not found")
+
+        # Build a fresh accumulator from game history (on-demand, not global)
+        # This ensures we always have up-to-date packets regardless of when page loaded
+        accumulator = ExplanationAccumulator(recent_action_count=5)
+
+        # Rebuild all packets from game state snapshots
+        # Each packet represents the game state + decision BEFORE that action was executed
+        current_state = game.copy()
+
+        # If the game has any actions, we need to replay from start to capture decision packets
+        if current_state.state.game_log:
+            # Create a fresh game with same players to replay
+            from catanatron.models.player import Player, Color
+            from catanatron.models.map import build_map
+
+            replay_game = Game(
+                players=[
+                    type(current_state.state.players[i])(color=current_state.state.players[i].color)
+                    for i in range(len(current_state.state.players))
+                ],
+                discard_limit=current_state.state.discard_limit,
+                friendly_robber=current_state.state.friendly_robber,
+                vps_to_win=current_state.state.vps_to_win,
+                catan_map=current_state.catan_map,
+            )
+
+            # Replay all actions and capture packets
+            action_idx = 0
+            for action_json in current_state.state.game_log:
+                # Capture pre-action snapshot and decision
+                player = replay_game.state.current_player()
+                decision_info = getattr(player, "last_decision_info", {}) or {}
+
+                snapshot = replay_game.copy()
+                packet = accumulator.builder.build_explanation_packet(snapshot, decision_info or {})
+                accumulator.store_for_later(packet)
+
+                # Execute the action
+                action = action_from_json(action_json)
+                replay_game.execute(action)
+                action_idx += 1
+
+        # Now create service with the fresh accumulator and explain the move
+        service = ExplanationService(accumulator, GeminiLLM())
+        explanation = service.explain_action(game_id, move_index)
+
     except LLMQuotaExceededError as exc:
         logging.warning(f"LLM quota exceeded for game {game_id} move {move_index}: {exc}")
         abort(429, description=str(exc))
     except IndexError as exc:
         logging.warning(f"Move index {move_index} out of range for game {game_id}: {exc}")
-        abort(400, description=str(exc))
+        abort(400, description=f"Move {move_index} not found. Game has {len(game.state.game_log) if game else 0} moves.")
     except ValueError as exc:
         logging.warning(f"ValueError for game {game_id} move {move_index}: {exc}")
         abort(409, description=str(exc))
