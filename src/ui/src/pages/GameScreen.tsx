@@ -68,9 +68,22 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
     try {
       const data = await getMoveExplanation(gameId, index);
       setExplanation(data.explanation ?? `No explanation returned for move ${index}`);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Failed to fetch explanation", err);
-      setExplanation("Error fetching explanation.");
+
+      // Provide more specific error messages based on HTTP status
+      let errorMsg = "Error fetching explanation.";
+      if (err.response?.status === 400) {
+        errorMsg = `Move ${index} not found. Please ensure the move has been recorded.`;
+      } else if (err.response?.status === 404) {
+        errorMsg = "Game not found or explanation data not loaded.";
+      } else if (err.response?.status === 429) {
+        errorMsg = "LLM quota reached. Please try again in a moment.";
+      } else if (err.response?.status === 500) {
+        errorMsg = "Server error generating explanation. Please try again.";
+      }
+
+      setExplanation(errorMsg);
     } finally {
       setIsExplainingLoading(false);
     }

@@ -339,9 +339,7 @@ def mcts_analysis_endpoint(game_id, state_index):
 @bp.route("/games/<string:game_id>/explain/<int:move_index>", methods=["GET"])
 def explain_move_endpoint(game_id, move_index):
     """
-    Temporary mock explain endpoint.
-    In future, use get_game_state(game_id, move_index) and pass the action/state
-    into an LLM or analysis pipeline to produce a meaningful explanation.
+    Explain a move using the accumulated game state and LLM.
     """
     global CURRENT_EXPLANATION_GAME_ID
 
@@ -349,13 +347,19 @@ def explain_move_endpoint(game_id, move_index):
         abort(404, description="No explanation packets available for that game")
 
     try:
-        explanation = CURRENT_EXPLANATION_SERVICE.explain_action(move_index)
+        explanation = CURRENT_EXPLANATION_SERVICE.explain_action(game_id, move_index)
     except LLMQuotaExceededError as exc:
+        logging.warning(f"LLM quota exceeded for game {game_id} move {move_index}: {exc}")
         abort(429, description=str(exc))
     except IndexError as exc:
+        logging.warning(f"Move index {move_index} out of range for game {game_id}: {exc}")
         abort(400, description=str(exc))
     except ValueError as exc:
+        logging.warning(f"ValueError for game {game_id} move {move_index}: {exc}")
         abort(409, description=str(exc))
+    except Exception as exc:
+        logging.error(f"Unexpected error explaining move {move_index} in game {game_id}: {exc}", exc_info=True)
+        abort(500, description="Internal error generating explanation")
 
     return jsonify(
         {

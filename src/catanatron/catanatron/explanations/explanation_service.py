@@ -132,10 +132,10 @@ class ExplanationService:
         turn_numbers = re.findall(r"\bturn\s*(\d+)\b", lower)
         return not turn_numbers or all(int(n) == action_index for n in turn_numbers)
 
-    def _make_cache_key(self, action_index: int, det: Any) -> str:
-        """Generate stable cache key including model, prompt version, and content hash."""
+    def _make_cache_key(self, game_id: str, action_index: int) -> str:
+        """Generate stable cache key based on game, action identity (not changing game state)."""
         model_name = getattr(self.llm, "_model", self.llm.__class__.__name__)
-        return f"{self._prompt_version}|{model_name}|{action_index}"
+        return f"{self._prompt_version}|{game_id}|{model_name}|{action_index}"
 
     def _acquire_rate_slot(self) -> None:
         """Block until rate limits allow a new request (RPM + min interval)."""
@@ -179,10 +179,10 @@ class ExplanationService:
 
         raise RuntimeError("Unreachable retry state")
 
-    def explain_action(self, action_index: int) -> str:
+    def explain_action(self, game_id: str, action_index: int) -> str:
         packet = self.accumulator.get_packet(action_index)
         det = explain_packet(packet)
-        key = self._make_cache_key(action_index, det)
+        key = self._make_cache_key(game_id, action_index)
 
         # Check cache and register in-flight request.
         with self._lock:
