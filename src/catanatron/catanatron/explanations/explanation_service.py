@@ -4,7 +4,6 @@ import re
 import time
 import random
 import threading
-import hashlib
 import json
 from collections import deque
 
@@ -136,10 +135,7 @@ class ExplanationService:
     def _make_cache_key(self, action_index: int, det: Any) -> str:
         """Generate stable cache key including model, prompt version, and content hash."""
         model_name = getattr(self.llm, "_model", self.llm.__class__.__name__)
-        det_hash = hashlib.sha256(
-            json.dumps(det, sort_keys=True, ensure_ascii=True, default=str).encode("ascii")
-        ).hexdigest()
-        return f"{self._prompt_version}|{model_name}|{action_index}|{det_hash}"
+        return f"{self._prompt_version}|{model_name}|{action_index}"
 
     def _acquire_rate_slot(self) -> None:
         """Block until rate limits allow a new request (RPM + min interval)."""
