@@ -259,6 +259,8 @@ def post_action_endpoint(game_id):
     else:
         action = action_from_json(request.json)
         game.execute(action)
+        CURRENT_EXPLANATION_ACCUMULATOR.before(game)
+        CURRENT_EXPLANATION_ACCUMULATOR.step(game, action)
         upsert_game_state(game)
 
     return Response(
@@ -348,8 +350,24 @@ def explain_move_endpoint(game_id, move_index):
     if CURRENT_EXPLANATION_GAME_ID != game_id:
         abort(404, description="No explanation packets available for that game")
 
+    # UI sends global action index, while accumulator keeps only recent packets.
+    action_count = len(get_game_state(game_id).state.actions)
+    packet_count = len(CURRENT_EXPLANATION_ACCUMULATOR.packets)
+    packet_start_index = action_count - packet_count
+
+    if move_index < packet_start_index or move_index >= action_count:
+        abort(
+            400,
+            description=(
+                f"Move {move_index} is outside explainable range "
+                f"[{packet_start_index}, {action_count - 1}]"
+            ),
+        )
+
+    packet_index = move_index - packet_start_index
+
     try:
-        explanation = CURRENT_EXPLANATION_SERVICE.explain_action(move_index)
+        explanation = CURRENT_EXPLANATION_SERVICE.explain_action(packet_index)
     except LLMQuotaExceededError as exc:
         abort(429, description=str(exc))
     except IndexError as exc:
