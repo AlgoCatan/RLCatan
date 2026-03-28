@@ -11,7 +11,6 @@ export type PlayerArchetype =
   | "PPO_PLAYER"
   | "VALUE_FUNCTION"
   | "MCTS_PLAYER"
-  | "GREEDY_PLAYER"
   | "VP_PLAYER"
   | "PLACEMENT_PLAYER"
   | "WEIGHTED_RANDOM";

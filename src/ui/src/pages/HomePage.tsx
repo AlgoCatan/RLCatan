@@ -37,7 +37,6 @@ const PLAYER_ARCHETYPES: Array<{
   { value: "PPO_PLAYER", label: "PPO Player" },
   { value: "VALUE_FUNCTION", label: "Value Function Bot" },
   { value: "MCTS_PLAYER", label: "MCTS" },
-  { value: "GREEDY_PLAYER", label: "Greedy Playouts" },
   { value: "VP_PLAYER", label: "Victory Point Bot" },
   { value: "PLACEMENT_PLAYER", label: "Placement Only Bot" },
   { value: "WEIGHTED_RANDOM", label: "Weighted Random" },

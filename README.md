@@ -62,7 +62,7 @@ To test Placement Player
 `catanatron-play --num 1 --players AB:1:True,PP --config-vps-to-win 15 --config-discard-limit 9`
 
 To test placement on alphabetaPlayer
-`catanatron-play --num 1 --players AB:1:True,ABPP:1:True --config-vps-to-win 15 --config-discard-limit 9`
+`catanatron-play --num 1 --players AB:2,ABPP:2 --config-vps-to-win 15 --config-discard-limit 9`
 
 To test PPObot
 `catanatron-play --num 100 --players PPOP,F --config-vps-to-win 15 --config-discard-limit 7`
