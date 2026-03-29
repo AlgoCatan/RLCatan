@@ -53,7 +53,7 @@ export default function HomePage() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [loading, setLoading] = useState(false);
-  const [mapTemplate, setMapTemplate] = useState<MapTemplate>("TOURNAMENT");
+  const [mapTemplate, setMapTemplate] = useState<MapTemplate>("BASE");
   const [vpsToWin, setVpsToWin] = useState(10);
   const [discardLimit, setDiscardLimit] = useState(7);
   const [friendlyRobber, setFriendlyRobber] = useState(false);
