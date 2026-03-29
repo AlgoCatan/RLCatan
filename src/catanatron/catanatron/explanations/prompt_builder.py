@@ -18,10 +18,14 @@ def _format_action_value(facts: dict) -> str:
         if tile_coordinates:
             # Format as intersection of tiles, e.g., "where tiles 6-5-9 meet"
             if len(tile_coordinates) == 3:
-                tile_names = [_format_tile_coordinate(coord) for coord in sorted(tile_coordinates)]
+                tile_names = [
+                    _format_tile_coordinate(coord) for coord in sorted(tile_coordinates)
+                ]
                 return f"intersection where tiles {', '.join(tile_names)} meet"
             else:
-                tile_names = [_format_tile_coordinate(coord) for coord in sorted(tile_coordinates)]
+                tile_names = [
+                    _format_tile_coordinate(coord) for coord in sorted(tile_coordinates)
+                ]
                 return f"location at tiles {', '.join(tile_names)}"
 
         return f"node {value}"
@@ -69,8 +73,7 @@ def build_llm_prompt(det_explanation: dict, familiarity: str = "MEDIUM") -> str:
 
     # Use numbered format instead of markdown bullets for considerations
     considerations = "\n".join(
-        f"{i+1}. {reason}"
-        for i, reason in enumerate(det_explanation["explanation"])
+        f"{i+1}. {reason}" for i, reason in enumerate(det_explanation["explanation"])
     )
 
     return f"""EXPLAIN WHY THIS CATAN BOT CHOSE ITS MOVE

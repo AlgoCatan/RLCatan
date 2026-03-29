@@ -196,7 +196,11 @@ def post_game_endpoint():
     _prune_explanation_state()
     accumulator = ExplanationAccumulator(recent_action_count=5)
     service = ExplanationService(accumulator, GeminiLLM(), familiarity)
-    EXPLANATION_STATE[game.id] = {"accumulator": accumulator, "service": service, "familiarity": familiarity}
+    EXPLANATION_STATE[game.id] = {
+        "accumulator": accumulator,
+        "service": service,
+        "familiarity": familiarity,
+    }
     upsert_game_state(game)
     return jsonify({"game_id": game.id})
 
@@ -267,7 +271,9 @@ def post_action_endpoint(game_id):
         if state:
             game.play_tick(accumulators=[state["accumulator"]])
         else:
-            logging.warning(f"No explanation state for game {game_id}; skipping explanation recording")
+            logging.warning(
+                f"No explanation state for game {game_id}; skipping explanation recording"
+            )
             game.play_tick(accumulators=[])
         upsert_game_state(game)
     else:
