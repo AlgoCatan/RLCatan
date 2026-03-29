@@ -268,10 +268,11 @@ def post_action_endpoint(game_id):
         upsert_game_state(game)
     else:
         action = action_from_json(request.json)
+        game_before_action = game.copy()
         game.execute(action)
         state = EXPLANATION_STATE.get(game_id)
         if state:
-            state["accumulator"].step(game, action)
+            state["accumulator"].step(game_before_action, action)
         upsert_game_state(game)
 
     return Response(
