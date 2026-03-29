@@ -45,7 +45,12 @@ function ReplayScreen() {
         setExplanation(data.explanation ?? `No explanation returned for move ${index}`);
       } catch (err) {
         console.error("Failed to fetch explanation", err);
-        setExplanation("Error fetching explanation.");
+        const message =
+          (err as any)?.response?.data?.description ||
+          (err as any)?.response?.data?.message ||
+          (err as Error)?.message ||
+          "Error fetching explanation.";
+        setExplanation(message);
       } finally {
         setIsExplainingLoading(false);
       }

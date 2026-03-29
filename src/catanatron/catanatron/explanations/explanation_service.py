@@ -68,6 +68,8 @@ class GeminiLLM(PromptLLM):
                 "rate limit",
                 "resource_exhausted",
                 "429",
+                "503",
+                "service unavailable",
                 "too many requests",
                 "exceeded",
                 "free tier",
