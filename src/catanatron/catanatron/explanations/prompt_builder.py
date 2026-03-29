@@ -21,53 +21,57 @@ def _get_familiarity_instruction(familiarity: str) -> str:
     """Return instruction for LLM based on familiarity level."""
     if familiarity == "HIGH":
         return (
-            "Assume the reader is an experienced Catan player. Provide deep strategic analysis, "
-            "including game theory concepts, probabilistic reasoning, settlement cluster analysis, "
-            "production chains, and sophisticated trading strategies. Use technical terminology. "
-            "Explain why this move is optimal in the context of competitive play."
+            "AUDIENCE: Experienced Catan player.\n"
+            "STYLE: Deep strategic analysis with game theory, probability, settlement clusters, production chains.\n"
+            "TONE: Technical. Explain move optimality for competitive play."
         )
     elif familiarity == "LOW":
         return (
-            "Assume the reader is new to Catan and doesn't deeply understand game mechanics. "
-            "Explain concepts simply without jargon. Define what resources, settlements, cities, and roads do. "
-            "Explain the basic reasoning without advanced strategy. Focus on immediate benefit. "
-            "Keep language friendly and accessible."
+            "AUDIENCE: New to Catan, unfamiliar with mechanics.\n"
+            "STYLE: Simple, beginner-friendly, no jargon.\n"
+            "MUST: Define resources, settlements, cities, roads. Explain basic reasoning and immediate benefit."
         )
     else:  # MEDIUM
         return (
-            "Assume the reader knows basic Catan rules but isn't an expert. Balance strategic depth with clarity. "
-            "Explain intermediate concepts like resource scarcity and position value without heavy jargon."
+            "AUDIENCE: Knows basic Catan rules, not expert.\n"
+            "STYLE: Balanced. Intermediate concepts like resource scarcity and position value.\n"
+            "TONE: Clear, no heavy jargon."
         )
 
 
 def build_llm_prompt(det_explanation: dict, familiarity: str = "MEDIUM") -> str:
     """Generates a prompt for LLM move explanation based on familiarity level."""
     facts = det_explanation["facts_used"]
-
     familiarity_instruction = _get_familiarity_instruction(familiarity)
 
-    return f"""
-Explain why this Catan bot likely chose its move.
+    # Use numbered format instead of markdown bullets for considerations
+    considerations = "\n".join(
+        f"{i+1}. {reason}"
+        for i, reason in enumerate(det_explanation["explanation"])
+    )
 
-Familiarity level: {familiarity}
+    return f"""EXPLAIN WHY THIS CATAN BOT CHOSE ITS MOVE
+
+AUDIENCE AND STYLE:
 {familiarity_instruction}
-        
-Rules:
-- Respond in plain text, not markdown.
-- Use only the information provided below.
-- Do not claim certainty about hidden motives.
-- Write 1 short paragraph followed by 2-4 bullet points of key factors.
-- Mention tradeoffs or uncertainty where appropriate.
-- Focus on why this move may have been preferred over the legal alternatives.
-- Do not directly reference internal node/tile IDs in your response, or any other info a human wouldn't know from the game state.
-- The given considerations are generated via a deterministic explainer. As such, it is likely not all info is relevant to a given
-  decision, especially in rare/edge cases such as initial settlement placements. If a fact appears to add no useful info,
-  do not mention it in your response.
-        
-Chosen move:
-- action type: {facts["chosen_type"]}
-- action value: {_format_action_value(facts)}
-        
-Important considerations:
-{chr(10).join(f"- {reason}" for reason in det_explanation["explanation"])}
-    """
+
+OUTPUT FORMAT (REQUIRED):
+- Write exactly one paragraph of 3-5 sentences
+- Use PLAIN TEXT ONLY: no asterisks, no dashes for bullets, no markdown formatting
+- Reference the move and its 2-3 most important factors from below
+- Write naturally as flowing prose
+
+MOVE DETAILS:
+Action: {facts["chosen_type"]}
+Target: {_format_action_value(facts)}
+
+KEY FACTORS TO ANALYZE:
+{considerations}
+
+GUIDELINES:
+- Use ONLY information provided above
+- If a factor seems irrelevant, skip it
+- Do NOT reference internal node IDs, tile numbers, or player names
+- Do NOT claim certainty about hidden bot intentions
+- Mention tradeoffs or uncertainty if relevant
+- Be conversational and clear for your audience"""
