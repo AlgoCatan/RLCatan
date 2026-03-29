@@ -1,9 +1,29 @@
+def _format_tile_coordinate(coord: tuple) -> str:
+    """Format a tile coordinate tuple as a natural name like '6-5-9'."""
+    if coord is None:
+        return "unknown"
+    return "-".join(str(x) for x in coord)
+
+
 def _format_action_value(facts: dict) -> str:
     """Converts the action value into something more readable."""
     action_type = facts["chosen_type"]
     value = facts["chosen_value"]
 
     if action_type in {"BUILD_SETTLEMENT", "BUILD_CITY"} and value is not None:
+        # Try to get tile coordinates if available
+        target_node_summary = facts.get("target_node_summary", {})
+        tile_coordinates = target_node_summary.get("tile_coordinates", [])
+
+        if tile_coordinates:
+            # Format as intersection of tiles, e.g., "where tiles 6-5-9 meet"
+            if len(tile_coordinates) == 3:
+                tile_names = [_format_tile_coordinate(coord) for coord in sorted(tile_coordinates)]
+                return f"intersection where tiles {', '.join(tile_names)} meet"
+            else:
+                tile_names = [_format_tile_coordinate(coord) for coord in sorted(tile_coordinates)]
+                return f"location at tiles {', '.join(tile_names)}"
+
         return f"node {value}"
 
     if action_type == "BUILD_ROAD" and value is not None:
@@ -24,18 +44,21 @@ def _get_familiarity_instruction(familiarity: str) -> str:
             "AUDIENCE: Experienced Catan player.\n"
             "STYLE: Deep strategic analysis with game theory, probability, settlement clusters, production chains.\n"
             "TONE: Technical. Explain move optimality for competitive play."
+            "TARGET READING LEVEL: Flesch Reading Ease 60-70 (academic, advanced vocabulary acceptable)\n"
         )
     elif familiarity == "LOW":
         return (
             "AUDIENCE: New to Catan, unfamiliar with mechanics.\n"
             "STYLE: Simple, beginner-friendly, no jargon.\n"
             "MUST: Define resources, settlements, cities, roads. Explain basic reasoning and immediate benefit."
+            "TARGET READING LEVEL: Flesch Reading Ease 80-90 (very easy, simple words, short sentences)\n"
         )
     else:  # MEDIUM
         return (
             "AUDIENCE: Knows basic Catan rules, not expert.\n"
             "STYLE: Balanced. Intermediate concepts like resource scarcity and position value.\n"
             "TONE: Clear, no heavy jargon."
+            "TARGET READING LEVEL: Flesch Reading Ease 70-80 (conversational, clear, accessible)\n"
         )
 
 
