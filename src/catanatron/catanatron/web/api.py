@@ -35,12 +35,10 @@ from werkzeug.exceptions import HTTPException
 bp = Blueprint("api", __name__, url_prefix="/api")
 VALID_MAP_TEMPLATES = {"BASE", "MINI", "TOURNAMENT"}
 
-CURRENT_EXPLANATION_ACCUMULATOR = ExplanationAccumulator(recent_action_count=5)
-CURRENT_EXPLANATION_SERVICE = ExplanationService(
-    CURRENT_EXPLANATION_ACCUMULATOR,
-    GeminiLLM(),
-)
-CURRENT_EXPLANATION_GAME_ID = None
+# Per-game explanation state (keyed by game_id) to support concurrent users
+# Limit to 100 games in memory to prevent memory leaks from long-running servers
+EXPLANATION_STATE = {}  # {game_id: {"accumulator": ..., "service": ...}}
+MAX_EXPLANATION_STATES = 100
 
 
 @lru_cache(maxsize=1)
@@ -70,6 +68,16 @@ def _resolve_model_path(raw_path: str) -> Path:
         p = Path("/app") / p
 
     return p
+
+
+def _prune_explanation_state():
+    """Remove oldest explanation states if count exceeds limit."""
+    if len(EXPLANATION_STATE) > MAX_EXPLANATION_STATES:
+        # Keep the MAX_EXPLANATION_STATES most recent by removing oldest
+        to_remove = len(EXPLANATION_STATE) - MAX_EXPLANATION_STATES
+        for _ in range(to_remove):
+            oldest_key = next(iter(EXPLANATION_STATE))
+            del EXPLANATION_STATE[oldest_key]
 
 
 def player_factory(player_key):
@@ -142,9 +150,7 @@ def player_factory(player_key):
 
 @bp.route("/games", methods=("POST",))
 def post_game_endpoint():
-    global CURRENT_EXPLANATION_ACCUMULATOR
-    global CURRENT_EXPLANATION_SERVICE
-    global CURRENT_EXPLANATION_GAME_ID
+    global EXPLANATION_STATE
 
     if not request.is_json or request.json is None or "players" not in request.json:
         abort(400, description="Missing or invalid JSON body: 'players' key required")
@@ -182,12 +188,11 @@ def post_game_endpoint():
         vps_to_win=vps_to_win,
         catan_map=catan_map,
     )
-    CURRENT_EXPLANATION_ACCUMULATOR = ExplanationAccumulator(recent_action_count=5)
-    CURRENT_EXPLANATION_SERVICE = ExplanationService(
-        CURRENT_EXPLANATION_ACCUMULATOR,
-        GeminiLLM(),
-    )
-    CURRENT_EXPLANATION_GAME_ID = game.id
+    # Create explanation state for this game
+    _prune_explanation_state()
+    accumulator = ExplanationAccumulator(recent_action_count=5)
+    service = ExplanationService(accumulator, GeminiLLM())
+    EXPLANATION_STATE[game.id] = {"accumulator": accumulator, "service": service}
     upsert_game_state(game)
     return jsonify({"game_id": game.id})
 
@@ -254,13 +259,19 @@ def post_action_endpoint(game_id):
     # TODO: remove `or body_is_empty` when fully implement actions in FE
     body_is_empty = (not request.data) or request.json is None or request.json == {}
     if game.state.current_player().is_bot or body_is_empty:
-        game.play_tick(accumulators=[CURRENT_EXPLANATION_ACCUMULATOR])
+        state = EXPLANATION_STATE.get(game_id)
+        if state:
+            game.play_tick(accumulators=[state["accumulator"]])
+        else:
+            logging.warning(f"No explanation state for game {game_id}; skipping explanation recording")
+            game.play_tick(accumulators=[])
         upsert_game_state(game)
     else:
         action = action_from_json(request.json)
         game.execute(action)
-        CURRENT_EXPLANATION_ACCUMULATOR.before(game)
-        CURRENT_EXPLANATION_ACCUMULATOR.step(game, action)
+        state = EXPLANATION_STATE.get(game_id)
+        if state:
+            state["accumulator"].step(game, action)
         upsert_game_state(game)
 
     return Response(
@@ -340,19 +351,14 @@ def mcts_analysis_endpoint(game_id, state_index):
 
 @bp.route("/games/<string:game_id>/explain/<int:move_index>", methods=["GET"])
 def explain_move_endpoint(game_id, move_index):
-    """
-    Temporary mock explain endpoint.
-    In future, use get_game_state(game_id, move_index) and pass the action/state
-    into an LLM or analysis pipeline to produce a meaningful explanation.
-    """
-    global CURRENT_EXPLANATION_GAME_ID
-
-    if CURRENT_EXPLANATION_GAME_ID != game_id:
+    """Explain a move using LLM."""
+    state = EXPLANATION_STATE.get(game_id)
+    if not state:
         abort(404, description="No explanation packets available for that game")
 
     # UI sends global action index, while accumulator keeps only recent packets.
     action_count = len(get_game_state(game_id).state.actions)
-    packet_count = len(CURRENT_EXPLANATION_ACCUMULATOR.packets)
+    packet_count = len(state["accumulator"].packets)
     packet_start_index = action_count - packet_count
 
     if move_index < packet_start_index or move_index >= action_count:
@@ -367,7 +373,7 @@ def explain_move_endpoint(game_id, move_index):
     packet_index = move_index - packet_start_index
 
     try:
-        explanation = CURRENT_EXPLANATION_SERVICE.explain_action(packet_index)
+        explanation = state["service"].explain_action(packet_index)
     except LLMQuotaExceededError as exc:
         abort(429, description=str(exc))
     except IndexError as exc:
