@@ -23,6 +23,7 @@ export type CreateGameOptions = {
   vpsToWin: number;
   discardLimit: number;
   friendlyRobber: boolean;
+  familiarity: "HIGH" | "MEDIUM" | "LOW";
 };
 
 export type UserStartRow = {
@@ -49,6 +50,7 @@ export async function createGame({
   vpsToWin,
   discardLimit,
   friendlyRobber,
+  familiarity,
 }: CreateGameOptions) {
   const response = await axios.post(API_URL + "/api/games", {
     players,
@@ -56,6 +58,7 @@ export async function createGame({
     vps_to_win: vpsToWin,
     discard_limit: discardLimit,
     friendly_robber: friendlyRobber,
+    familiarity,
   });
   return response.data.game_id;
 }

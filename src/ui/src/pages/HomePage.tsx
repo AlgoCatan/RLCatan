@@ -137,6 +137,7 @@ export default function HomePage() {
         vpsToWin,
         discardLimit,
         friendlyRobber: FRIENDLY_ROBBER_SUPPORTED ? friendlyRobber : false,
+        familiarity,
       });
       navigate("/games/" + gameId);
     } finally {
@@ -155,6 +156,7 @@ export default function HomePage() {
       vpsToWin,
       discardLimit,
       friendlyRobber: FRIENDLY_ROBBER_SUPPORTED ? friendlyRobber : false,
+      familiarity,
     };
 
     saveAutoGameConfig(config);
