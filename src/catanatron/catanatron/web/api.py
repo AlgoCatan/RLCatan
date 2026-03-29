@@ -178,6 +178,10 @@ def post_game_endpoint():
     if not isinstance(friendly_robber, bool):
         abort(400, description="'friendly_robber' must be a boolean")
 
+    familiarity = request.json.get("familiarity", "MEDIUM")
+    if familiarity not in {"HIGH", "MEDIUM", "LOW"}:
+        abort(400, description="'familiarity' must be one of HIGH, MEDIUM, or LOW")
+
     players = list(map(player_factory, zip(player_keys, Color)))
     catan_map = build_map(map_template)
 
@@ -191,8 +195,8 @@ def post_game_endpoint():
     # Create explanation state for this game
     _prune_explanation_state()
     accumulator = ExplanationAccumulator(recent_action_count=5)
-    service = ExplanationService(accumulator, GeminiLLM())
-    EXPLANATION_STATE[game.id] = {"accumulator": accumulator, "service": service}
+    service = ExplanationService(accumulator, GeminiLLM(), familiarity)
+    EXPLANATION_STATE[game.id] = {"accumulator": accumulator, "service": service, "familiarity": familiarity}
     upsert_game_state(game)
     return jsonify({"game_id": game.id})
 
