@@ -168,8 +168,8 @@ Despite its popularity, the inherent complexity of \emph{\Catan{}} presents a si
 
 \subsection{High-Level Usage Scenarios}\label{subsec:high-level-usage-scenarios}
 \begin{itemize}
-    \item {Scenario 1: Playing Against Skill-Matched \AI{}} – Users select their skill level or enter their own Elo rating, and the system recommends or directly assigns an opponent from the Elo league. Users then play a match through the web interface with real-time board visualization and optional move recommendations.
-    \item {Scenario 2: Multi-Level Player Progression} – A novice player starts with a low-Elo opponent, practices, and gradually challenges higher-rated opponents as their skill improves. The system dynamically suggests progressively more difficult opponents based on win rates.
+    \item {Scenario 1: Playing Against Skill-Matched \AI{}} – Users select an opponent from the list of bots. Users then play a match through the web interface with real-time board visualization.
+    \item {Scenario 2: Multi-Level Player Progression} – A novice player starts against a weaker bot, practices, and gradually challenges higher-rated opponents as their skill improves.
     \item {Scenario 3: Replaying Past Games and Analysis} – Users access historical games, step through each turn, and view strategic analysis (e.g., win probability calculations) at each state to learn from both wins and losses.
     \item {Scenario 4: Bot Selection and Benchmarking} – Developers or advanced users select specific trained models from the league, configure them against each other or baselines, and evaluate performance through statistical analysis and match results.
     \item {Scenario 5: Curriculum-Based Training} – Developers run training loops configured with curriculum phases, monitoring phase transitions and reward metrics as the \AI{} agent progresses from simplified to full-complexity game rules.
@@ -386,15 +386,15 @@ Additionally, we shall abide by the following legal and regulatory factors:
     \hline
     NFR.E.6 & All JavaScript/React code shall pass Google Style Guide[8] checks. \label{NFR.E.6} \\
     \hline
-    NFR.E.7 & The total number of roads per player shall remain exactly 15. \label{NFR.E.7} \\
+    NFR.E.7 & The system shall enforce the invariant that the total number of roads per player remains exactly 15. \label{NFR.E.7} \\
     \hline
-    NFR.E.8 & The total number of settlements per player shall remain exactly 5. \label{NFR.E.8} \\
+    NFR.E.8 & The system shall enforce the invariant that the total number of settlements per player remains exactly 5. \label{NFR.E.8} \\
     \hline
-    NFR.E.9 & The total number of cities per player shall remain exactly 4. \label{NFR.E.9} \\
+    NFR.E.9 & The system shall enforce the invariant that the total number of cities per player remains exactly 4. \label{NFR.E.9} \\
     \hline
-    NFR.E.10 & The total number of resource cards of each type shall remain exactly. \label{NFR.E.10} \\
+    NFR.E.10 & The system shall enforce the invariant that the total number of resource cards per type remains exactly 19. \label{NFR.E.10} \\
     \hline
-    NFR.E.11 & The total number of development cards shall remain exactly. \label{NFR.E.11} \\
+    NFR.E.11 & The system shall enforce the invariant that the total number of development cards remains exactly 25. \label{NFR.E.11} \\
     \hline
     NFR.E.12 & Player turn order shall remain consistent throughout the game. \label{NFR.E.12} \\
     \hline
@@ -605,7 +605,15 @@ The original vision for a computer vision system to observe physical board state
 
 \subsection{Interfaces}\label{subsec:interfaces}
 
-No external APIs or hardware interfaces are required for the system.
+
+The system requires several software interfaces. These include:
+\begin{itemize}
+    \item A REST API between the React frontend and Flask backend for gameplay, replay, and explanation requests.
+    \item A Python library interface to the Catanatron simulator for rule enforcement and game-state transitions.
+    \item An \RL{} environment interface compatible with Stable Baselines3 / OpenAI Gym-style interaction for training the \RL{} agent.
+    \item An external \LLM{} API interface for generating natural-language move explanations.
+\end{itemize}
+
 
 \subsection{Normal Operation}\label{subsec:normal-operation}
 \begin{itemize}
@@ -623,6 +631,7 @@ No external APIs or hardware interfaces are required for the system.
     \item {Invalid Move Request} – Backend rejects the move and returns valid action options.
 \end{itemize}
 
+
 \subsection{Detailed Usage Scenarios}\label{subsec:detailed-usage-scenarios}
 
 \noindent\textbf{Use Case Name:} Human vs \RL{} Agent Gameplay Session
@@ -631,85 +640,307 @@ No external APIs or hardware interfaces are required for the system.
 
 \noindent\textbf{Stakeholders and Interests:}
 \begin{itemize}
-    \item Human Player: Wants a challenging and fair game experience.
-    \item Developer: Tests agent's usability and robustness against non-scripted behavior.
-    \item Society: General public interested in board game strategy.
+    \item Human Player: Wants a challenging, fair, and responsive game experience.
+    \item Developer: Wants to validate that the integrated system behaves correctly during real gameplay.
+    \item Society: Benefits from an accessible and engaging board-game \AI{} system.
 \end{itemize}
 
 \noindent\textbf{Preconditions:}
 \begin{itemize}
-    \item User interface allows human-agent interaction.
-    \item \RL{} agent is loaded and operational.
+    \item User interface is available and connected to the backend API.
+    \item A valid \emph{Catan} game configuration can be initialized.
+    \item The selected \RL{} agent model is loaded and operational.
 \end{itemize}
 
 \noindent\textbf{Postconditions (Success Guarantees):}
 \begin{itemize}
-    \item Game runs to completion with all moves recorded.
-    \item Agent responds to human actions appropriately.
+    \item A complete game is played to termination or normal user exit.
+    \item All moves, state transitions, and results are recorded for later analysis or replay.
+    \item The user is shown the final outcome of the match.
 \end{itemize}
 
 \noindent\textbf{Postconditions (Failure Guarantees):}
 \begin{itemize}
-    \item If crash occurs, session ends with error logs.
+    \item If the game cannot continue, the system preserves logs and any recoverable state.
+    \item The user receives a clear error message and the session ends gracefully or falls back to a baseline opponent if available.
 \end{itemize}
 
 \noindent\textbf{Main Success Scenario (Basic Flow):}
 \begin{itemize}
-    \item Human starts a new game session.
-    \item Game environment is initialized.
-    \item Player and \RL{} agent alternate turns.
-    \item Agent observes player actions and adapts accordingly.
-    \item Game concludes, and results are displayed.
+    \item Human player starts a new game session from the web interface.
+    \item Backend initializes the game state using the simulation environment and loads the selected opponent.
+    \item The current board state is displayed to the user.
+    \item Human player submits legal actions through the interface.
+    \item After each player action, the game state manager updates the state and synchronizes it with the backend and UI.
+    \item On the \RL{} agent's turn, the backend queries the loaded model for a legal action.
+    \item The chosen action is applied through the simulator and the updated state is shown to the player.
+    \item Steps 4--7 repeat until the game ends.
+    \item Final results are displayed and persisted for replay, analysis, and optional rating updates.
 \end{itemize}
 
 \noindent\textbf{Justification:}
 
-Testing the agent against human input ensures it handles unpredictable behaviors and can offer a meaningful challenge. This scenario is also key for validating real-world deployment feasibility.
+This is the core end-user scenario for the project. It validates the integration of the user interface, backend API, simulator, and trained model in a realistic deployment setting.
 
 \vspace{1em}
 
-\noindent\textbf{Use Case Name:} \Elo{}-Based Opponent Selection for Skill-Matched Play
+\noindent\textbf{Use Case Name:} Multi-Level Player Progression
 
-\noindent\textbf{Primary Actor:} Human Player (any skill level)
+\noindent\textbf{Primary Actor:} Returning Human Player
 
 \noindent\textbf{Stakeholders and Interests:}
 \begin{itemize}
-    \item Novice Players: Want opponents that match their skill level for a fair learning experience.
-    \item Intermediate Players: Seek progressively challenging opponents to improve their gameplay.
-    \item Competitive Players: Want access to the highest-rated opponents for maximum challenge.
-    \item Developers: Validate that the Elo league system provides appropriate skill-based matchmaking.
+    \item Novice and Intermediate Players: Want a difficulty curve that supports learning and improvement.
+    \item Competitive Players: Want progressively stronger opponents as their skill increases.
+    \item Developer: Wants to verify that difficulty progression is meaningful and usable.
 \end{itemize}
 
 \noindent\textbf{Preconditions:}
 \begin{itemize}
-    \item Elo league system is populated with trained model snapshots and baseline opponents.
-    \item User interface displays available opponents with their Elo ratings.
-    \item Player has an estimated or tracked Elo rating (or can select a difficulty preference).
+    \item The bot selection panel contains multiple opponents of varying strength.
+    \item The system stores allows the user to choose any of the available bots.
 \end{itemize}
 
 \noindent\textbf{Postconditions (Success Guarantees):}
 \begin{itemize}
-    \item Player is matched with an opponent within their skill range.
-    \item Game completes with appropriate challenge level.
-    \item Elo ratings are updated based on match outcome (if applicable).
+    \item The player selects an appropriate next opponent.
+    \item The player's progress is reflected through match history and, where applicable, rating changes.
 \end{itemize}
 
 \noindent\textbf{Main Success Scenario (Basic Flow):}
 \begin{itemize}
-    \item Player selects "Play vs AI" from the main menu.
-    \item System displays Elo league standings with opponent options.
-    \item Player either: (a) enters their skill level or Elo rating, or (b) selects a specific opponent from the league.
-    \item System recommends suitable opponents based on Elo proximity using temperature-based sampling.
-    \item Player confirms opponent selection.
-    \item Game initializes with the selected Elo-rated opponent.
-    \item After game completion, Elo ratings are updated if player is tracked in the league.
+    \item Player opens the opponent selection screen.
+    \item System displays available opponents and their relative strengths.
+    \item Player selects a bot that matches their desired challenge level.
+    \item A new match is launched against the selected bot.
+    \item After the match, results are recorded.
 \end{itemize}
 
 \noindent\textbf{Justification:}
 
-The Elo-based opponent selection ensures that players of all skill levels can enjoy appropriately challenging games. This scenario validates the core value proposition: a bot that any level Catan player can play against. It also demonstrates software engineering principles for implementing skill-based matchmaking in AI systems.
+This scenario supports one of the main goals of the project: providing an \AI{} opponent that remains useful across multiple skill levels instead of serving only as a static benchmark.
 
+\vspace{1em}
 
+\noindent\textbf{Use Case Name:} Replay of Past Games with Strategic Analysis
+
+\noindent\textbf{Primary Actor:} Human Player or Analyst
+
+\noindent\textbf{Stakeholders and Interests:}
+\begin{itemize}
+    \item Human Player: Wants to review decisions and learn from previous games.
+    \item Developer: Wants access to historical data for debugging and evaluation.
+    \item Researcher: Wants structured game histories for studying strategy and model behavior.
+\end{itemize}
+
+\noindent\textbf{Preconditions:}
+\begin{itemize}
+    \item At least one completed game has been stored in the database.
+    \item Replay and analysis data are available for retrieval.
+\end{itemize}
+
+\noindent\textbf{Postconditions (Success Guarantees):}
+\begin{itemize}
+    \item The selected game is replayed accurately from stored history.
+    \item The user can inspect important game states and associated strategic analysis.
+\end{itemize}
+
+\noindent\textbf{Postconditions (Failure Guarantees):}
+\begin{itemize}
+    \item If replay data is incomplete or unavailable, the system informs the user and preserves all accessible data.
+\end{itemize}
+
+\noindent\textbf{Main Success Scenario (Basic Flow):}
+\begin{itemize}
+    \item User opens the replay/history view.
+    \item Backend retrieves the stored game states, actions, and metadata.
+    \item UI reconstructs the board and allows the user to step forward or backward through turns, or jump to a specific turn number.
+    \item At each selected state, the analysis module provides supporting information such as estimated win probability or other evaluation metrics.
+    \item User reviews the replay until the desired point or the end of the game.
+\end{itemize}
+
+\noindent\textbf{Justification:}
+
+Replay functionality turns gameplay into a learning tool and supports both player improvement and technical analysis of system behavior.
+
+\vspace{1em}
+
+\noindent\textbf{Use Case Name:} LLM-Based Strategic Explanation Request
+
+\noindent\textbf{Primary Actor:} Human Player
+
+\noindent\textbf{Stakeholders and Interests:}
+\begin{itemize}
+    \item Human Player: Wants understandable explanations of why a move was made.
+    \item Developer: Wants to verify that explanation requests are correctly routed and logged.
+    \item Researcher: Wants to study whether explanations improve interpretability and learning value.
+\end{itemize}
+
+\noindent\textbf{Preconditions:}
+\begin{itemize}
+    \item A game is currently in progress or a past game state is available.
+    \item The explanation pipeline and external \LLM{} interface are operational.
+    \item Sufficient state and move context are available for the selected explanation target.
+\end{itemize}
+
+\noindent\textbf{Postconditions (Success Guarantees):}
+\begin{itemize}
+    \item A natural-language explanation is returned to the user and associated with the selected move or state.
+    \item The explanation request and result are logged for future review.
+\end{itemize}
+
+\noindent\textbf{Postconditions (Failure Guarantees):}
+\begin{itemize}
+    \item If explanation generation fails, the user receives a clear error message and gameplay or replay can continue without interruption.
+\end{itemize}
+
+\noindent\textbf{Main Success Scenario (Basic Flow):}
+\begin{itemize}
+    \item User selects a move or game state and requests an explanation.
+    \item Backend gathers the relevant game-state context, move details, and any analysis metadata.
+    \item Explanation pipeline formats the request for the \LLM{} service.
+    \item External \LLM{} API generates a natural-language explanation.
+    \item Backend validates and returns the explanation to the frontend.
+    \item UI displays the explanation to the user.
+\end{itemize}
+
+\noindent\textbf{Justification:}
+
+This scenario supports the project's goal of making the \AI{} not only strong, but also interpretable and educational for players of different skill levels.
+
+\vspace{1em}
+
+\noindent\textbf{Use Case Name:} Bot Selection and Benchmarking
+
+\noindent\textbf{Primary Actor:} Developer or Advanced User
+
+\noindent\textbf{Stakeholders and Interests:}
+\begin{itemize}
+    \item Developer: Wants to compare trained models against baselines and other snapshots.
+    \item Researcher: Wants reproducible benchmark results across different opponents or configurations.
+    \item Competitive Player: Wants to inspect the relative strength of available bots.
+\end{itemize}
+
+\noindent\textbf{Preconditions:}
+\begin{itemize}
+    \item Multiple baseline and trained models are available in the league or model store.
+    \item Benchmarking configuration options are accessible to the user.
+\end{itemize}
+
+\noindent\textbf{Postconditions (Success Guarantees):}
+\begin{itemize}
+    \item Selected models are evaluated in the requested configuration.
+    \item Match results, statistics, and rating impacts are recorded.
+\end{itemize}
+
+\noindent\textbf{Postconditions (Failure Guarantees):}
+\begin{itemize}
+    \item If a selected model cannot be loaded or executed, the benchmark is aborted with logs and an error message.
+\end{itemize}
+
+\noindent\textbf{Main Success Scenario (Basic Flow):}
+\begin{itemize}
+    \item Developer opens the benchmarking interface.
+    \item Developer selects one or more opponents and benchmark settings such as number of games or evaluation mode.
+    \item Backend loads the chosen models and initializes benchmark matches in the CLI interface.
+    \item Matches are executed and results are aggregated.
+    \item System displays statistics such as wins, losses, and updated ratings where applicable.
+\end{itemize}
+
+\noindent\textbf{Justification:}
+
+Benchmarking is necessary to show that training produces meaningful performance gains and to support model comparison, regression detection, and evaluation against baselines.
+
+\vspace{1em}
+
+\noindent\textbf{Use Case Name:} Curriculum-Based Training Run
+
+\noindent\textbf{Primary Actor:} Developer
+
+\noindent\textbf{Stakeholders and Interests:}
+\begin{itemize}
+    \item Developer: Wants a controlled training workflow with measurable phase progression.
+    \item Researcher: Wants to study the impact of curriculum design on learning quality.
+    \item Project Team: Wants reproducible training runs and interpretable training logs.
+\end{itemize}
+
+\noindent\textbf{Preconditions:}
+\begin{itemize}
+    \item A valid curriculum configuration has been defined.
+    \item Training infrastructure and required model dependencies are available.
+    \item The simulator and league integration are operational.
+\end{itemize}
+
+\noindent\textbf{Postconditions (Success Guarantees):}
+\begin{itemize}
+    \item Training completes or advances through one or more curriculum phases.
+    \item Metrics, checkpoints, and phase transitions are recorded.
+\end{itemize}
+
+\noindent\textbf{Postconditions (Failure Guarantees):}
+\begin{itemize}
+    \item If training fails, partial logs and the most recent valid checkpoint are preserved when possible.
+\end{itemize}
+
+\noindent\textbf{Main Success Scenario (Basic Flow):}
+\begin{itemize}
+    \item Developer launches a training run with a selected curriculum configuration.
+    \item Curriculum manager initializes the first phase and its rule variations.
+    \item Training pipeline selects opponents from the league and begins self-play episodes.
+    \item Rewards, episode results, and other training metrics are collected.
+    \item System checks whether advancement criteria for the current phase have been met.
+    \item If criteria are met, the curriculum manager advances to the next phase.
+    \item Updated checkpoints and logs are saved throughout the run.
+    \item Training stops at completion or at a developer-defined stopping point.
+\end{itemize}
+
+\noindent\textbf{Justification:}
+
+This scenario captures the core research and engineering workflow behind the project's \RL{} component and validates curriculum learning as a practical training strategy.
+
+\vspace{1em}
+
+\noindent\textbf{Use Case Name:} Model Versioning and Rollback
+
+\noindent\textbf{Primary Actor:} Developer or Administrator
+
+\noindent\textbf{Stakeholders and Interests:}
+\begin{itemize}
+    \item Developer: Wants safe deployment and the ability to recover from regressions.
+    \item Project Team: Wants clear traceability between checkpoints, ratings, and performance history.
+    \item Advanced User: May want to inspect how different model versions behave.
+\end{itemize}
+
+\noindent\textbf{Preconditions:}
+\begin{itemize}
+    \item Multiple model checkpoints or snapshots have been saved.
+    \item Metadata such as version identifiers, ratings, or training history is available.
+\end{itemize}
+
+\noindent\textbf{Postconditions (Success Guarantees):}
+\begin{itemize}
+    \item A selected previous model version becomes active for evaluation or deployment.
+\end{itemize}
+
+\noindent\textbf{Postconditions (Failure Guarantees):}
+\begin{itemize}
+    \item If a selected version is missing or invalid, the current stable version remains active and the user is notified.
+\end{itemize}
+
+\noindent\textbf{Main Success Scenario (Basic Flow):}
+\begin{itemize}
+    \item Developer selects a previous version for inspection or rollback.
+    \item System validates that the selected model artifact is available and loadable.
+    \item Developer modifies loaded model metadata if necessary (e.g., updating the active version reference).
+    \item Backend updates the active model reference.
+    \item The chosen version is used for subsequent gameplay, evaluation, or deployment tasks.
+\end{itemize}
+
+\noindent\textbf{Justification:}
+
+Model versioning and rollback reduce operational risk and support experimental development by allowing the team to recover quickly from regressions or undesirable training outcomes.
+
+\vspace{1em}
 
 \subsection{Prioritization}\label{subsec:prioritization}
 M → Must have
