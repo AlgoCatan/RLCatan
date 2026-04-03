@@ -82,14 +82,15 @@ class GeminiLLM(PromptLLM):
 
 
 class ExplanationService:
-    def __init__(self, accumulator, llm: PromptLLM):
+    def __init__(self, accumulator, llm: PromptLLM, familiarity: str = "MEDIUM"):
         self.accumulator = accumulator
         self.llm = llm
+        self.familiarity = familiarity
 
     def explain_action(self, action_index: int) -> str:
         packet = self.accumulator.get_packet(action_index)
         det = explain_packet(packet)
-        prompt = build_llm_prompt(det)
+        prompt = build_llm_prompt(det, familiarity=self.familiarity)
         explanation_text = self.llm.explain_prompt(prompt)
 
         return explanation_text

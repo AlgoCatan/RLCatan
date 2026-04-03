@@ -405,8 +405,16 @@ class ExplanationPacketBuilder:
 
     def _summarize_tile(self, state, tile):
         """Build a summary of the tile's key characteristics and strategic context, for use in explanation."""
+        # Find the coordinate of this tile
+        tile_coordinate = None
+        for coord, t in state.board.map.tiles.items():
+            if t == tile:
+                tile_coordinate = coord
+                break
+
         return {
             "tile_id": tile.id,
+            "tile_coordinate": tile_coordinate,
             "resource": "DESERT" if tile.resource is None else tile.resource,
             "number": None if tile.resource is None else tile.number,
             "probability": (
@@ -414,6 +422,18 @@ class ExplanationPacketBuilder:
             ),
             "has_robber": state.board.map.tiles[state.board.robber_coordinate] == tile,
         }
+
+    def _get_tile_coordinates_for_node(self, board_map, node_id):
+        """Get the tile coordinates that touch this node."""
+        adjacent_tiles = board_map.adjacent_tiles.get(node_id, [])
+        coordinates = []
+        for tile in adjacent_tiles:
+            # Find the coordinate of this tile
+            for coord, t in board_map.tiles.items():
+                if t == tile:
+                    coordinates.append(coord)
+                    break
+        return coordinates
 
     def _summarize_node(self, snapshot, node_id, actor):
         """Build a summary of the node's key characteristics and strategic context, for use in explanation."""
@@ -449,8 +469,11 @@ class ExplanationPacketBuilder:
                 "building_type": building[1],
             }
 
+        tile_coordinates = self._get_tile_coordinates_for_node(board_map, node_id)
+
         return {
             "node_id": node_id,
+            "tile_coordinates": tile_coordinates,
             "adjacent_tiles": adjacent_tiles,
             "production_by_resource": production_by_resource,
             "total_production": total_production,
