@@ -1,11 +1,11 @@
-import { useEffect, useState, useContext, useRef, useCallback } from "react";
+import { useEffect, useState, useContext, useRef } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import PropTypes from "prop-types";
 import { GridLoader } from "react-spinners";
-import { useSnackbar } from "notistack";
 
 import ZoomableBoard from "./ZoomableBoard";
 import ActionsToolbar from "./ActionsToolbar";
+import { getActiveGameState } from "./gameScreenUtils";
 
 import "./GameScreen.scss";
 import LeftDrawer from "../components/LeftDrawer";
@@ -43,9 +43,9 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
   const { gameId, stateIndex } = useParams();
   const navigate = useNavigate();
   const { state, dispatch } = useContext(store);
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [isBotThinking, setIsBotThinking] = useState(false);
   const lastProcessedStateIndex = useRef(-1);
+  const latestGameId = useRef<string | null>(gameId ?? null);
 
   // Explain-mode state + explanation storage
   const [isExplainMode, setIsExplainMode] = useState(false);
@@ -53,9 +53,12 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
   const [isExplainingLoading, setIsExplainingLoading] = useState(false);
   const [isWinnerModalOpen, setIsWinnerModalOpen] = useState(false);
   const [isMobilePlayerInfoCollapsed, setIsMobilePlayerInfoCollapsed] = useState(false);
-  const [isAutoRestarting, setIsAutoRestarting] = useState(false);
+  const [loadedGameId, setLoadedGameId] = useState<string | null>(null);
   const autoRestartedGameId = useRef<string | null>(null);
   const isAutoMode = searchParams.get("auto") === "1";
+  const activeGameState = getActiveGameState(gameId, loadedGameId, state.gameState);
+
+  latestGameId.current = gameId ?? null;
 
   const handleActionClick = async (index: number) => {
     if (!isExplainMode || !gameId) return;
@@ -86,17 +89,22 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
     if (!gameId) {
       return;
     }
+
     lastProcessedStateIndex.current = -1;
     autoRestartedGameId.current = null;
+    setLoadedGameId(null);
+    setIsBotThinking(false);
+    setIsWinnerModalOpen(false);
     dispatch({ type: ACTIONS.SET_GAME_STATE, data: null });
 
     let isCancelled = false;
+    const requestedGameId = gameId;
 
     (async () => {
-      const gameState = await getState(gameId, stateIndex as StateIndex);
-      if (!isCancelled) {
+      const gameState = await getState(requestedGameId, stateIndex as StateIndex);
+      if (!isCancelled && latestGameId.current === requestedGameId) {
         dispatch({ type: ACTIONS.SET_GAME_STATE, data: gameState });
-        setIsAutoRestarting(false);
+        setLoadedGameId(requestedGameId);
       }
     })();
 
@@ -107,25 +115,34 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
 
   // Maybe kick off next query?
   useEffect(() => {
-    if (!state.gameState || replayMode || !gameId) {
+    if (!activeGameState || replayMode || !gameId) {
       return;
     }
+
     if (
-      state.gameState.bot_colors.includes(state.gameState.current_color) &&
-      !state.gameState.winning_color
+      activeGameState.bot_colors.includes(activeGameState.current_color) &&
+      !activeGameState.winning_color
     ) {
-      if (lastProcessedStateIndex.current === state.gameState.state_index) {
+      if (lastProcessedStateIndex.current === activeGameState.state_index) {
         return;
       }
-      lastProcessedStateIndex.current = state.gameState.state_index;
+      lastProcessedStateIndex.current = activeGameState.state_index;
+
+      let isCancelled = false;
+      let timeoutId: number | undefined;
+      const requestedGameId = gameId;
 
       // Make bot click next action.
       (async () => {
         setIsBotThinking(true);
         const start = new Date();
-        const gameState = await postAction(gameId);
+        const gameState = await postAction(requestedGameId);
         const requestTime = new Date().valueOf() - start.valueOf();
-        setTimeout(() => {
+        timeoutId = window.setTimeout(() => {
+          if (isCancelled || latestGameId.current !== requestedGameId) {
+            return;
+          }
+
           // simulate thinking
           setIsBotThinking(false);
           dispatch({ type: ACTIONS.SET_GAME_STATE, data: gameState });
@@ -133,28 +150,35 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
           // if (getHumanColor(gameState)) {
           //   dispatchSnackbar(enqueueSnackbar, closeSnackbar, gameState);
           // }
-        }, ROBOT_THINKING_TIME - requestTime);
+        }, Math.max(0, ROBOT_THINKING_TIME - requestTime));
       })();
+
+      return () => {
+        isCancelled = true;
+        setIsBotThinking(false);
+        if (timeoutId !== undefined) {
+          window.clearTimeout(timeoutId);
+        }
+      };
     }
   }, [
     gameId,
     replayMode,
-    state.gameState,
+    activeGameState,
     dispatch,
-    enqueueSnackbar,
-    closeSnackbar,
   ]);
 
   useEffect(() => {
-    if (state.gameState?.winning_color && !replayMode && !isAutoMode) {
+    if (activeGameState?.winning_color && !replayMode && !isAutoMode) {
       setIsWinnerModalOpen(true);
     }
-  }, [state.gameState?.winning_color, replayMode, isAutoMode]);
+  }, [activeGameState?.winning_color, replayMode, isAutoMode]);
 
   useEffect(() => {
-    if (!state.gameState?.winning_color || replayMode || !isAutoMode || !gameId) {
+    if (!activeGameState?.winning_color || replayMode || !isAutoMode || !gameId) {
       return;
     }
+
     if (autoRestartedGameId.current === gameId) {
       return;
     }
@@ -167,7 +191,6 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
 
     let isCancelled = false;
     autoRestartedGameId.current = gameId;
-    setIsAutoRestarting(true);
 
     (async () => {
       try {
@@ -180,7 +203,6 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
         if (!isCancelled) {
           autoRestartedGameId.current = null;
           setIsWinnerModalOpen(true);
-          setIsAutoRestarting(false);
         }
       }
     })();
@@ -188,7 +210,7 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
     return () => {
       isCancelled = true;
     };
-  }, [state.gameState?.winning_color, replayMode, isAutoMode, gameId, navigate]);
+  }, [activeGameState?.winning_color, replayMode, isAutoMode, gameId, navigate]);
 
   useEffect(() => {
     setIsMobilePlayerInfoCollapsed(false);
@@ -264,7 +286,7 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
     </div>
   );
 
-  if (!state.gameState) {
+  if (!activeGameState) {
     return (
       <main>
         <GridLoader
@@ -276,19 +298,19 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
     );
   }
 
-  const winnerColor = state.gameState.winning_color;
+  const winnerColor = activeGameState.winning_color;
   const winnerKey =
-    winnerColor !== undefined ? playerKey(state.gameState, winnerColor) : null;
+    winnerColor !== undefined ? playerKey(activeGameState, winnerColor) : null;
   const winnerName =
-    winnerColor && state.gameState.player_models?.[winnerColor]
-      ? state.gameState.player_models[winnerColor]
+    winnerColor && activeGameState.player_models?.[winnerColor]
+      ? activeGameState.player_models[winnerColor]
       : winnerColor;
   const winnerStats =
     winnerKey && winnerColor
       ? {
-          knights: state.gameState.player_state[`${winnerKey}_PLAYED_KNIGHT`],
-          roads: state.gameState.player_state[`${winnerKey}_LONGEST_ROAD_LENGTH`],
-          vps: state.gameState.player_state[`${winnerKey}_ACTUAL_VICTORY_POINTS`],
+          knights: activeGameState.player_state[`${winnerKey}_PLAYED_KNIGHT`],
+          roads: activeGameState.player_state[`${winnerKey}_LONGEST_ROAD_LENGTH`],
+          vps: activeGameState.player_state[`${winnerKey}_ACTUAL_VICTORY_POINTS`],
         }
       : null;
 
@@ -423,12 +445,12 @@ function GameScreen({ replayMode }: { replayMode: boolean }) {
                   />
                 </button>
                 <div className="mobile-player-panel">
-                  <PlayerStats gameState={state.gameState} />
+                  <PlayerStats gameState={activeGameState} />
                 </div>
               </div>
               <div className="mobile-left-bottom">
                 <ActionLog
-                  gameState={state.gameState}
+                  gameState={activeGameState}
                   isExplainMode={isExplainMode}
                   onActionClick={handleActionClick}
                 />
