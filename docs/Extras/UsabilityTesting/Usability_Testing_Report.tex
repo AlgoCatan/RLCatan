@@ -16,6 +16,12 @@
 \usepackage{caption}
 \usepackage{hyperref}
 
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage[table]{xcolor}
+\pgfplotsset{compat=1.18}
+
+
 \title{Usability Report}
 
 \input{../../Comments}
@@ -48,7 +54,7 @@ with minimal training. Here are the goals:
 
 \section{Elicitation Plan \& Instruments}
 \subsection{Elicitation Plan: Observational Think-Aloud Study}
-To gather qualitative data on user interaction with the Catan Arena interface, we implemented an observational think-aloud study. This method allows us to identify specific friction points in the UI and verify if the LLM-generated explanations actually aid the "Experiential Learning" cycle.
+To gather qualitative data on user interaction with the Catan Arena interface, we implemented an observational think-aloud study. This method allows us to identify specific friction points in the UI and verify if the catan arena actually aid the "Experiential Learning" cycle.
 \medskip   
 
 \textbf{Tesing Goals:}
@@ -214,32 +220,139 @@ This section details the elicitation process of 7 participants across the three 
 
 
 \section{Elicitation Results}
-
 % Restructured into separate "Before" and "After" subsections
 \subsection{Before}
-%\begin{figure}[H]
-%    \centering
-%    \includegraphics[width=0.7\textwidth]{blank1.png}
-%    \caption{Initial interface state / Placeholder 1}
-%\end{figure}
 
-%\begin{figure}[H]
-%    \centering
-%    \includegraphics[width=0.7\textwidth]{blank2.png}
-%    \caption{Initial interface state / Placeholder 2}
-%\end{figure}
+\begin{table}[H]
+    \centering
+    \small
+    \begin{tabular}{|l|c|c|c|c|}
+    \hline
+    \textbf{Participant} & \textbf{Clarity} & \textbf{Flow} & \textbf{Catan-to-Bot Intuition} & \textbf{User Avg.} \\ \hline
+    Participant 1 & 3.5 & 4.0 & 2.5 & \textbf{3.3} \\ \hline
+    Participant 2 & 4.0 & 4.5 & 3.0 & \textbf{3.8} \\ \hline
+    Participant 3 & 3.0 & 3.5 & 2.5 & \textbf{3.0} \\ \hline
+    Participant 4 & 4.5 & 4.5 & 3.0 & \textbf{4.0} \\ \hline
+    Participant 5 & 3.5 & 4.0 & 3.0 & \textbf{3.5} \\ \hline
+    Participant 6 & 3.0 & 3.5 & 2.5 & \textbf{3.0} \\ \hline
+    Participant 7 & 4.0 & 4.5 & 3.0 & \textbf{3.8} \\ \hline
+    \rowcolor[HTML]{F2F2F2} 
+    \textbf{Component Avg.} & \textbf{3.6} & \textbf{4.1} & \textbf{2.8} & \textbf{3.5} \\ \hline
+    \end{tabular}
+    \caption{Pre-Implementation Usability Component Breakdown (NFR.S.2)}
+    \end{table}
+    
+    \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+    \begin{axis}[
+        ybar,
+        bar width=25pt,
+        ylabel={Average Score (1-5)},
+        symbolic x coords={Clarity, Game Flow, Intuition},
+        xtick=data,
+        ymin=0, ymax=5,
+        ytick={1,2,3,4,5},
+        nodes near coords,
+        nodes near coords align={vertical},
+        ymajorgrids=true,
+        grid style=dashed,
+        width=0.85\textwidth,
+        height=7cm,
+        title={Usability Scores by Component: Before UI Changes}
+    ]
+    \addplot[fill=blue!40] coordinates {
+        (Clarity,3.6) (Game Flow,4.1) (Intuition,2.8)
+    };
+    \end{axis}
+    \end{tikzpicture}
+    \caption{Visual Summary of Pre-Implementation Scores}
+    \end{figure}
+
+\subsection{Summary of Features Added}
+\begin{itemize}
+    \item \textbf{Board Intuition:} Users didnt like the patterns for the tiles, and found it hard to distinguish between the UI's meaning and the board games.
+    \subitem Changed patterns to be more similar to the board game, and changed colours to be more similar to the board game.
+    \item \textbf{Action Log:} Users found the action log to be too small and cluttered, making it difficult to follow the game flow and understand what actions were being taken.
+    \subitem Increased the size of the action log and improved the layout to make it easier to read and follow.
+    \item \textbf{Fixed Drawers:} Users found the fixed right drawer to be intrusive and distracting, as it took up valuable screen space and made it difficult to focus on the board.
+    \subitem Made the right drawer collapsible, allowing users to hide it when they want a full view of the board. Also made the board zoomable, so users can focus on specific areas of the board without being hindered by the fixed layout.
+    \item \textbf{Bot Identification:} Users found it hard to distinguish between the bots during the fast-paced bot vs bot game due to the lack of distinct headers or titles.
+    \subitem Added clear headers for each bot in the bot vs bot game, making it easier for users to track which bot is which and follow the game flow.
+    \item  \textbf{Dice Roll Visualization:} Users expressed frustration with having to look at the action log to see dice rolls, stating that dice should be a primary visual element on the board.
+    \subitem Added a visual representation of dice rolls directly on the board, making it easier for users to quickly understand the game state without having to refer to the action log.
+    \item \textbf{ Bot Move Clarity:} Users were confused by why bots made certain moves, indicating a need for better explanations or visual cues to clarify bot decision-making.
+    \subitem Added a large feature that allows users to click on any move and see an explanation of why the bot made that move, including the bot's current strategy and how it evaluates the game state. This helps experintal learning.
+\end{itemize}
+
+\subsection{UI Comparison}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{UI_before.png}
+    \caption{Baseline Interface: Pre Observational Study Results Implementation.}
+    \label{fig:ui_before}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{UI_after.png}
+    \caption{Revised Interface: Post Observational Study Results Implementation.}
+    \label{fig:ui_after}
+\end{figure}
+
 
 \subsection{After}
-%\begin{figure}[H]
-%    \centering
-%    \includegraphics[width=0.7\textwidth]{ui1.png}
-%    \caption{Final UI Design 1}
-%\end{figure}
 
-%\begin{figure}[H]
-%    \centering
-%    \includegraphics[width=0.7\textwidth]{ui2.png}
-%    \caption{Final UI Design 2}
-%\end{figure}
+\begin{table}[H]
+    \centering
+    \small
+    \begin{tabular}{|l|c|c|c|c|}
+    \hline
+    \textbf{Participant} & \textbf{Clarity} & \textbf{Flow} & \textbf{Catan-to-Bot Intuition} & \textbf{User Avg.} \\ \hline
+    Participant 1 & 3.5 & 4.9 & 4.1 & \textbf{4.2} \\ \hline
+    Participant 2 & 4.1 & 5.0 & 4.4 & \textbf{4.5} \\ \hline
+    Participant 3 & 3.5 & 4.6 & 4.0 & \textbf{4.0} \\ \hline
+    Participant 4 & 4.7 & 5.0 & 4.7 & \textbf{4.8} \\ \hline
+    Participant 5 & 4.0 & 4.9 & 4.7 & \textbf{4.5} \\ \hline
+    Participant 6 & 3.1 & 4.9 & 3.9 & \textbf{4.0} \\ \hline
+    Participant 7 & 4.4 & 5.0 & 5.0 & \textbf{4.8} \\ \hline
+    \rowcolor[HTML]{F2F2F2} 
+    \textbf{Component Avg.} & \textbf{3.9} & \textbf{4.9} & \textbf{4.4} & \textbf{4.4} \\ \hline
+    \end{tabular}
+    \caption{Post-Implementation Usability Component Breakdown (NFR.S.2)}
+    \end{table}
+    
+    \begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+    \begin{axis}[
+        ybar,
+        bar width=25pt,
+        ylabel={Average Score (1-5)},
+        symbolic x coords={Clarity, Game Flow, Intuition},
+        xtick=data,
+        ymin=0, ymax=5,
+        ytick={1,2,3,4,5},
+        nodes near coords,
+        nodes near coords align={vertical},
+        ymajorgrids=true,
+        grid style=dashed,
+        width=0.85\textwidth,
+        height=7cm,
+        title={Usability Scores by Component: After UI Changes}
+    ]
+    \addplot[fill=blue!70] coordinates {
+        (Clarity,3.9) (Game Flow,4.9) (Intuition,4.4)
+    };
+    \end{axis}
+    \end{tikzpicture}
+    \caption{Visual Summary of Post-Implementation Improvements}
+    \end{figure}
+
+
+\subsection{Conclusion}
+
+After implementing the UI changes based on the observational think-aloud study, we observed significant improvements across all usability components. The average scores for Clarity, Game Flow, and Catan-to-Bot Intuition increased from 3.6, 4.1, and 2.8 to 3.9, 4.9, and 4.4 respectively. This indicates that the UI changes successfully addressed the major friction points identified in the initial study, leading to a more intuitive and engaging user experience that better supports experiential learning.
 
 \end{document}
