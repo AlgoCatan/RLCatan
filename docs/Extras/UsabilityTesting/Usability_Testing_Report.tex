@@ -1,0 +1,245 @@
+\documentclass[12pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{amsfonts}
+\usepackage{amsopn}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{amstext}
+\usepackage{zed-csp}
+\usepackage{placeins}
+\usepackage{pdflscape}
+\usepackage{caption}
+\usepackage{hyperref}
+
+\title{Usability Report}
+
+\input{../../Comments}
+\input{../../Common}
+
+\author{\authname}
+
+\date{}
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\listoftables
+
+\listoffigures
+
+\newpage
+
+\section{Usability Goals}
+Throughout the design process we aimed to acheive the following usability goals which are tied to
+our non function requierement NFR.S.2: Provide an intuitive interface accessible to users
+with minimal training. Here are the goals:
+\begin{itemize}
+    \item Goal 1: User interface is easy to use and navigate for users of all experience levels.
+    \item Goal 2: Board cleary and intuitvley represents actual catan board, allowing easy playing and learning.
+    \item Goal 3: Teach users catan through experiential learning.
+\end{itemize}
+
+\section{Elicitation Plan \& Instruments}
+\subsection{Elicitation Plan: Observational Think-Aloud Study}
+To gather qualitative data on user interaction with the Catan Arena interface, we implemented an observational think-aloud study. This method allows us to identify specific friction points in the UI and verify if the LLM-generated explanations actually aid the "Experiential Learning" cycle.
+\medskip   
+
+\textbf{Tesing Goals:}
+\begin{itemize}
+    \item Identify usability challenges in the user interface.
+    \item Measure the effectiveness of experiential learning.
+    \item Assess the overall user experience and satisfaction with the interface, especially in terms of learning and engagement.
+\end{itemize}
+
+\textbf{Observed User Groups:}
+\begin{itemize}
+    \item \textbf{Beginners (Elo 0--850):} Users with little to no experience playing Catan, who are new to the game and may be unfamiliar with basic mechanics.
+    \item \textbf{Novice Players (Elo 900--1250):} Users who have some experience with Catan, understand basic rules, but may struggle with strategy and resource management.
+    \item \textbf{Competitive Players (Elo 1300+):} Experienced users who have a strong understanding of Catan mechanics and strategy.
+\end{itemize}
+
+\textbf{Observation Setting:}
+\begin{itemize}
+    \item \textbf{Remote:} Conducted via screen-share, where users are encouraged to "think aloud" while navigating the web-based interface.
+\end{itemize}
+
+\textbf{Observation Tasks:}
+\begin{enumerate}
+    \item \textbf{Game Setup:} Start a new game human vs. bot game (Final Boss) with default settings and applicable flesch score.
+    \item \textbf{Game} Play a full game against Final boss.
+    \item \textbf{Replay}: When game finishes, use the replay feature to review the game.
+    \item \textbf{Move Cycling:} Go through different moves in the game.
+    \item \textbf{Bot Vs Bot}: Start a new game where 4 different bots play against each other.
+    \item \textbf{Analyze} During the bot vs bot game, use analyze feature to see the most likely to win bot and the most likely to lose bot.
+    \item \textbf{Bot Vs Bot Replay}: After the bot vs bot game finishes, use the replay feature to review the game.
+    \item \textbf{Bot Vs Bot Move Cycling}: Go through different moves in the bot vs bot game.
+    \item \textbf{Post-Observation Survey:} Fill out a survey to rate the interface on Clarity, Game Flow, and Intuition using a 1--5 Likert scale.
+\end{enumerate}
+
+\textbf{Instruments Used:}
+\begin{itemize}
+    \item \textbf{Researcher Notes Template:} Captures context (device/experience), specific user actions, time-to-complete, frequency of UI errors (ex:, misclicks), and emotional responses.
+    \item \textbf{Post-Observation Survey:} A 1--5 Likert scale survey to quantify Clarity, Game Flow, and Intuition.
+\end{itemize}
+
+\section{Elicitation Process}
+\subsection{Before UI Changes}
+This section details the elicitation process of 7 participants across the three user groups (Beginners, Novice Players, Competitive Players) using the observational think-aloud method. Participants were observed while interacting with the Catan Arena interface, and their actions, time-to-complete tasks, frequency of UI errors, and emotional responses were recorded. After the observation, participants completed a post-observation survey to rate the interface on Clarity, Game Flow, and Intuition.
+% --- Participant 1 ---
+\subsubsection{Participant 1}
+\textbf{Elo Rating:} 1200 | \textbf{Flesch Score:} Medium \\
+\textbf{Observational Task Notes:}
+\begin{itemize}
+    \item \textbf{Game Setup:} Confused about bot difficulty levels.
+    \item \textbf{Game:} Struggled to read the action log; noted it felt small and cluttered.
+    \item \textbf{Replay:} Attempted to zoom in on a settlement cluster but was frustrated to find the board was static.
+    \item \textbf{Move Cycling:} Mentioned the right "Analyze" drawer felt intrusive since it could not be closed to see the full board.
+    \item \textbf{Bot vs Bot:} Hard to distinguish between the four bots during fast play due to lack of distinct headers.
+    \item \textbf{Analyze:} Noted that the colours look of the tiles did not mimic a real Catan board, making it less immersive.
+    \item \textbf{Bot vs Bot Replay:} Nothing to note.
+    \item \textbf{Bot vs Bot Move Cycling:} Nothing to note.
+\end{itemize}
+\textbf{Research Notes Summary:} User is competent in Catan strategy but was significantly slowed down by the cluttered action log and the lack of prominent visual feedback for dice rolls.
+
+\textbf{Survey Ratings:} Clarity: 3.5, Game Flow: 4.0, Intuition: 2.5 (Avg: 3.3)
+
+% --- Participant 2
+\subsubsection{Participant 2}
+\textbf{Elo Rating:} 1550 | \textbf{Flesch Score:} High \\
+\textbf{Observational Task Notes:}
+\begin{itemize}
+    \item \textbf{Game Setup:} Nothing to note.
+    \item \textbf{Game:} Confused Wheat and Sheep tiles due to poor catan tile replication.
+    \item \textbf{Replay:} Asked if the board could be moved or zoomed to see the top half better.
+    \item \textbf{Move Cycling:} Found it cool to see what moves bots made.
+    \item \textbf{Bot vs Bot:} Found that the action log was too small to follow the fast-paced bot vs bot game, making it hard to understand the flow of the game.
+    \item \textbf{Analyze:} Found the fixed right drawer distracting usless and too big to keep static..
+    \item \textbf{Bot vs Replay:} Nothing to note.
+    \item \textbf{Bot vs Bot Move Cycling:} Didnt like having to look into action log to see dice rolls. 
+\end{itemize}
+\textbf{Research Notes Summary:} High level player who found the UI "functional but not intuitive," especially criticizing the lack of visual feedback for dice rolls and the fixed right drawer.
+\textbf{Survey Ratings:} Clarity: 4.0, Game Flow: 4.5, Intuition: 3.0 (Avg: 3.8)
+
+% --- Participant 3
+\subsubsection{Participant 3}
+\textbf{Elo Rating:} 300 | \textbf{Flesch Score:} Low\\
+\textbf{Observational Task Notes:}
+\begin{itemize}
+    \item \textbf{Game Setup:} Lots of questions about bot levels and how to select them.
+    \item \textbf{Game:} Hated having to scroll the log just to see the current roll; stated, "Dice should be a primary visual element." Had no idea what cards meant what, and what cities and settlements looked like.
+    \item \textbf{Replay:} Found the non-zoomable interface hindered their ability to analyze road-building strategies on the board edges.
+    \item \textbf{Move Cycling:} Complained about the color contrast; specifically, the blue and red colours were hard to distinguish against the dark background.
+    \item \textbf{Bot vs Bot:} Observed that without bot titles, it was impossible to track which bot was which during the fast-paced game. Didnt understand why bots were making certain moves because there was explainations.
+    \item \textbf{Analyze:} Noted the "Analyze" button was far from the game board, causing unnecessary eye strain.
+    \item \textbf{Bot vs Bot Replay:} Didnt like that we couldnt hide the "Analyze" panel to see the full board during replay.
+    \item \textbf{Bot vs Bot Move Cycling:} Nothing to note.
+\end{itemize}
+\textbf{Research Notes Summary:} Medium level player who struggled with the UI's lack of visual hierarchy and poor color contrast, which significantly hindered their ability to quickly interpret game state and make strategic decisions.
+\textbf{Survey Ratings:} Clarity: 3.0, Game Flow: 3.5, Intuition: 2.5 (Avg: 3.0)
+
+% --- Participant 4 ---
+\subsubsection{Participant 4}
+\textbf{Elo Rating:} 1150 | \textbf{Flesch Score:} Medium \\
+\textbf{Observational Task Notes:}
+\begin{itemize}
+    \item \textbf{Game Setup:} Noted the setup screen was uninspiring and boring,
+    \item \textbf{Game:} Confused about which tiles were what, due to lack of visual distinction and poor color choices. Also mentioned that the action log was too small to read.
+    \item \textbf{Replay:} Mentioned it would be good if you knew why the bots made certain moves, as it would help them learn.
+    \item \textbf{Move Cycling:} Nothing to note. 
+    \item \textbf{Bot vs Bot:} Found it hard to follow since there was no titles telling which bot was which.
+    \item \textbf{Analyze:} Felt the "Analyze" panel was too large and static, making it difficult to focus on the board.
+    \item \textbf{Bot vs Bot Replay:} Nothing to note.
+    \item \textbf{Bot vs Bot Move Cycling:} Was confused by not having a dice roll visualizer, saying "I have to look at the log just to see the dice rolls? That's not very intuitive."
+\end{itemize}
+\textbf{Research Notes Summary:} Competitive player focused on efficiency; found the fixed-layout UI and lack of visual dice icons to be the biggest friction points.
+\textbf{Survey Ratings:} Clarity: 4.5, Game Flow: 4.5, Intuition: 3.0 (Avg: 4.0)
+
+% --- Participant 5 ---
+\subsubsection{Participant 5}
+\textbf{Elo Rating:} 1000 | \textbf{Flesch Score:} Medium \\
+\textbf{Observational Task Notes:}
+\begin{itemize}
+    \item \textbf{Game Setup:} Didnt like the complicated bot titles.
+    \item \textbf{Game:} Disliked colours, was confused how this helps learn catan. 
+    \item \textbf{Replay:} Liked this feature but didnt enjoy the fixed board size, saying "I wish I could zoom in to see the details better, the drawers take up too much space."
+    \item \textbf{Move Cycling:} Nothing to note.
+    \item \textbf{Bot vs Bot:} "Why are there no titles for the bots? I have no idea who is who, it's just a mess to follow."
+    \item \textbf{Analyze:} Thought this feature would be better off somewhere else on the scren.
+    \item \textbf{Bot vs Bot Replay:} Found it helpful since game was so fast.
+    \item \textbf{Bot vs Bot Move Cycling:} Nothing to note.
+\end{itemize}
+\textbf{Research Notes Summary:} Average player who disliked the fixed board size, keep squinting.
+\textbf{Survey Ratings:} Clarity: 3.5, Game Flow: 4.0, Intuition: 3.0 (Avg: 3.5)
+
+% --- Participant 6 ---
+\subsubsection{Participant 6}
+\textbf{Elo Rating:} 100 - played once | \textbf{Flesch Score:} Low \\
+\textbf{Observational Task Notes:}
+\begin{itemize}
+    \item \textbf{Game Setup:} Was confused by bot titles and didnt know anything about elo ratings.
+    \item \textbf{Game:} Had no idea what was happening. Wished it was easier and more similar to the board game layout.
+    \item \textbf{Replay:} Liked this feature but was still confused by why bot made moves . "I wish I could ask it why it made certain moves, I dont understand why it did what it did."
+    \item \textbf{Move Cycling:} Nothing to note.
+    \item \textbf{Bot vs Bot:} Mentioned it was way too fast to follow and didnt learn anything.
+    \item \textbf{Analyze:} Nothing to note.
+    \item \textbf{Bot vs Bot Replay:} Found it helpful since game was so fast.
+    \item \textbf{Bot vs Bot Move Cycling:} Was impressed how fast the game went and liked being able to see the different moves, but was still confused by why bots made certain moves.
+\end{itemize}
+\textbf{Research Notes Summary:} High level of confusion and low engagement; the UI failed to provide a "game-like" experience for a beginner.
+\textbf{Survey Ratings:} Clarity: 3.0, Game Flow: 3.5, Intuition: 2.5 (Avg: 3.0)
+
+% --- Participant 7 ---
+\subsubsection{Participant 7}
+\textbf{Elo Rating:} 1100 | \textbf{Flesch Score:} Medium \\
+\textbf{Observational Task Notes:}
+\begin{itemize}
+    \item \textbf{Game Setup:} No troubles but did say its a pretty boring home screen.
+    \item \textbf{Game:} Tried closing drawers to see if they could get a better view of the board, but was frustrated to find they were fixed. Also mentioned that the action log was too small to read and that the colours made it hard to even know what actions were being taken.
+    \item \textbf{Replay:} Enjoyed this feature.
+    \item \textbf{Move Cycling:} Nothing to note.
+    \item \textbf{Bot vs Bot:} Thought this was cool but noted here that the tiles were hard to match to real catan tiles, making it less immersive and harder to follow. Same with development cards.
+    \item \textbf{Analyze:} Nothing to note.
+    \item \textbf{Bot vs Bot Replay:} Nothing to note.
+    \item \textbf{Bot vs Bot Move Cycling:} Nothing to note.
+\end{itemize}
+\textbf{Research Notes Summary:} Really enjoyed the arena, found the board to be the biggest point of friction, saying "The board is so hard to read, I wish it looked more like the real game, it would be way easier to understand what's going on."
+\textbf{Survey Ratings:} Clarity: 4.0, Game Flow: 4.5, Intuition: 3.0 (Avg: 3.8)
+
+
+\section{Elicitation Results}
+
+% Restructured into separate "Before" and "After" subsections
+\subsection{Before}
+%\begin{figure}[H]
+%    \centering
+%    \includegraphics[width=0.7\textwidth]{blank1.png}
+%    \caption{Initial interface state / Placeholder 1}
+%\end{figure}
+
+%\begin{figure}[H]
+%    \centering
+%    \includegraphics[width=0.7\textwidth]{blank2.png}
+%    \caption{Initial interface state / Placeholder 2}
+%\end{figure}
+
+\subsection{After}
+%\begin{figure}[H]
+%    \centering
+%    \includegraphics[width=0.7\textwidth]{ui1.png}
+%    \caption{Final UI Design 1}
+%\end{figure}
+
+%\begin{figure}[H]
+%    \centering
+%    \includegraphics[width=0.7\textwidth]{ui2.png}
+%    \caption{Final UI Design 2}
+%\end{figure}
+
+\end{document}
