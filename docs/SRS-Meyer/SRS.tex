@@ -605,7 +605,15 @@ The original vision for a computer vision system to observe physical board state
 
 \subsection{Interfaces}\label{subsec:interfaces}
 
-No external APIs or hardware interfaces are required for the system.
+
+The system requires several software interfaces. These include:
+\begin{itemize}
+    \item A REST API between the React frontend and Flask backend for gameplay, replay, and explanation requests.
+    \item A Python library interface to the Catanatron simulator for rule enforcement and game-state transitions.
+    \item An \RL{} environment interface compatible with Stable Baselines3 / OpenAI Gym-style interaction for training the \RL{} agent.
+    \item An external \LLM{} API interface for generating natural-language move explanations.
+\end{itemize}
+
 
 \subsection{Normal Operation}\label{subsec:normal-operation}
 \begin{itemize}
