@@ -1634,7 +1634,7 @@ The following safety and security requirements have been ported from our hazard 
     \item FR.Sa.8: The system shall notify the user in the event board streaming ceases.
     \item FR.Sa.9: The system shall warn the user when incomplete game data is read where possible.
     \item FR.Sa.10: The system shall enable the user to roll back to previous model versions.
-    \item FR.Sa.11: The system shall only capture and process game board area, not player faces or personal content.
+    \item FR.Sa.11: The system shall restrict image capture and processing to the game board region, and shall ignore, discard, or mask non-board content such as player faces or personal items when detected.
     \item FR.Sa.12: Iterations of the reinforcement learning environment shall be automatically validated to ensure its simulation dynamics remain consistent with real gameplay conditions. \newline
 \end{itemize}
 
