@@ -1,7 +1,13 @@
 \documentclass{article}
 
-\usepackage{tabularx}
+\usepackage{ltablex}
 \usepackage{booktabs}
+\usepackage{pdflscape}
+
+\keepXColumns
+
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
 
 \title{Reflection and Traceability Report on \progname}
 
@@ -61,11 +67,119 @@ be able to grade your response to feedback.  In that case your grade on this
 document, and likely the Revision 1 versions of the other documents will be
 low.} 
 
+\newpage
+\begin{landscape}
 \subsection{SRS and Hazard Analysis}
 
+\begin{tabularx}{\linewidth}{|P{2.3cm}|Y|P{2.5cm}|P{3.5cm}|}
+
+        % Header
+        \caption{SRS and HA Feedback and Resultant Changes} \label{TblSRSHA} \\
+        \hline
+        \textbf{Source} &
+        \textbf{Feedback Summary} &
+        \textbf{Link to Issue} &
+        \textbf{Link to Commit} \\
+        \hline
+        \endfirsthead
+
+        % Subsequent pages header
+        \hline
+        \textbf{Source} &
+        \textbf{Feedback Summary} &
+        \textbf{Link to Issue} &
+        \textbf{Link to Commit} \\
+        \hline
+        \endhead
+
+        % Prompt that the table continues
+        \hline
+        \multicolumn{4}{r}{\textit{Continued on next page}} \\
+        \endfoot
+
+        % No footer on last page
+        \hline
+        \endlastfoot
+
+        % Table Content
+        Peer Review &
+        NFR-E.10 and 11 missing values &
+        \href{https://github.com/AlgoCatan/RLCatan/issues/16}{Issue \#16} &
+        \href{https://github.com/AlgoCatan/RLCatan/commit/983904c2f1b365fc0b136a427e5a16b1c1ac575e}{Commit 983904c} \\
+
+\end{tabularx}
+
+\newpage
 \subsection{Design and Design Documentation}
 
+\begin{tabularx}{\linewidth}{|P{2.3cm}|Y|P{2.5cm}|P{3.5cm}|}
+
+        % Header
+        \caption{Design and Design Documentation Feedback and Resultant Changes} \label{TblDesign} \\
+        \hline
+        \textbf{Source} &
+        \textbf{Feedback Summary} &
+        \textbf{Link to Issue} &
+        \textbf{Link to Commit} \\
+        \hline
+        \endfirsthead
+
+        % Subsequent pages header
+        \hline
+        \textbf{Source} &
+        \textbf{Feedback Summary} &
+        \textbf{Link to Issue} &
+        \textbf{Link to Commit} \\
+        \hline
+        \endhead
+
+        % Prompt that the table continues
+        \hline
+        \multicolumn{4}{r}{\textit{Continued on next page}} \\
+        \endfoot
+
+        % No footer on last page
+        \hline
+        \endlastfoot
+
+\end{tabularx}
+
+\newpage
 \subsection{VnV Plan and Report}
+
+\begin{tabularx}{\linewidth}{|P{2.3cm}|Y|P{2.5cm}|P{3.5cm}|}
+
+        % Header
+        \caption{VnV Plan and Report Feedback and Resultant Changes} \label{TblVnV} \\
+        \hline
+        \textbf{Source} &
+        \textbf{Feedback Summary} &
+        \textbf{Link to Issue} &
+        \textbf{Link to Commit} \\
+        \hline
+        \endfirsthead
+
+        % Subsequent pages header
+        \hline
+        \textbf{Source} &
+        \textbf{Feedback Summary} &
+        \textbf{Link to Issue} &
+        \textbf{Link to Commit} \\
+        \hline
+        \endhead
+
+        % Prompt that the table continues
+        \hline
+        \multicolumn{4}{r}{\textit{Continued on next page}} \\
+        \endfoot
+
+        % No footer on last page
+        \hline
+        \endlastfoot
+
+\end{tabularx}
+
+\end{landscape}
 
 \section{Extras}
 
