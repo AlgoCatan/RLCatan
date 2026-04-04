@@ -964,14 +964,18 @@ None.
 \item exception: -
 \end{itemize}
 
-\subsubsection{Local Functions}
+\noindent resetQueue():
 \begin{itemize}
-\item \texttt{resetQueue()}:
+\item transition:
 \[
 \text{head} := 0, \quad \text{tail} := 0, \quad \text{size} := 0
 \]
-Resets the queue to an empty state.
+\item output: -
+\item exception: -
 \end{itemize}
+
+\subsubsection{Local Functions}
+None.
 
 \subsubsection{Formalization}
 
@@ -1087,7 +1091,7 @@ system input and output interactions. Because of this expanded definition,
 multiple hazards had to be revised. Risks that were previously limited 
 to incorrect board modeling were broadened to include incorrect state 
  synchronization, input misinterpretation, and output decision errors. 
- This led to updated mitigation strategies, such as stronger state 
+ This led to updated mitigation strategies, such as stronger state
  validation checks and clearer interface boundaries between the 
  AI agent and the game environment.
 
