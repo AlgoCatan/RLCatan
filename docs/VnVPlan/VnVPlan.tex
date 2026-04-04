@@ -290,7 +290,7 @@ This will use a combination of dynamic (automated tests) and non-dynamic (static
 Automated VnV tools are central to maintaining code quality and continuous integration.
 
 \begin{itemize}
-    \item \textbf{Unit Testing Frameworks:} Python’s built-in \texttt{unittest} or \texttt{pytest} will be used for backend unit testing. Jest will be used for the frontend React components.
+    \item \textbf{Unit Testing Frameworks:} Python's built-in \texttt{unittest} or \texttt{pytest} were planned for backend unit testing, and Jest was planned for the frontend React components. However, during implementation, the team prioritized system-level integration testing and usability validation over comprehensive unit test coverage, given time constraints and the need to validate the AI agent's effectiveness in the broader system context. Unit testing infrastructure remains in place for future development iterations.
     \item \textbf{Continuous Integration (CI):} GitHub Actions will be implemented to run automated tests, linters, and build checks upon every push or pull request.
     \item \textbf{Static Analysis:} SonarQube will be used to analyze the codebase, identify code smells, potential bugs, and security vulnerabilities.
     \item \textbf{Code Coverage:} Tools like Coverage.py (for Python) will be integrated into the CI pipeline to report and track unit test coverage metrics, aiming for a minimum of 80\% coverage for core logic modules.

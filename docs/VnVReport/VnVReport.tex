@@ -517,12 +517,14 @@ We believe this focus will have a more significant impact on the success of the 
 
 \section{Automated Testing}
 
-For our functional and non-functional requirements evaluation there were a couple bash scripts that we made for testing,
-but nothing too extensive.
-Many were handled manually or were already incorporated in our existing pipeline.
-The CI/CD pipeline was expanded for any remaining automated test plans that were not yet implemented.
-It ensures that our codebase remains stable and reliable.
-This automated testing process includes running unit tests, integration tests, linting, and coverage reporting, to catch issues early in the development cycle.
+For our functional and non-functional requirements evaluation, we employed bash scripts for specific testing purposes:
+\begin{itemize}
+    \item \textbf{Load/Stress Testing:} Bash scripts were used to send repeated requests to the API endpoints to measure response times and identify performance bottlenecks under load (satisfying NFR.E.4 and FR.S.6.3).
+    \item \textbf{Game Simulation Testing:} Scripts automated the execution of multiple game scenarios to validate that the AI model produces legal moves and handles edge cases correctly (satisfying FR.S.3.1 and FR.S.3.2).
+    \item \textbf{Integration Testing:} Bash scripts coordinated calls between modules to verify data flow and state consistency across the system (supporting FR.S.7 game state database requirements).
+\end{itemize}
+
+However, comprehensive unit testing with pytest (Python) and Jest (JavaScript) was not fully implemented during this revision due to time constraints and the team's focus on system-level validation and usability testing. The CI/CD pipeline was expanded to incorporate the bash scripts and static analysis tools, ensuring code stability and catching issues early in the development cycle. The automated testing process includes running integration tests, linting, and coverage reporting through the GitHub Actions pipeline.
 
 \section{Trace to Requirements}
 
