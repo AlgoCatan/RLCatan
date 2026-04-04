@@ -244,7 +244,7 @@ This module provides the interface between the hardware (camera) and the
 Hides the complexity of calibration and error correction.
 \item[Services:]Provides access programs to process camera input, detect board elements, and translate visual features into a structured digital representation of the game state.
 Provides diagnostic feedback on detection confidence.
-\item[Implemented By:] \progname{}
+\item[Implemented By:] Python using OpenCV/YOLOv9-based computer vision tooling, trained models, and supporting scripts within \progname{}
 \end{description}
 
 \subsection{Behaviour-Hiding Module}
@@ -263,7 +263,7 @@ This module serves as a communication layer between the
 Hides the details of DOM manipulation and event handling.
 \item[Services:]Provides an interactive, real-time visualization of the Catan board.
 Displays player moves, resources, and AI-generated move recommendations. Allows users to provide manual corrections to the board state (to satisfy FR.Sa.1).
-\item[Implemented By:] \progname{}
+\item[Implemented By:] React/JavaScript frontend in \progname{}
 \end{description}
 
 \subsubsection{Game State Manager (\mref{mState})} \label{sec:mState}
@@ -272,7 +272,7 @@ Displays player moves, resources, and AI-generated move recommendations. Allows 
 Hides the complex logic used to enforce the official Catan ruleset and ensure state synchronization.
 \item[Services:]Maintains the single source of truth for the current game state. Tracks player assets and turn data.
 Provides access programs to update the state and validate all player and AI moves against the game rules.
-\item[Implemented By:] \progname{}
+\item[Implemented By:] Python backend logic in \progname{}
 \end{description}
 
 \subsubsection{Reinforcement Learning Environment (\mref{mEnv})} \label{sec:mEnv}
@@ -281,7 +281,7 @@ Provides access programs to update the state and validate all player and AI move
 Hides the specific reward/penalty functions and opponent logic used during AI self-play and training.
 \item[Services:]Simulates the game rules and state transitions of Catan. Provides an interface for the AI model to interact with, perform self-play, and receive feedback for learning.
 Supports model evaluation and benchmarking.
-\item[Implemented By:] \progname{} (as a wrapper around Catanatron)
+\item[Implemented By:] \progname{} as a wrapper around Catanatron
 \end{description}
 
 \subsection{Software Decision Module}
@@ -301,7 +301,7 @@ The secrets of this module are
 Hides the complex mathematical formulation of the policy $\pi(a \mid s)$.
 \item[Services:]Analyzes a given digital game state to predict optimal player strategies.
 Provides access programs to request move recommendations, confidence scores, and textual reasoning.
-\item[Implemented By:] \progname{}
+\item[Implemented By:] Python-based DRL model implementation in \progname{}
 \end{description}
 
 \subsubsection{Game State Database (\mref{mDB})} \label{sec:mDB}
@@ -310,7 +310,7 @@ Provides access programs to request move recommendations, confidence scores, and
 Hides the implementation of data persistence, transactions, and indexing.
 \item[Services:]Stores and maintains complete and consistent records of all game states and player profiles.
 Provides access programs for efficient read/write operations and structured access to historical game data for post-game analysis or replay.
-\item[Implemented By:] \progname{}
+\item[Implemented By:] PostgreSQL database layer in \progname{}
 \end{description}
 
 \subsubsection{Image Queue (\mref{mQueue})} \label{sec:mQueue}
@@ -318,7 +318,7 @@ Provides access programs for efficient read/write operations and structured acce
 \item[Secrets:]The specific data transfer protocol and middleware (e.g., 0MQ/imageMQ) used for low-latency, asynchronous communication between modules.
 Hides the details of message serialization, authentication, and error handling.
 \item[Services:]Enables reliable, low-latency data exchange between the CV Model, Game State Manager, AI Model, and UI. Supports asynchronous message-passing mechanisms.
-\item[Implemented By:] \progname{}
+\item[Implemented By:] \progname{} message-passing layer over the chosen queue/middleware
 \end{description}
 
 \section{Traceability Matrix} \label{SecTM}
