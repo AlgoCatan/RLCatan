@@ -425,6 +425,23 @@ Additionally, we shall abide by the following legal and regulatory factors:
 \subsection{Components}\label{subsec:components}
 The system is separated into a list of major components:
 
+The figure below provides a simple view of the main component interactions so readers can quickly see how the simulator, API, frontend, storage, and model-based services connect.
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.92\linewidth}{\centering
+    \textit{Game Simulation Engine} $\rightarrow$ \textit{Game State Manager} $\rightarrow$ \textit{Backend API Server} $\leftrightarrow$ \textit{User Interface}\\[0.5em]
+    \textit{Backend API Server} $\leftrightarrow$ \textit{Game State Database}\\[0.5em]
+    \textit{Backend API Server} $\rightarrow$ \textit{Reinforcement Learning Agent (PPO)}\\[0.5em]
+    \textit{Backend API Server} $\rightarrow$ \textit{Analysis Module}\\[0.5em]
+    \textit{Backend API Server} $\rightarrow$ \textit{Explanation Pipeline}\\[0.5em]
+    \textit{Training Pipeline} $\leftrightarrow$ \textit{Model Storage and Versioning}\\[0.5em]
+    \textit{Training Pipeline} $\leftrightarrow$ \textit{\Elo{} League System}
+    }}
+    \caption{\textit{Minimal component linkage view for the main RLCatan system parts.}}
+    \label{fig:component-linkage}
+\end{figure}
+
 \begin{itemize}
     \item Game Simulation Engine: The Python-based Catanatron library that simulates the complete game state, rules, and mechanics for both training and gameplay.
 
@@ -1487,11 +1504,13 @@ Each predicate ensures the acting player has sufficient resources and that the m
     \item {\AI{} framework} – Reinforcement learning agent (PPO) trained using Stable Baselines3 and the Catanatron game simulator; compatible with OpenAI Gym.
     \item {Web Backend} – Flask with Flask-CORS for REST API development and server-side game logic.
     \item {Frontend Framework} – React with TypeScript and Vite as the build tool for the web interface.
-    \item {Database} – PostgreSQL for game state persistence and historical data storage.
-    \item {Containerization} – Docker and Docker Compose for consistent deployment across environments.
-    \item {Computer Vision} – (Deferred) Originally planned for OpenCV or YOLOv9; currently out of scope pending future implementation.
-    \item {Version control and collaboration} – GitHub for repository management with branching, pull requests, CI/CD pipelines, and Kanban board for task tracking.
-    \item {License} – GPL-3.0-or-later for the catanatron library; other dependencies follow their respective open-source licenses.
+    \item {Database} – PostgreSQL for persistent game state storage and historical data management.
+    \item {Containerization} – Docker and Docker Compose for deployment and environment consistency.
+    \item {\CV{} Libraries} – (Deferred) OpenCV and YOLOv9 planned for future computer vision integration.
+    \item {Hardware} – GPU recommended for efficient \RL{} model training and inference.
+    \item {Version Control} – GitHub for source code management and collaboration.
+    \item {Continuous Integration} – GitHub Actions for automated testing and build pipelines.
+    \item {LLM API} - Gemini API for integration of natural language processing capabilities.
 \end{itemize}
 
 \subsection{Schedule and Milestones}\label{subsec:schedule}
@@ -1559,10 +1578,11 @@ Code Cleanup and Documentation & Refactor code, remove unnecessary files, write 
 
 \subsection{Required Technology Elements}\label{subsec:requiredtech}
 \begin{itemize}
-    \item {Primary Programming Language} – Python for backend and machine learning components; TypeScript/JavaScript for frontend.
+    \item {Primary Programming Language} – Python for backend and \AI{} development; TypeScript/JavaScript for frontend.
     \item {Game Simulation Library} – Catanatron[10] for complete \emph{\Catan{}} game simulation and rule enforcement.
     \item {Reinforcement Learning Framework} – Stable Baselines3 with PPO algorithm for training and deploying the \AI{} agent.
-    \item {Web Framework} – Flask with Flask-CORS for building the REST API backend; React with TypeScript for the user interface.
+    \item {Web Framework} – Flask with Flask-CORS for REST API development and server-side game logic.
+    \item {Frontend Framework} – React with TypeScript and Vite as the build tool for the web interface.
     \item {Database} – PostgreSQL for persistent game state storage and historical data management.
     \item {Containerization} – Docker and Docker Compose for deployment and environment consistency.
     \item {\CV{} Libraries} – (Deferred) OpenCV and YOLOv9 planned for future computer vision integration.
@@ -1787,7 +1807,7 @@ The following safety and security requirements have been ported from our hazard 
     several elements not explicitly covered by the Meyer template.
      Because of this, we had to diverge from the original format to 
      align with the rubric’s expectations. We decided to create
-      a “Changes Table” that clearly outlined all modifications and
+      a “Changes from Template” table that clearly outlined all modifications and
        additions we made to the original template, ensuring clarity
         and consistency across the document.
 
@@ -1795,9 +1815,8 @@ The following safety and security requirements have been ported from our hazard 
      who proposed the project and provided valuable insights into 
      reinforcement learning (RL) and deep reinforcement learning (DRL).
       In addition, Sunny has a connection with a competitive 
-      \emph{\Catan{}} player, whose input has been great in
-     shaping some of our project requirements and understanding 
-       player strategies.
+      \emph{\Catan{}} player, which allowed us to get direct user input.
+      This helped us understand the specific needs of our target audience and the limitations of existing competitive \AI{} bots, which in turn helped shape our requirements.
 
     \item I am currently taking 4AL3 (Introduction to Machine Learning),
      which aligns closely with our project since it covers many of the
