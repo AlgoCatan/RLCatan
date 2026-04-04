@@ -481,17 +481,39 @@ How test will be performed: Automated unit test using an HTTP test client.
 \end{enumerate}
 
 \section{Changes Due to Testing}
-Going from rev1 to the final demo, we will be
-overhauling the UI to address the usability issues identified in our testing. This will include a more intuitive layout,
-clearer visual cues for game actions, and improved color-coding to enhance the connection between the real-life Catan game and the bot's interface.
-We will also be incorporating a LLM-based feedback system to provide the players insight into why certain moves are made, since our usability testing found this to be an area of confusion.
-The maintainability analysis with SonarQube also revealed some areas for improvement.
-While our codebase received a high maintainability rating, there were still many medium and low severity maintainability issues found, as well as a couple high severity issues (largely dependency based) that we'll close going forward.
-This will involve restructuring certain modules, adding more detailed comments, and ensuring consistent coding standards across the project.
-In the process of analysing maintainability, the static analysis also revealed some security and reliability problems.
-Many of these issues are likely out of scope for now, but we'll still sort through them for anything critical and make the corresponding changes.
-Overall, the conclusions we've drawn from this testing have changed our priorities from improving the model's decision-making, to enhancing the user experience and code quality.
-We believe this will have a more significant impact on the success of the project as we pursue the path of turning our model into a method of experiential learning.
+
+Based on testing results, we have identified and prioritized changes as follows:
+
+\subsection*{High Priority (Rev 1 Implementation)}
+The following critical changes will be implemented before or immediately after the final demo to address major usability and quality gaps:
+\begin{itemize}
+    \item \textbf{UI/UX Overhaul:} We identified significant usability issues in testing.
+    We will implement a more intuitive layout, clearer visual cues for game actions, and improved color-coding to enhance the connection between the real-life Catan game and the bot's interface.
+    \item \textbf{High Severity Code Issues:} SonarQube analysis revealed high severity maintainability and security issues, largely dependency-based.
+    These will be resolved to ensure code stability and security.
+\end{itemize}
+
+\subsection*{Medium Priority (Post-Rev 1 / Backlog)}
+The following improvements are valuable but can be deferred to future iterations:
+\begin{itemize}
+    \item \textbf{Medium/Low Severity Maintainability Issues:} SonarQube flagged many medium and low severity maintainability issues.
+    While our codebase received a high maintainability rating overall, we will address these issues through module restructuring, improved code comments, and consistent coding standards across the project.
+    \item \textbf{Deployment Expiry Date:} Currently the team is paying to host the application on paid third-party services like Render and Render's Postgres DB.
+    Once the project is complete, the team will need to decide on a plan for how long to keep the application hosted, and whether to switch to a free-tier hosting solution or shut down the service entirely.
+\end{itemize}
+
+\subsection*{Out of Scope}
+The following findings from testing will not be addressed due to time constraints or project priorities:
+\begin{itemize}
+    \item \textbf{Low-Impact Security Issues:} Some security issues identified in static analysis are considered low-risk given the system's deployment context and will not be addressed in the current release cycle.
+    \item \textbf{Advanced Model Optimizations:} Initially, we prioritized improving the AI model's decision-making.
+    However, testing revealed that user experience is a larger bottleneck.
+    Further model optimization is deferred in favor of usability improvements.
+\end{itemize}
+
+\subsection*{Summary}
+Overall, testing conclusions have shifted our priorities from improving the model's decision-making to enhancing the user experience and code quality.
+We believe this focus will have a more significant impact on the success of the project as we pursue the path of turning our model into a method of experiential learning.
 
 \section{Automated Testing}
 
