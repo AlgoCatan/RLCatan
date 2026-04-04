@@ -416,8 +416,9 @@ FR.Sa.12 (Env. Validation) & \mref{mEnv} \\
 \section{Use Hierarchy Between Modules} \label{SecUse}
 
 In this section, the uses hierarchy between modules is provided.
-A module A uses a module B if the correct execution of A depends upon the availability of a correct implementation of B. For our system, the 'uses' relation is not a simple hierarchy, as the main components communicate in a decoupled manner through the Communication Layer (\mref{mQueue}).
-The relationships are shown in Figure \ref{FigUH}. This graph is a directed acyclic graph (DAG), as required.
+A module A uses a module B if the correct execution of A depends upon the availability of a correct implementation of B.
+For our system, the diagram in Figure \ref{FigUH} shows which modules depend on other modules.
+The main components communicate in a decoupled manner through the Communication Layer (\mref{mQueue}), which may introduce cycles in the dependency graph.
 
 \begin{figure}[H]
 \centering
