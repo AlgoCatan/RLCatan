@@ -210,9 +210,20 @@ The modules listed below, which are leaves in the hierarchy tree, are the module
 \section{Connection Between Requirements and Design} \label{SecConnection}
 
 The design of the system is intended to satisfy the requirements developed in
-the SRS.
-To satisfy the requirements for real-time operation (NFR.E.4), low-latency communication (FR.S.6.3), and component decoupling (NFR.S.3), a design decision was made to use a message queue middleware (as implemented in \mref{mQueue}) for asynchronous communication between the primary components.
-This allows the CV, AI, and UI modules to operate independently without blocking each other.
+the SRS. The following key design decisions were made to address specific requirements:
+
+\begin{itemize}
+    \item \textbf{Reinforcement Learning Environment (\mref{mEnv}):} To satisfy FR.S.2 (AI training environment) and enable the AI model to learn optimal strategies, a dedicated simulation environment was implemented as a Software Decision module.
+    \item This encapsulates the Catan game rules and opponent logic, allowing the AI to perform self-play training before deployment.
+
+    \item \textbf{Computer Vision Module (\mref{mCV}):} To satisfy FR.S.1 (board state detection) and FR.Sa.9 (safety validation of vision results), a dedicated CV module processes camera input and translates it to structured game state.
+    \item This separation enables independent testing of CV accuracy and provides diagnostic feedback required by FR.Sa.11.
+
+    \item \textbf{Game State Database (\mref{mDB}):} To satisfy FR.S.5 (persistent storage) and NFR.S.5 (data integrity), a dedicated database module manages all game state records, ensuring transactional consistency and enabling post-game analysis as specified in FR.S.5.5.
+
+    \item \textbf{Message Queue Middleware (\mref{mQueue}):} To satisfy NFR.E.4 (real-time operation), FR.S.6.3 (low-latency communication), and NFR.S.3 (component maintainability through decoupling), asynchronous message-passing is used between primary components.
+    \item This allows the CV, AI, and UI modules to operate independently without blocking each other, improving system responsiveness and modularity.
+\end{itemize}
 
 \section{Module Decomposition} \label{SecMD}
 
