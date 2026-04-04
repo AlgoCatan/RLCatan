@@ -375,17 +375,17 @@ Additionally, we shall abide by the following legal and regulatory factors:
     \hline
     \textbf{Label} & \textbf{Requirement} \\
     \hline
-    NFR.E.1 & System shall be installable and fully operational on Windows 10+. \label{NFR.E.1} \\
+    NFR.E.1 & The system shall be installable and fully operational on Windows 10+. \label{NFR.E.1} \\
     \hline
-    NFR.E.2 & Complete system installation shall take no more than 15 minutes. \label{NFR.E.2} \\
+    NFR.E.2 & The system shall have a complete installation time of no more than 15 minutes. \label{NFR.E.2} \\
     \hline
-    NFR.E.3 & System shall compile successfully on available GPU/CPU resources. \label{NFR.E.3} \\
+    NFR.E.3 & The system shall compile successfully on available GPU/CPU resources. \label{NFR.E.3} \\
     \hline
-    NFR.E.4 & System shall provide \AI{} recommendations within 5 seconds. \label{NFR.E.4} \\
+    NFR.E.4 & The system shall provide \AI{} moves within 5 seconds. \label{NFR.E.4} \\
     \hline
-    NFR.E.5 & Python code shall pass PEP8 [9] style checks. \label{NFR.E.5} \\
+    NFR.E.5 & The system's Python code shall pass all PEP8 [9] style checks. \label{NFR.E.5} \\
     \hline
-    NFR.E.6 & All JavaScript/React code shall pass Google Style Guide[8] checks. \label{NFR.E.6} \\
+    NFR.E.6 & The system's JavaScript/React code shall pass all Google Style Guide [8] checks. \label{NFR.E.6} \\
     \hline
     NFR.E.7 & The system shall enforce the invariant that the total number of roads per player remains exactly 15. \label{NFR.E.7} \\
     \hline
@@ -397,13 +397,13 @@ Additionally, we shall abide by the following legal and regulatory factors:
     \hline
     NFR.E.11 & The system shall enforce the invariant that the total number of development cards remains exactly 25. \label{NFR.E.11} \\
     \hline
-    NFR.E.12 & Player turn order shall remain consistent throughout the game. \label{NFR.E.12} \\
+    NFR.E.12 & The system shall enforce consistent player turn order throughout the game. \label{NFR.E.12} \\
     \hline
-    NFR.E.13 & System shall not reproduce or distribute copyrighted materials. \label{NFR.E.13} \\
+    NFR.E.13 & The system shall not reproduce or distribute copyrighted materials. \label{NFR.E.13} \\
     \hline
-    NFR.E.14 & System shall not use any trademarked assets of \emph{Catan{}}. \label{NFR.E.14} \\
+    NFR.E.14 & The system shall not use any trademarked assets of \emph{Catan{}}. \label{NFR.E.14} \\
     \hline
-    NFR.E.15 & System shall not collect personally identifiable information. \label{NFR.E.15} \\
+    NFR.E.15 & The system shall not collect personally identifiable information. \label{NFR.E.15} \\
     \hline
     \end{tabular}
 \end{table}
@@ -466,21 +466,21 @@ The original vision for a computer vision system to observe physical board state
 \textbf{Functional Requirements}
 
 \begin{itemize}
-  \item \label{FR.S.1.1}\textbf{FR.S.1.1 (DEFERRED)} Process live or captured camera input to detect board elements, player actions, and resource placements.
-  \item \label{FR.S.1.2}\textbf{FR.S.1.2 (DEFERRED)} Translate visual features into structured \GameState{} data for the Game State Manager.
-  \item \label{FR.S.1.3}\textbf{FR.S.1.3 (DEFERRED)} Detect and correct inconsistencies or occlusions in visual recognition.
-  \item \label{FR.S.1.4}\textbf{FR.S.1.4 (DEFERRED)} Calibrate dynamically for lighting, camera angle, and board orientation.
-  \item \label{FR.S.1.5}\textbf{FR.S.1.5 (DEFERRED)} Provide visual diagnostics and confidence metrics for detected states.
+  \item \label{FR.S.1.1}\textbf{FR.S.1.1 (DEFERRED)} The system shall process live or captured camera input to detect board elements, player actions, and resource placements with at least 99.99\% accuracy.
+  \item \label{FR.S.1.2}\textbf{FR.S.1.2 (DEFERRED)} The system shall translate visual features into structured \GameState{} data for the Game State Manager.
+  \item \label{FR.S.1.3}\textbf{FR.S.1.3 (DEFERRED)} The system shall detect and report inconsistencies or occlusions in visual view.
+  \item \label{FR.S.1.4}\textbf{FR.S.1.4 (DEFERRED)} The system shall dynamically calibrate lighting, camera angle, and board orientation.
+  \item \label{FR.S.1.5}\textbf{FR.S.1.5 (DEFERRED)} The system shall provide visual diagnostics and confidence metrics for detected states.
 \end{itemize}
 
 \subsubsection{Reinforcement Learning Environment}
 
 \begin{itemize}
-  \item \label{FR.S.2.1}\textbf{FR.S.2.1} Simulate the game rules, move logic, and state transitions consistent with the official \emph{\Catan{}} rule set.
-  \item \label{FR.S.2.2}\textbf{FR.S.2.2} Allow the \AI{} model to perform self-play or interact with recorded game states for training.
-  \item \label{FR.S.2.3}\textbf{FR.S.2.3} Provide feedback in the form of rewards, penalties, or success metrics for learning.
-  \item \label{FR.S.2.4}\textbf{FR.S.2.4} Support batch and real-time evaluation modes for model benchmarking.
-  \item \label{FR.S.2.5}\textbf{FR.S.2.5} Interface seamlessly with the Game State Manager and \AI{} model.
+  \item \label{FR.S.2.1}\textbf{FR.S.2.1} The system shall simulate the game rules, move logic, and state transitions consistent with the official \emph{\Catan{}} rule set.
+  \item \label{FR.S.2.2}\textbf{FR.S.2.2} The system shall enable the \AI{} model to perform self-play against opponents selected from the Elo league for training purposes.
+  \item \label{FR.S.2.3}\textbf{FR.S.2.3} The system shall provide feedback in the form of rewards, penalties, or success metrics for learning.
+  \item \label{FR.S.2.4}\textbf{FR.S.2.4} The system shall support batch and real-time evaluation modes for model benchmarking.
+  \item \label{FR.S.2.5}\textbf{FR.S.2.5} The system shall adapt dynamically to changing game conditions through curriculum-guided reinforcement learning.
 \end{itemize}
 
 
@@ -489,11 +489,11 @@ The original vision for a computer vision system to observe physical board state
 \textbf{Functional Requirements}
 
 \begin{itemize}
-  \item \label{FR.S.3.1}\textbf{FR.S.3.1} Analyze the digital \GameState{} to predict optimal player strategies.
-  \item \label{FR.S.3.2}\textbf{FR.S.3.2} Evaluate potential moves based on resource availability, player position, and opponent behavior.
-  \item \label{FR.S.3.3}\textbf{FR.S.3.3} Adapt dynamically to changing game conditions through curriculum-guided reinforcement learning.
-  \item \label{FR.S.3.4}\textbf{FR.S.3.4} Provide move recommendations with confidence scores and textual reasoning.
-  \item \label{FR.S.3.5}\textbf{FR.S.3.5} Integrate with the Reinforcement Learning Environment for continuous improvement.
+  \item \label{FR.S.3.1}\textbf{FR.S.3.1} The system shall analyze the digital \GameState{} and return a valid action consistent with the rules of \emph{}\Catan{}}.
+  \item \label{FR.S.3.2}\textbf{FR.S.3.2} The system shall evaluate potential moves based on resource availability, player position, and opponent behavior.
+  \item \label{FR.S.3.3}\textbf{FR.S.3.3} The system's models shall interface seamlessly with the Game State, allowing the interchanging of model versions.
+  \item \label{FR.S.3.4}\textbf{FR.S.3.4} The system shall win matches against a bot making random moves >50\% of the time to demonstrate learning.
+  \item \label{FR.S.3.5}\textbf{FR.S.3.5} The system shall integrate with the Reinforcement Learning Environment, enabling continuous improvement.
 \end{itemize}
 
 \subsubsection{Elo League System}
@@ -501,12 +501,11 @@ The original vision for a computer vision system to observe physical board state
 \textbf{Functional Requirements}
 
 \begin{itemize}
-  \item \label{FR.S.3.6}\textbf{FR.S.3.6} Maintain Elo ratings for all trained model snapshots and baseline opponents.
-  \item \label{FR.S.3.7}\textbf{FR.S.3.7} Update Elo ratings based on match outcomes between league members using the standard Elo formula.
-  \item \label{FR.S.3.8}\textbf{FR.S.3.8} Support dynamic opponent selection by matching players to Elo-rated opponents within their skill range.
-  \item \label{FR.S.3.9}\textbf{FR.S.3.9} Provide temperature-based sampling for opponent selection to balance challenge and feasibility.
-  \item \label{FR.S.3.10}\textbf{FR.S.3.10} Manage league member storage and implement pruning strategies to maintain league size within reasonable bounds.
-  \item \label{FR.S.3.11}\textbf{FR.S.3.11} Expose league standings and member statistics through API endpoints for user interface display.
+  \item \label{FR.S.3.6}\textbf{FR.S.3.6} The system shall maintain Elo ratings for all trained model snapshots and baseline opponents.
+  \item \label{FR.S.3.7}\textbf{FR.S.3.7} The system shall update Elo ratings based on match outcomes between league members using the standard Elo formula.
+  \item \label{FR.S.3.8}\textbf{FR.S.3.8} The system shall expose stored league members to the UI, enabling users to select from multiple bot options.
+  \item \label{FR.S.3.9}\textbf{FR.S.3.9} The system shall reduce training bias by enforcing fixed probabilities of selecting opponents from known stable benchmarks during training.
+  \item \label{FR.S.3.10}\textbf{FR.S.3.10} The system shall manage league member storage and implement pruning strategies to maintain league size to no more than 125 model snapshots.
 \end{itemize}
 
 \subsubsection{Curriculum Learning Manager}
@@ -514,11 +513,11 @@ The original vision for a computer vision system to observe physical board state
 \textbf{Functional Requirements}
 
 \begin{itemize}
-  \item \label{FR.S.3.12}\textbf{FR.S.3.12} Define and manage curriculum phases with configurable rule variations (e.g., victory point targets, disabled action types).
-  \item \label{FR.S.3.13}\textbf{FR.S.3.13} Automatically advance to the next curriculum phase based on metric thresholds and minimum episode requirements.
-  \item \label{FR.S.3.14}\textbf{FR.S.3.14} Support optional cycling back to earlier phases or continuous training through the same phase.
-  \item \label{FR.S.3.15}\textbf{FR.S.3.15} Log curriculum phase transitions and training metrics for analysis and debugging.
-  \item \label{FR.S.3.16}\textbf{FR.S.3.16} Integrate curriculum phases with Elo league opponent selection during training.
+  \item \label{FR.S.3.12}\textbf{FR.S.3.12} The system shall define and manage curriculum phases with configurable rule variations (e.g., victory point targets, disabled action types).
+  \item \label{FR.S.3.13}\textbf{FR.S.3.13} The system shall automatically advance to the next curriculum phase based on metric thresholds and minimum episode requirements.
+  \item \label{FR.S.3.14}\textbf{FR.S.3.14} The system shall support optional cycling back to earlier phases or continuous training through the same phase.
+  \item \label{FR.S.3.15}\textbf{FR.S.3.15} The system shall log curriculum phase transitions and training metrics for analysis and debugging.
+  \item \label{FR.S.3.16}\textbf{FR.S.3.16} The system shall integrate curriculum phases with Elo league opponent selection during training.
 \end{itemize}
 
 \subsubsection{User Interface}
@@ -526,14 +525,14 @@ The original vision for a computer vision system to observe physical board state
 \textbf{Functional Requirements}
 
 \begin{itemize}
-  \item \label{FR.S.4.1}\textbf{FR.S.4.1} Provide an interactive, real-time visualization of the \emph{\Catan{}} board and current \GameState{}.
-  \item \label{FR.S.4.2}\textbf{FR.S.4.2} Display player moves, dice rolls, and resource changes immediately after occurrence.
-  \item \label{FR.S.4.3}\textbf{FR.S.4.3} Enable player interactions such as building, trading, and ending turns.
-  \item \label{FR.S.4.4}\textbf{FR.S.4.4} Present \AI{}-generated move recommendations clearly, with visual highlighting or overlays.
-  \item \label{FR.S.4.5}\textbf{FR.S.4.5} Support desktop and mobile layouts for accessibility and responsiveness.
-  \item \label{FR.S.4.6}\textbf{FR.S.4.6} Log user interactions and decisions for post-game analysis.
-  \item \label{FR.S.4.7}\textbf{FR.S.4.7} Display Elo ratings and league standings for informed opponent selection.
-  \item \label{FR.S.4.8}\textbf{FR.S.4.8} Allow users to filter opponents by difficulty level or select specific opponents from the league.
+  \item \label{FR.S.4.1}\textbf{FR.S.4.1} The system shall provide an interactive, real-time visualization of the \emph{\Catan{}} board and current \GameState{}.
+  \item \label{FR.S.4.2}\textbf{FR.S.4.2} The system shall display player moves, dice rolls, and resource changes immediately after occurrence.
+  \item \label{FR.S.4.3}\textbf{FR.S.4.3} The system shall enable player interactions such as building, trading, and any other actions possible in the game of \emph{\Catan{}}.
+  \item \label{FR.S.4.4}\textbf{FR.S.4.4} The system shall present \LLM{}-generated move explanations clearly, with visual highlighting or overlays.
+  \item \label{FR.S.4.5}\textbf{FR.S.4.5} The system shall support desktop and mobile layouts for accessibility and responsiveness.
+  \item \label{FR.S.4.6}\textbf{FR.S.4.6} The system shall log user interactions and decisions for post-game analysis.
+  \item \label{FR.S.4.7}\textbf{FR.S.4.7} The system shall display Elo ratings and league standings for informed opponent selection.
+  \item \label{FR.S.4.8}\textbf{FR.S.4.8} The system shall allow users to select specific opponents from the league.
 \end{itemize}
 
 
@@ -542,13 +541,13 @@ The original vision for a computer vision system to observe physical board state
 \textbf{Functional Requirements}
 
 \begin{itemize}
-  \item \label{FR.S.5.1}\textbf{FR.S.5.1} Store complete and consistent records of all ongoing and past \emph{\Catan{}} games.
-  \item \label{FR.S.5.2}\textbf{FR.S.5.2} Maintain player profiles, scores, resource inventories, and game metadata.
-  \item \label{FR.S.5.3}\textbf{FR.S.5.3} Support efficient read and write operations for real-time synchronization.
-  \item \label{FR.S.5.4}\textbf{FR.S.5.4} Ensure data persistence across sessions and support recovery after interruptions.
-  \item \label{FR.S.5.5}\textbf{FR.S.5.5} Provide structured access to historical game data for training or replay features.
-  \item \label{FR.S.5.6}\textbf{FR.S.5.6} Maintain Elo ratings and match history for all league members.
-  \item \label{FR.S.5.7}\textbf{FR.S.5.7} Track curriculum phase progress and training metrics across runs.
+  \item \label{FR.S.5.1}\textbf{FR.S.5.1} The system shall store complete and consistent records of all ongoing and past \emph{\Catan{}} games.
+  \item \label{FR.S.5.2}\textbf{FR.S.5.2} The system shall maintain scores, resource inventories, and game metadata.
+  \item \label{FR.S.5.3}\textbf{FR.S.5.3} The system shall support efficient read and write operations for real-time synchronization.
+  \item \label{FR.S.5.4}\textbf{FR.S.5.4} The system shall ensure data persistence across sessions and support recovery after interruptions.
+  \item \label{FR.S.5.5}\textbf{FR.S.5.5} The system shall provide structured access to historical game data for training or replay features.
+  \item \label{FR.S.5.6}\textbf{FR.S.5.6} The system shall maintain Elo ratings and match history for all league members.
+  \item \label{FR.S.5.7}\textbf{FR.S.5.7} The system shall track curriculum phase progress and training metrics across runs.
 \end{itemize}
 
 
@@ -557,10 +556,10 @@ The original vision for a computer vision system to observe physical board state
 \textbf{Functional Requirements}
 
 \begin{itemize}
-  \item \label{FR.S.6.1}\textbf{FR.S.6.1} Enable reliable data exchange between the User Interface, Game State Manager, \AI{} model, and Database.
-  \item \label{FR.S.6.2}\textbf{FR.S.6.2} Support both synchronous and asynchronous message-passing mechanisms.
-  \item \label{FR.S.6.3}\textbf{FR.S.6.3} Ensure low-latency updates to maintain real-time synchronization of states.
-  \item \label{FR.S.6.4}\textbf{FR.S.6.4} Provide secure authentication, authorization, and encryption for all transmitted data.
+  \item \label{FR.S.6.1}\textbf{FR.S.6.1} The system shall enable reliable data exchange between the User Interface, Game State Manager, \AI{} model, and Database.
+  \item \label{FR.S.6.2}\textbf{FR.S.6.2} The system shall support both synchronous and asynchronous message-passing mechanisms.
+  \item \label{FR.S.6.3}\textbf{FR.S.6.3} The system shall ensure low-latency updates (<100ms for UI updates, <500ms for \AI{} decisions) to maintain real-time synchronization of states.
+  \item \label{FR.S.6.4}\textbf{FR.S.6.4} The system shall provide secure authentication, authorization, and encryption for all transmitted data.
 \end{itemize}
 
 \subsubsection{Game State Manager}
@@ -568,11 +567,11 @@ The original vision for a computer vision system to observe physical board state
 \textbf{Functional Requirements}
 
 \begin{itemize}
-  \item \label{FR.S.7.1}\textbf{FR.S.7.1} Ensure state synchronization so the digital model matches the physical game at all times.
-  \item \label{FR.S.7.2}\textbf{FR.S.7.2} Track player assets such as settlements, cities, roads, and resources accurately.
-  \item \label{FR.S.7.3}\textbf{FR.S.7.3} Record turn and dice data to enable game history tracking and replay functionality.
-  \item \label{FR.S.7.4}\textbf{FR.S.7.4} Automatically update the system to reflect player actions and maintain consistency.
-  \item \label{FR.S.7.5}\textbf{FR.S.7.5} Provide a query interface for structured access to current board and player information.
+  \item \label{FR.S.7.1}\textbf{FR.S.7.1} The system shall ensure state synchronization so the digital model matches the physical game at all times.
+  \item \label{FR.S.7.2}\textbf{FR.S.7.2} The system shall track player assets such as settlements, cities, roads, and resources accurately.
+  \item \label{FR.S.7.3}\textbf{FR.S.7.3} The system shall record turn and dice data to enable game history tracking and replay functionality.
+  \item \label{FR.S.7.4}\textbf{FR.S.7.4} The system shall automatically update the board state to reflect player actions and maintain consistency.
+  \item \label{FR.S.7.5}\textbf{FR.S.7.5} The system shall provide a method for structured access to current board and player information.
 \end{itemize}
 
 \subsubsection{Explanation Pipeline}
@@ -580,27 +579,21 @@ The original vision for a computer vision system to observe physical board state
 \textbf{Functional Requirements}
 
 \begin{itemize}
-  \item \label{FR.S.8.1}\textbf{FR.S.8.1} Integrate with a large language model (LLM) to generate natural language explanations of the \AI{} agent's strategic decisions.
-  \item \label{FR.S.8.2}\textbf{FR.S.8.2} Provide an API endpoint for the frontend to request explanations for specific moves or game states.
-  \item \label{FR.S.8.3}\textbf{FR.S.8.3} Ensure explanations are contextually relevant, accurate, and understandable to players of varying skill levels.
-  \item \label{FR.S.8.4}\textbf{FR.S.8.4} Log generated explanations for analysis and improvement of the explanation quality over time.
+  \item \label{FR.S.8.1}\textbf{FR.S.8.1} The system shall integrate with a large language model (LLM) to generate natural language explanations of the \AI{} agent's strategic decisions.
+  \item \label{FR.S.8.2}\textbf{FR.S.8.2} The system shall provide an API endpoint for the frontend to request explanations for specific moves or game states.
+  \item \label{FR.S.8.3}\textbf{FR.S.8.3} The system shall ensure explanations are contextually relevant, accurate, and understandable to players of varying skill levels.
+  \item \label{FR.S.8.4}\textbf{FR.S.8.4} The system shall log generated explanations for analysis and improvement of the explanation quality over time.
 \end{itemize}
 
 \subsubsection{Non-Functional Requirements}
 
 \begin{itemize}
-  \item \label{NFR.S.1}\textbf{NFR.S.1} \textbf{Scalability:} Support multiple concurrent games without
-        performance degradation.
-  \item \label{NFR.S.2}\textbf{NFR.S.2} \textbf{Usability:} Provide an intuitive interface accessible to users
-        with minimal training.
-  \item \label{NFR.S.3}\textbf{NFR.S.3} \textbf{Maintainability:} Codebase should follow modular design for easy
-        updates and debugging.
-  \item \label{NFR.S.4}\textbf{NFR.S.4} \textbf{Installability:} Ensure compatibility across major operating systems
-        and browsers.
-  \item \label{NFR.S.5}\textbf{NFR.S.5} \textbf{Data Integrity:} Prevent data corruption through validation and
-        transactional consistency.
-  \item \label{NFR.S.6}\textbf{NFR.S.6} \textbf{Availability:} Recover from system failures automatically within
-        one minute of downtime.
+  \item \label{NFR.S.1}\textbf{NFR.S.1} \textbf{Scalability:} The system shall support multiple concurrent games without performance degradation.
+  \item \label{NFR.S.2}\textbf{NFR.S.2} \textbf{Usability:} The system shall provide an intuitive interface accessible to users (assessed through usability surveys/interviews).
+  \item \label{NFR.S.3}\textbf{NFR.S.3} \textbf{Maintainability:} The system's codebase shall follow modular design for easy updates and debugging.
+  \item \label{NFR.S.4}\textbf{NFR.S.4} \textbf{Installability:} The system shall ensure compatibility across major operating systems and browsers.
+  \item \label{NFR.S.5}\textbf{NFR.S.5} \textbf{Data Integrity:} The system shall prevent data corruption through validation and transactional consistency.
+  \item \label{NFR.S.6}\textbf{NFR.S.6} \textbf{Availability:} The system shall recover from system failures automatically within one minute of downtime.
 \end{itemize}
 
 
