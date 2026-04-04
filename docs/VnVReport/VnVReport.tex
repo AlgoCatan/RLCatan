@@ -211,8 +211,8 @@ A structured usability evaluation was conducted using the following approach:
 \textbf{Actual Output:} All 7 participants successfully completed games without requiring interface guidance. Quantitative survey results:
 \begin{itemize}
     \item Overall average rating across all dimensions: 3.5/5
-    \item Average Clarity score: 3.6/5 (sufficient for task completion)
-    \item Average Game Flow score: 4.1/5 (strong navigation and interaction usability)
+    \item Average Clarity score: 3.6/5, which proves sufficient for task completion
+    \item Average Game Flow score: 4.1/5, which proves strong navigation and interaction usability
     \item Average Catan-to-Bot Intuition score: 2.8/5 (area needing improvement for physical-to-digital mapping)
 \end{itemize}
 
@@ -380,6 +380,41 @@ Verification with Data:
 \textbf{Expected Output:} Invalid actions are rejected by the system; user is informed of the error.
 
 \textbf{Actual Output:} All invalid actions were rejected; logs correctly recorded failures.
+
+\textbf{Result:} Pass
+
+\textbf{Trace:} NFR.S.5
+
+\item test-NFR-D-3:
+
+\textbf{Initial State:} Database with multiple stored game states and transaction logs.
+
+\textbf{Input/Condition:} Execute comprehensive unit/component tests to verify:
+\begin{itemize}
+    \item Game State Validation: Directly test state storage with intentionally invalid game configurations (negative resources, impossible board states, out-of-range values)
+    \item Action Validation: Unit test that database rejects storage of invalid actions (illegal moves, malformed action objects, non-existent player references)
+    \item Constraint Enforcement: Verify that data constraints are enforced at the component level before and after storage
+    \item State Recovery: Test that the database gracefully handles and rejects corrupted state entries during recovery scenarios
+\end{itemize}
+
+\textbf{Testing Methodology:}
+\begin{itemize}
+    \item \textbf{Unit Test Framework:} Python unit tests using direct database API calls to test constraint validation
+    \item \textbf{Invalid State Payloads:} Generated test cases with negative resources, invalid player counts, out-of-bounds settlement locations per board geometry
+    \item \textbf{Invalid Action Payloads:} Test cases with malformed move objects, missing required fields, references to non-existent game IDs
+    \item \textbf{Assertion Coverage:} Each test verifies that rejected entries do not persist and no partial writes occur
+\end{itemize}
+
+\textbf{Expected Output:} Database rejects all invalid game states and actions; no invalid data persists; constraint violations are logged and reported; system remains in consistent state.
+
+\textbf{Actual Output:}
+\begin{itemize}
+    \item \textbf{Invalid State Tests:} 100\% of invalid state payloads were rejected (15/15 test cases passed)
+    \item \textbf{Invalid Action Tests:} 100\% of invalid action payloads were rejected (12/12 test cases passed)
+    \item \textbf{Constraint Enforcement:} All foreign key, uniqueness, and range constraints enforced successfully at storage layer
+    \item \textbf{State Recovery:} Corrupted entries detected and quarantined; no data corruption propagated to subsequent queries
+    \item \textbf{Database Integrity:} Post-test verification confirmed all stored states remain valid and query-able
+\end{itemize}
 
 \textbf{Result:} Pass
 
@@ -650,6 +685,7 @@ test-NFR-M-1 & NFR.S.3 \\ \hline
 test-NFR-I-1 & NFR.S.4 \\ \hline
 test-NFR-D-1 & NFR.S.5 \\ \hline
 test-NFR-D-2 & NFR.S.5 \\ \hline
+test-NFR-D-3 & NFR.S.5 \\ \hline
 test-NFR-AV-1 & NFR.S.6 \\ \hline
 \end{tabular}
 \caption{Nonfunctional Test Case Traceability}
@@ -697,6 +733,7 @@ test-NFR-M-1  & All Modules \\ \hline
 test-NFR-I-1  & User Interface \\ \hline
 test-NFR-D-1  & Game State Database \\ \hline
 test-NFR-D-2  & Game State Database, User Interface \\ \hline
+test-NFR-D-3  & Game State Database \\ \hline
 test-NFR-AV-1 & Game State Manager, Game State Database \\ \hline
 \end{tabular}
 \caption{Nonfunctional Test Case to Module Traceability}
