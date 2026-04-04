@@ -219,6 +219,7 @@ low.}
 
 \newpage
 \subsection{Design and Design Documentation}
+We did not receive any peer reviews for the MG or MIS documents, hence the shorter feedback table for this section.
 
 \begin{tabularx}{\linewidth}{|P{2.3cm}|Y|P{2.5cm}|P{3.5cm}|}
 
@@ -394,6 +395,24 @@ can include usability testing, code walkthroughs, user documentation, formal
 proof, GenderMag personas, Design Thinking, etc.  Extras should have already
 been approved by the course instructor as included in your problem statement.}
 
+For our project, we chose to conduct usability testing, and create a user instructional video for our extras.
+
+The usability testing was conducted in multiple stages throughout the process.
+We ran the first interviews and subsequent survey following our rev0 demonstration, and the feedback we
+received heavily guided our design decisions between rev0 and rev1.
+As such, we will expand further on the details of this feedback in the following design iteration section.
+Following the incorporation of feedback from this first round of usability testing, we ran a second round
+of interviews and surveys to evaluate the changes we made in response to the first round of feedback.
+We saw a noticeable increase in the UX metrics we were tracking, indicating our changes were valuable.
+For more information on the specifics of this process, see the usability testing document in the extras folder.
+
+The user instructional video was created following the completion of our rev1 documentation
+and is intended to be a resource for users to learn how to use our product.
+It's around 3 minutes long, and gives explanations of the various settings and features present in our
+front-end interface, as well as a demonstration of how to use the product to play a game of Catan against the bot.
+The video is available on our YouTube channel, and the link to the video is included in the extras folder.
+The responses from users we showed it to are also listed in a doc in the same folder.
+
 \section{Design Iteration (LO11 (PrototypeIterate))}
 
 \plt{Explain how you arrived at your final design and implementation.  How did
@@ -403,6 +422,75 @@ the design evolve from the first version to the final version?}
 client should be part of the explanation.  For example, if you made changes in
 response to usability testing, explain what the testing found and what changes
 it led to.}
+
+Over the course of the project, our design evolved significantly in response to feedback from various sources,
+including peer reviews, TA and supervisor feedback, and usability testing.
+At the beginning of the project, our planned flow was to use computer vision to read the game state off a
+physical board, and then have a trained reinforcement learning model provide move recommendations
+through an interface, acting as a sort of coach for the user playing the game.
+Obviously, our design now has evolved significantly from this initial concept.
+
+The first major change in our plans came quite early in the process.
+We began by searching for existing Catan simulators, as designing a full sim for an RL model to
+train on would have been a significant undertaking.
+We came across Catanatron, an open-source Catan simulator written in Python, and decided to use it as
+the core engine of our project.
+Having made this decision, we began work on integrating with Catanatron, taking the time to understand
+the codebase and design of the simulator, as well as its existing bots.
+We then spent some time designing and implementing some simple bots to test our integration,
+as well as incorporating Catanatron unit tests into our CI pipeline to ensure our integration didn't
+break any existing functionality.
+This decision to use Catanatron was a major turning point for our project, as it meant we could get
+straight to work on our RL model.
+We progressed with this model quite quickly early on, and by the time of our rev0 demonstration,
+we had a working model that could play a game of Catan against the existing bots in Catanatron,
+and beat a random bot consistently.
+This was a significant milestone, and we decided as a team to defer the development of the
+computer vision component indefinitely, in order to put more effort into the bot itself.
+This meant we would no longer be reading off a physical board, and we moved away from the idea of a coach
+to a more traditional bot that could be played against through Catanatron's CLI.
+
+At this stage we put our full effort into improving our bot, implementing a variety of RL techniques
+to improve training, such as reward shaping, curriculum learning, and self-play.
+The bot was progressing steadily, and we were happy with the results we were seeing, but in a
+meeting with our supervisor Prof. Istvan David, he expressed concern that while our work was impressive,
+the only method we had of showing it was through Catanatron's CLI, and for a rev1 demo presented
+to an audience less familar with RL, it would likely appear little progress had been made since rev0.
+This was a very valid point, and we decided to pivot our design once again, this time towards the
+development of a front-end interface that would allow users to play against our bot in a more
+engaging way, as well as better demonstrate the progress we had made with the bot itself.
+This was a significant change, as it meant we would be developing a full front-end interface,
+which was a significant undertaking, but we felt it was necessary in order to properly showcase our work.
+With only a couple weeks left until the rev1 demo, out first take on this UI was quite basic, but
+it was a good starting point and went over quite well in the demo.
+
+Now having a working UI, we realised this was the ideal situation for usability testing, so we
+ran a round of interviews and surveys to gather feedback on the UI and overall user experience.
+This exposed a few key areas for improvement in the design.
+Similar to Prof. Smith in the demo, the users found the action log colours in the UI to be hard on the eyes,
+especially the red and blue text on a black background.
+They also disliked the look of the board, as some tile colours (such as lumber vs. wool) were hard to differentiate,
+and the overall look was quite bland.
+The action log colours were chosen to reflect the colour of each player, so we didn't remove them entirely,
+but we played around with different hue and saturation levels to find a more visually appealing colour scheme.
+We also redesigned the entire board, changing tile colours and textures.
+Users also commented on other issues, such as the lack of a clear indication of which bot was which, as well
+as what the current dice roll was, so we added a bot name label and a dice roll display to the UI.
+Other changes were also made, you can see the details in the usability testing document in the extras folder.
+Follow-up usability testing showed a noticeable increase in the UX metrics we were tracking, indicating our
+changes were valuable.
+
+While these changes were being made, we had continued meetings with Istvan.
+In one of these meetings, he expressed that having the sole goal of creating the best bot was a bit narrow,
+since likely someone will likely come along in the future with more compute resources and time and create
+something better.
+This was a good point, so we decided to take an idea given by Prof. Smith in the rev1 demo,
+and additionally utilize our bot as a learning tool.
+We accomplished this by adding an "explain move" feature to the UI,
+where users can receive LLM-generated explanations of why a bot made the move it did, and allowing users
+to walk back through a replay of the game.
+This allowed users to develop strategic understanding from the bots that they could then apply in
+their own games, supporting experiential learning.
 
 \section{Design Decisions (LO12)}
 
