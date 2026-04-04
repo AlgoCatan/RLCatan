@@ -507,23 +507,53 @@ Accuracy-related nonfunctional qualities are validated implicitly through the fu
 
 \subsection{Performance and Scalability}
 
-This area ensures the RLCatan system maintains acceptable responsiveness and throughput when supporting multiple concurrent games.
+This area ensures acceptable responsiveness and throughput under varying load.
 
-\textbf{Test Case: Scalability and Response Time Evaluation}
+\textbf{Test Case: Baseline Performance}
 
 \begin{enumerate}
 \item T.NFR.P.1 \\
 \textbf{Control:} Automatic
 
-\textbf{Initial State:} The RLCatan server is running the complete software stack ($\AI{}$, $\CV{}$, Database, UI).
+\textbf{Initial State:} RLCatan server running full stack with no concurrent load.
 
-\textbf{Input/Condition:} Simulate 1, 3, and 5 concurrent games using the $\RL{}$ environment and mock UI clients.
+\textbf{Input/Condition:} Single 4-player game with standard actions (build, trade, roll dice, 100+ repetitions).
 
-\textbf{Output/Result:} Average response time per game, CPU load, and memory usage are measured and summarized in a graph.
+\textbf{Performance Thresholds:}
+\begin{itemize}
+    \item AI Move Suggestion: $\leq 500$ms avg, $\leq 750$ms peak
+    \item Board State Update: $\leq 200$ms avg, $\leq 300$ms peak
+    \item UI Render: $\leq 50$ms/frame
+\end{itemize}
 
-\textbf{Test Case Derivation:} Verifies NFR.S.1 (Scalability) by demonstrating that response time increases sub-linearly with load.
+\textbf{How tested:} Automated with server-side logging and Chrome DevTools Performance API.
 
-\textbf{How test will be performed:} Automated load-testing scripts measure latency between GameState updates and $\AI{}$ recommendations. Results are summarized in a table of performance metrics versus number of sessions.
+\textbf{Trace:} NFR.S.1
+\end{enumerate}
+
+\textbf{Test Case: Scalability Under Load}
+
+\begin{enumerate}
+\item T.NFR.P.2 \\
+\textbf{Control:} Automatic
+
+\textbf{Initial State:} RLCatan server running full stack.
+
+\textbf{Input/Condition:} Simulate 1, 3, and 5 concurrent games.
+Measure response time scaling.
+
+\textbf{Scalability Thresholds (Sub-Linear Growth):}
+\begin{itemize}
+    \item Response time at 3 games $\leq 1.5 \times$ single game
+    \item Response time at 5 games $\leq 2.0 \times$ single game
+    \item CPU utilization $\leq 80\%$ at 5 games
+    \item No memory leaks or OOM errors over 1+ hour
+\end{itemize}
+
+\textbf{How tested:} Automated load-testing scripts with system monitoring.
+Pass if all thresholds met.
+
+\textbf{Trace:} NFR.S.1
 \end{enumerate}
 
 \subsection{Usability}
