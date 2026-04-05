@@ -409,7 +409,7 @@ For more information on the specifics of this process, see the usability testing
 The user instructional video was created following the completion of our rev1 documentation
 and is intended to be a resource for users to learn how to use our product.
 It's around 3 minutes long, and gives explanations of the various settings and features present in our
-front-end interface, as well as a demonstration of how to use the product to play a game of Catan against the bot.
+front-end interface, as well as a demonstration of how to use the product to play a game of \emph{Catan} against the bot.
 The video is available on our YouTube channel, and the link to the video is included in the extras folder.
 The responses from users we showed it to are also listed in a doc in the same folder.
 
@@ -431,9 +431,9 @@ through an interface, acting as a sort of coach for the user playing the game.
 Obviously, our design now has evolved significantly from this initial concept.
 
 The first major change in our plans came quite early in the process.
-We began by searching for existing Catan simulators, as designing a full sim for an RL model to
+We began by searching for existing \emph{Catan} simulators, as designing a full sim for an RL model to
 train on would have been a significant undertaking.
-We came across Catanatron, an open-source Catan simulator written in Python, and decided to use it as
+We came across Catanatron, an open-source \emph{Catan} simulator written in Python, and decided to use it as
 the core engine of our project.
 Having made this decision, we began work on integrating with Catanatron, taking the time to understand
 the codebase and design of the simulator, as well as its existing bots.
@@ -443,7 +443,7 @@ break any existing functionality.
 This decision to use Catanatron was a major turning point for our project, as it meant we could get
 straight to work on our RL model.
 We progressed with this model quite quickly early on, and by the time of our rev0 demonstration,
-we had a working model that could play a game of Catan against the existing bots in Catanatron,
+we had a working model that could play a game of \emph{Catan} against the existing bots in Catanatron,
 and beat a random bot consistently.
 This was a significant milestone, and we decided as a team to defer the development of the
 computer vision component indefinitely, in order to put more effort into the bot itself.
@@ -499,6 +499,78 @@ their own games, supporting experiential learning.
  separately.}
 
 
+Our final design was heavily shaped by as much by limitations, assumptions, and constraints.
+At the beginning of the project, we imagined a system that would read a physical \emph{Catan} board through
+computer vision and act as a real-time strategic coach.
+As the project progressed, we made a series of decisions that moved the system toward a web-based arena and
+analysis platform built around a trained bot, replay tooling, and explanation features.
+These decisions were responses to the realities of time, compute power, integration complexity, and
+demonstration value.
+
+\subsection{Limitations}
+
+The largest limitation was that our team had limited time to simultaneously build a strong reinforcement
+learning bot, a polished user interface, a full physical-board computer vision pipeline, and the surrounding
+infrastructure needed to make all of that reliable.
+Trying to fully realise every part of the original concept would likely have produced a weaker overall result
+in every area.
+Because of this, we chose to build on top of Catanatron rather than implementing our own simulator, and we deferred
+the physical-board computer vision component in favour of a web-based UI.
+This let us focus effort on the parts that most directly demonstrated technical progress, including the
+bot itself, the training and explanation pipelines, and the user interface.
+
+A second limitation was compute power.
+Training in a game as large and stochastic as \emph{Catan} is expensive, and while the use of department GPUs
+was critical to the project's success, it still wasn't sufficient infrastructure for us to justify chasing
+model improvement through brute force alone.
+This limitation pushed us toward efficiency-oriented ideas such as curriculum learning, self-play, and
+reward shaping, allowing us to get more out of our training runs.
+
+A third limitation was explainability.
+A strong model is not automatically a helpful one.
+Even when the bot makes good moves, the reason for those moves is not obvious to the user.
+This is a recognised problem in the field of RL, and it is especially important in a project like ours,
+where the bot is intended to be a learning tool for users.
+This limitation motivated the addition of replay support and LLM-based move explanations,
+since these features transform the project from being only a competitive bot into something
+that can also support learning.
+
+\subsection{Assumptions}
+
+One major assumption behind our design was that Catanatron would provide a sufficiently correct
+and flexible rule engine for both training and gameplay.
+This assumption justified building our architecture around integration rather than simulator creation.
+It also influenced our module boundaries.
+Rather than spending project time coding the board game rules from scratch, we treated the simulator as
+the stable core and built the learning, interface, and analysis layers around it.
+At times this assumption was challenged by simulator bugs and limitations, but when we ran into such issues,
+we were able to work around them or even contribute fixes to the Catanatron codebase, as it's open source.
+
+Similarly, we assumed that the existing bots in Catanatron were correctly implemented, using only legal moves
+and not accessing board info unavailable to human players, such as other players cards.
+This assumption allowed us to use these bots as training opponents without worrying about them cheating or behaving
+in unrealistic ways.
+We were able to use them as consistent benchmarks for our bot's performance, and they gave us a constant goal
+to work towards, particularly Catanatron's AlphaBeta bot, which was the world's former best.
+
+\subsection{Constraints}
+
+The course deliverables imposed a documentation and traceability constraint.
+Because our design had to remain justifiable across the SRS, MG/MIS, and VnV documents,
+despite our often changing design ideas, we aimed for a relatively modular architecture with clear
+responsibilities, making it easier to add new components later (as we have throughout the last few milestones).
+It made the system easier both to reason about and to document.
+
+Another constraint was the need to demonstrate progress in a way that was engaging and understandable to an audience
+that may not be familiar with the technical details of RL.
+This influenced our decision to build a front-end interface, and to add features that supported learning and
+engagement, such as move explanations and replay support.
+
+Finally, we could not assume that users would be accessing our UI from a standard desktop environment,
+so we had to design for a variety of screen sizes and input methods.
+This constraint influenced our design decisions around the UI, as every change was also tested on mobile
+to ensure it was still usable.
+
 
 \section{Economic Considerations (LO23)}
 
@@ -510,28 +582,28 @@ open source project, how would you go about attracting users?  How many potentia
 users currently exist?}
 
 Our repo is open source, and we have no plans to sell anything produced during this project.
-Part of our motivation for this project was to push the field of Catan bots forward, and charging for
+Part of our motivation for this project was to push the field of \emph{Catan} bots forward, and charging for
 access to our bot/arena would go against this motivation.
 As such, we'll focus instead in this section on how we will go about attracting users to our bot,
 and how many potential users currently exist.
 
-Multiple members of our team are active in the Catan community, and we've made connections with other
-devs working on Catan bots throughout the project, thanks to are discussions in the Catanatron discord server.
+Multiple members of our team are active in the \emph{Catan} community, and we've made connections with other
+devs working on \emph{Catan} bots throughout the project, thanks to are discussions in the Catanatron discord server.
 This has given us a good network of potential dev users for our system, and we plan to invite them
 to hook their own bots up to our bot arena, allowing them to benchmark their bots against ours.
 We are already talking to a few devs with promising bots, and hope to have their bots integrated soon.
-This will be a good way to attract users who are already interested in Catan bots, and we hope it will
-give our platform a reputation as a hub for good Catan bots, attracting more devs.
+This will be a good way to attract users who are already interested in \emph{Catan} bots, and we hope it will
+give our platform a reputation as a hub for good \emph{Catan} bots, attracting more devs.
 
 Of course, our focus is not only on dev users, but with more discussion about our tool, we believe
-we can attract a good number of regular Catan players as well, who are interested in playing against a strong bot
+we can attract a good number of regular \emph{Catan} players as well, who are interested in playing against a strong bot
 or using the bot as a learning tool to improve their own play.
-We've already had some players from Colonist.io, a popular online Catan platform, express interest in
+We've already had some players from Colonist.io, a popular online \emph{Catan} platform, express interest in
 testing themselves against our bot, and we plan to reach out to more players in the community through
-social media and Catan forums.
+social media and \emph{Catan} forums.
 Should a bot hosted on our platform ever surpass the strength of the best human players, we believe this would
 generate a lot of buzz and attract a large number of users to our platform, and this may not be all
-that far-fetched of a possibility given the progress in the field of Catan bots in recent years.
+that far-fetched of a possibility given the progress in the field of \emph{Catan} bots in recent years.
 
 Catan is the most popular modern board game in the world, and Colonist.io alone has 4.3 million registered users,
 so while many may not be interested in testing themselves against or learning from our bot,
@@ -547,23 +619,134 @@ we still have a large potential user base.
 team communication plan, team member roles and workflow plan.  Did you use the 
 technology you planned on using?}
 
+Overall, our project management was fairly consistent with the development plan we proposed.
+We kept the core structure of weekly meetings, Discord-based communication, GitHub for source control,
+and issue tracking through GitHub Issues.
+Besides deferred computer vision-related tools, we also used all our expected technologies, including Python
+for development (holding to PEP 8 standard), React for the front-end, and GitHub Actions for CI/CD.
+That said, there are some differences from the original dev plan.
+
+Our meeting time of 4:30–6:30 pm wasn't something we held to after the first couple of weeks.
+Instead, we found it was more effective to simply call for a meeting the night before whenever we had
+something important to discuss, as development on the project was rarely linear due to other course work
+and commitments.
+We would work less around midterms, and more in quiet periods, so a rigid schedule didn't make as much sense.
+That said, we still had regular meetings with our supervisor every Monday at 5:15 pm.
+Our meetings were also almost always virtual, as it was rare for us all to be on campus simultaneously.
+Our Discord server became quite the communication hub, having many channels for different purposes, and our
+supervisor was also added to the server, allowing for easy communication with him as well.
+
+We also barely followed the proposed team member roles for the most part.
+Jake held the most consistent to his role as Team Lead, managing administrative tasks such as scheduling meetings
+and tasks, and acting as the main point of contact with our supervisor and TA, but Sunny, Rebecca, and Matthew
+all had fairly fluid roles, contributing to all aspects of the project as needed.
+This inconsistency likely results from poor initial role definitions.
+We should have focused more on technical roles rather than administrative ones, as in a 4-person team,
+most administrative tasks can be handled by a single person.
+We did split into natural technical roles however, with Jake and Sunny focusing more on backend development
+and training, while Rebecca and Matthew focusing more on the UI and documentation, but there was still some overlap.
+
+
 \subsection{What Went Well?}
 
 \plt{What went well for your project management in terms of processes and 
 technology?}
 
+A major thing that went well was communication.
+Discord was effective for day-to-day discussion, communicating with our supervisor, quick troubleshooting,
+and sharing resources, while GitHub Issues gave us a more durable place to record concrete tasks and feedback.
+The combination of both together worked well, and all team members were active on both platforms, allowing
+for good communication and collaboration.
+
+Another strength was that we became better at dividing work by subsystem.
+As the project grew, it became more practical to let different people focus on RL, frontend/backend integration,
+documentation, testing, or research-heavy tasks while still checking in regularly.
+This reduced duplicated effort and let people build momentum in the parts of the project they were already touching.
+
+We believe we also did an excellent job at flexibly adapting to new information and feedback, whether from
+our supervisor, TA, or users.
+We were able to quickly pivot our goals to adopt new ideas, and this led to a much stronger final product
+than if we had rigidly stuck to our original plans and been bogged down with computer vision troubles for example.
+
+Finally, our tech choices were generally good, and we were able to use them effectively.
+We were all quite familiar with Python, so there were no struggles there, and React was a good choice for
+the front-end, making it easier to build an engaging UI than we would have been able to
+with a more basic framework.
+Our CI/CD pipeline was also quite effective, allowing us to catch bugs early and maintain
+a high level of code quality.
+
 \subsection{What Went Wrong?}
 
 \plt{What went wrong in terms of processes and technology?}
+
+The biggest project-management issue was scope uncertainty early on.
+Because reinforcement learning work is hard to estimate, especially in a game as complex as \emph{Catan},
+it was difficult to predict how long training improvements, integrations, and tuning would actually take.
+That made long-range planning more fragile than it would be in a more conventional project.
+This was exacerbated by the fact that prior to this project, none of us had any experience with RL.
+
+We also underestimated how much work would be involved in making the project presentable, not just functional.
+By rev0, we had meaningful technical progress, but not a strong enough presentation layer to communicate that
+progress clearly.
+That meant we had to make a fairly significant late-stage push into frontend and usability work, which although
+it worked out, was quite stressful at the time.
+
+Finally, we had some struggles with documentation and traceability.
+Because our design was evolving so much, it was difficult to keep all the documentation up to date and ensure
+traceability across documents.
+This was especially true for the SRS, which we had to update multiple times as our design evolved.
 
 \subsection{What Would you Do Differently Next Time?}
 
 \plt{What will you do differently for your next project?}
 
+The main thing we would do differently is establish a user-facing component earlier.
+Even if the underlying model was weak at first, having a basic end-to-end product sooner would have made early
+demos, and design decisions easier.
+It's much easier to iterate on a visible product than on a backend that can only show outputs through the
+command line.
+
+We would also narrow the initial scope sooner and more aggressively.
+In hindsight, the original vision was quite ambitious, and we should have focused on a smaller set of
+core features that would have been more feasible to implement and demonstrate within the time constraints
+of the project.
+Making the simulator-based focus explicit earlier would have reduced some wasted planning effort
+around features that were ultimately deferred, and dealing with old docs now wouldn't be such a headache.
+
 \section{Ethics and Equity (LO18)}
 
 \plt{Describe how your team applied the principle of equity and universal design
 to ensure equitable treatment of all stakeholders.}
+
+Our team tried to apply ethics and equity in two main ways,
+by thinking carefully about who the system is designed for and by avoiding design choices that would
+unfairly exclude or mislead users.
+
+First, the project was designed to support users across a range of skill levels rather than assuming a single
+all users would be familiar or competent in \emph{Catan}.
+A novice player and a competitive player do not need the same thing from a \emph{Catan} system.
+By supporting multiple bot strengths, replay functionality, and explanatory features, we aimed to make the project
+useful to people with different backgrounds and goals.
+This is an equity consideration because it avoids privileging only already-expert users.
+
+Second, we tried to make the interface more universally understandable.
+Usability testing showed that visual clarity cannot be taken for granted, especially when users are processing
+a dense game state.
+In response, we improved board readability, revised harsh colour choices, and added explicit labels, textures,
+and indicators rather than relying only on colour to convey information.
+This does not make the system perfectly accessible, and we believe there are still many UI improvements
+that could be made, but we attempted to move toward as clear and inclusive an interaction design as possible
+given time constraints.
+
+Finally, making the repository open source is itself part of our ethical stance.
+We are not trying to build a gated system available only to people with money or institutional access.
+Instead, we want the project to be inspectable, usable, and extendable by other developers and interested players.
+Devs were also one of our stakeholder groups, and we wanted to ensure they had access to the code and the ability
+to build on it.
+Had Catanatron been closed-source, we would have had to build our own simulator, which would have entailed
+a long process that may have wrought the entire project infeasible, so we choose to follow their example.
+This does not solve every equity issue, obviously, because technology still assumes access to hardware,
+internet, and time, but it does move the project in a more open and fair direction.
 
 \section{Reflection on Capstone}
 
