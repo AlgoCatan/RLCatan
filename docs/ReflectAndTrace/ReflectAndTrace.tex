@@ -756,10 +756,66 @@ internet, and time, but it does move the project in a more open and fair directi
 
 \plt{Which of the courses you have taken were relevant for the capstone project?}
 
+Several courses were directly relevant to this capstone, with arguably 2AA4 the most relevant.
+That course emphasized iterative development, modular design, teamwork, and managing a larger project over time.
+Those lessons transferred almost directly into capstone, especially once our system grew into a multi-part
+architecture with backend, frontend, simulator integration, persistence, and testing concerns.
+2AA4 was essentially a mini single-term capstone, only with requirements directly given.
+
+Speaking of requirements, 3RA3 was another critical course, as it gave us a strong background in structured
+software documents, traceability, and design rationale.
+That background mattered a lot, especially when documents such as our SRS began diverging from the original
+template and had to stay consistent with each other.
+In fact, the Meyer template used in the SRS for this project was the same template taught in 3RA3s
+main project.
+
+Machine learning coursework, especially 4AL3, was relevant to the technical core of the project.
+Even though the RL elements of the project quickly went beyond what that single course covers, having prior
+exposure to learning algorithms, model evaluation, and experimentation gave us a base to build on.
+Without that foundation, the technical details of the project would have been much harder to approach.
+
+4HC3 was another important course, as it gave us prior experience with usability testing, user research,
+and design iteration.
+That experience was critical to our ability to gather and incorporate user feedback effectively,
+and it also gave us a good understanding of the importance of user-centered design, which was a
+key part of our approach to the project.
+
+More generally, earlier programming and systems courses were also relevant.
+Even when a course did not map one-to-one onto the project, it often contributed something important,
+such as version control experience, or the ability to reason about performance and correctness.
+
 \subsection{Knowledge/Skills Outside of Courses}
 
 \plt{What skills/knowledge did you need to acquire for your capstone project
 that was outside of the courses you took?}
+
+The capstone also required us to learn a large amount that was not cleanly covered by our coursework.
+The biggest area was practical deep reinforcement learning engineering.
+Early in the project, we each asynchronously worked through the Hugging Face Deep RL course, which was a great
+theoretical introduction to the field and the techniques we would be using.
+This is where we first learned about PPO, reward shaping, and self-play, which were all critical to the project.
+
+It is one thing to understand the idea of reinforcement learning in theory, and another thing entirely to train,
+benchmark, debug, and improve a PPO-based agent in a large stochastic game.
+We had to implement and debug self-play, curriculum learning, benchmarking, model versioning, and experimental
+iteration from scratch, which proved quite the technical challenge.
+
+We also had to learn the internals of the Catanatron ecosystem and how to adapt an existing open-source
+codebase to our own architecture.
+That meant learning someone else's abstractions, identifying extension points, and working around
+limitations in a codebase we did not originally design.
+
+Frontend and full-stack integration were another major area of out-of-course learning.
+Building a user-facing interface around the bot required practical knowledge of React, TypeScript, Vite,
+Flask APIs, Dockerized development, and cross-layer debugging between a backend, frontend, and simulator.
+This was especially important because the final version of the project became much more interface-driven
+than originally planned.
+
+Finally, we had to learn how to make AI outputs more interpretable.
+The explanation feature forced us to think about prompt design, what information should or should not be
+surfaced to users, and how to present strategic reasoning in a way that is helpful rather than cluttered.
+That kind of translation layer between model behaviour and user understanding was one of the most
+interesting parts of the project, and it sits well outside the boundaries of most standard software courses.
 
 \end{document}
 
