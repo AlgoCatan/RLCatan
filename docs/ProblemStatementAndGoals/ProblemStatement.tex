@@ -37,8 +37,11 @@ It also has a growing competitive scene, complete with Elo ratings in a manner s
 Unlike chess however, there are no existing AI bots capable of playing \emph{Catan} to the level of a human player.
 This is due to the large state-space of potential moves on a given turn, and the stochastic nature of the game with its dice rolls, as well as only partially observable information (e.g., opponents' hidden cards).
 This same nature makes it impossible for humans to calculate optimal strategies, as we can't see far enough ahead.
-A bot capable of playing \emph{Catan} would be useful for both new and experienced players, aiding in learning the complexities of the game, and providing optimal moves in a given situation.
-It would also be perfect for \emph{Catan} fans with no one else to play with.
+A bot capable of playing \emph{Catan} would be useful for both new and experienced players, aiding in learning the 
+complexities of the game.
+The primary intended use of this project is as a decision-support tool: a human player 
+receives move recommendations and strategic feedback through an application interface.
+Autonomous full-game play is a secondary use case, intended for self-play training, benchmarking, and optional practice matches against the AI.
 
 % Commented out this paragraph since it focuses more on the how than the what, but if you're reading this you can check it out for an idea of our solution
 
@@ -50,16 +53,19 @@ It would also be perfect for \emph{Catan} fans with no one else to play with.
 %The final product will be a digital twin, a tool that uses computer vision to observe a physical game and offer strategic suggestions to the player based on its underlying DRL model.
 
 \subsection{Inputs and Outputs}\label{subsec:inputs-and-outputs}
-The system's high-level inputs are the game state information of a \emph{Catan} match, including all board and player data.
-This information is captured in real-time by a camera and processed to create a digital representation of the board's state space.
-The high-level outputs are the next optimal move(s) for the player, delivered directly to their device.
-The AI can also simulate gameplay as a competing player.
-The tool also provides post-game advice, identifying past decisions that could have been made differently to alter the game's outcome.
+The system's primary operational inputs are the game state information of an in-progress \emph{Catan} match, 
+including board layout, turn context, and relevant player data needed to explain moves.
+The system's training inputs are simulated game trajectories produced by a \emph{Catan} rules engine, including 
+self-play episodes and matches against baseline bots, which serve as the main training material for the reinforcement model.
+The primary outputs are ranked move recommendations and post-game advice, delivered to the user's device to support in-game 
+and post-game decision making.
+In the secondary autonomous-play mode, the output is the AI-selected action for each turn while acting as a competing 
+player.
 
 \subsection{Stakeholders}\label{subsec:stakeholders}
 The primary stakeholders for this project are:
 \begin{itemize}
-    \item Players of \emph{Settlers of Catan}: The end-users who will use the AI for in-game and post-game analysis to improve their skills, or to train against skilled AI bots.
+    \item Players of \emph{Settlers of Catan}: The end-users who will primarily use the AI as an in-game and post-game advisory tool to improve their skills, and secondarily as an autonomous opponent for practice matches.
     \item Dr. Istvan David: The project supervisor who provides guidance, expertise, and oversight.
     \item The Project Team: The developers responsible for designing, implementing, and testing the software.
     \item The Department of Computing and Software (CAS) at McMaster University: The organization hosting the project, which benefits from the academic and technical achievements of its students and faculty.
@@ -67,15 +73,18 @@ The primary stakeholders for this project are:
 
 \subsection{Environment}\label{subsec:environment}
 The project requires a hardware and software environment to support its modules.
-On the software side, the system will need a game simulator for training, a reinforcement learning framework for the AI, a computer vision library to process video, and a user-facing application for the player's device.
-On the hardware side, the project requires a GPU to train the model, a device with a processor to run the AI, devices for the players to use the application and stream video of the game board, and a physical \emph{Catan} board game for testing.
+On the software side, the system will need a game simulator for generating training data and evaluating autonomous play, 
+a reinforcement learning framework for the AI and a user-facing application for advisory interaction on the player's device.
+On the hardware side, the project requires GPUs to train the model, a device with a CPU to run the AI, 
+devices for the players to use the application.
 
 \section{Goals}\label{sec:goals}
 The following are the major goals for the project:
 \begin{itemize}
-    \item Create a bot capable of playing \emph{Catan} to the level of the average human player (based on existing Elo system).
+    \item Create an AI advisory system capable of recommending strong legal \emph{Catan} moves to a human player.
+    \item Support autonomous play as a secondary mode for self-play training, benchmarking, and optional practice matches.
     \item Accurately record current \emph{static} game state from a physical board.
-    \item Provides valid and reasonable move suggestions to the user.
+    \item Provide valid and reasonable move suggestions to the user.
     \item Visually presents move suggestions to the user.
     \item Positive win rate against existing/baseline bot.
 \end{itemize}
@@ -154,7 +163,14 @@ The extras for this project include:
     The biggest challenge early on was finalizing both a project idea and a stable group. We had several meetings just to settle on which project to choose, and some of the people we initially planned to work with ended up leaving. I had to post multiple times on Avenue and Discord to fill our group, which was frustrating. We also decided to remove one member before the team deadline because they weren’t showing up to meetings or contributing. Ultimately, once we solidified the group, things improved. For the project choice, we resolved uncertainty by holding discussions and using Discord polls to weigh different options. Meeting with supervising professors also helped us make an informed decision.
     \item
      
-    At first, we considered including more ambitious features, such as having the agent take in real-time data directly from a physical board using smart glasses or a video stream. After reviewing the overall project scope, we realized these features would be too complex for the time we have. Instead, we focused the core project on developing the reinforcement learning model itself, with simpler inputs like static pictures or descriptions of the game state. More advanced features, such as real-time board capture, multiple camera angles, and post-game explanations generated by an LLM, were moved to stretch goals. This way, the project remains challenging and meaningful, but realistic within the Capstone timeline.
+    At first, we considered including more ambitious features, such as having the agent take in 
+    real-time data directly from a physical board using smart glasses or a video stream. After 
+    reviewing the overall project scope, we realized these features would be too complex for the 
+    time we have. Instead, we focused the core project on developing the reinforcement learning model 
+    itself, with simpler inputs like static pictures or descriptions of the game state. 
+    More advanced features, such as real-time board capture, multiple camera angles, and post-game explanations
+     generated by an LLM, were moved to stretch goals. This way, the project remains challenging and meaningful, 
+     but realistic within the Capstone timeline.
     
 \end{enumerate}
 
