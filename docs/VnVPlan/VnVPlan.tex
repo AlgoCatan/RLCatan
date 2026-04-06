@@ -903,17 +903,25 @@ Their values are defined in this section for easy maintenance.
 
 
 
-\subsection{Usability Survey Questions?}
+\subsection{Usability Survey Questions}
 
 
-This section provides the planned questions for the usability survey, which will be used to validate the usability Non-Functional Requirements ($\hyperref[NFR.S.2]{NFR.S.2}$) and gather feedback on the clarity of the $\AI{}$ suggestions ($\hyperref[FR.Sa.7]{FR.Sa.7}$), primarily targeting the Novice and Intermediate player profiles.
+This section provides the planned questions for the usability survey, which will be used to validate the usability Non-Functional Requirement ($\hyperref[NFR.S.2]{NFR.S.2}$) and gather feedback on the clarity of the real-time board visualization ($\hyperref[FR.S.4.1]{FR.S.4.1}$), the intuitiveness of player interactions ($\hyperref[FR.S.4.3]{FR.S.4.3}$), and the understandability of \AI{}-generated move explanations ($\hyperref[FR.S.8.3]{FR.S.8.3}$), primarily targeting the Novice and Intermediate player profiles.
+\medskip
+
+*NOTE: \textbf{Please see more about this in our extra} under \\
+/docs/Extras/UsabilityTesting as we did two studies with 7 participants in total, 
+the first round we didnt have the LLM explanations, and after feedback from the 
+observational think aloud study and the following survery below, we added them. We will be comparing
+ the results of the two studies to see if there is a significant difference in the
+  usability ratings with and without the LLM explanations, which will help us understand 
+  the impact of this feature on experiential learning ($\hyperref[FR.S.8.3]{FR.S.8.3}$).* \\
 
 \begin{enumerate}
-    \item \textbf{Clarity of $\AI{}$ Suggestion:} When the $\AI{}$ suggested a move, how clear was the visual highlighting or overlay that indicated the location and action? (1=Very Unclear, 5=Very Clear)
-    \item \textbf{Ease of Interface Use:} How easy was it to navigate the RLCatan interface to access the current $\GameState{}$ and receive the $\AI{}$ advice? (1=Very Difficult, 5=Very Easy)
-    \item \textbf{Speed of Advice:} Did the advice appear fast enough to be useful during a normal turn of play? (Yes/No, If No: please explain.)
-    \item \textbf{Trust in System:} How much confidence do you have in the system's ability to accurately reflect the physical board state? (1=Very Low, 5=Very High)
-    \item \textbf{Usefulness of Post-Game Analysis:} If you used the post-game analysis, how helpful were the insights for improving your future strategy? (1=Not Helpful, 5=Extremely Helpful)
+    \item \textbf{Overall Experience:} "Overall, how was your experience with the interface? Please share any general recomendations or feedback you have about the usability and design of the interface."
+    \item \textbf{Clarity:} "On a scale of 1 to 5, how clear was the interface with what is happening in the game, allowing you to easily understand the game state and the actions being taken?"
+    \item \textbf{Game Flow:} "On a scale of 1 to 5, how well did the interface support the flow of the game, allowing you to easily follow and take actions without feeling lost or confused?"
+    \item \textbf{Intuition:} "On a scale of 1 to 5, how intuitive was the interface in matching the mechanics of the board game, making it easy for you to learn and play without needing extensive instructions?" 
 \end{enumerate}
 
 
