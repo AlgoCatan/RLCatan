@@ -177,16 +177,49 @@ in \emph{Catan}, even if it is not performing at a high level at this stage.
 
 \section{Expected Technology}
 
-\raggedright
-We expect to use Python as our primary programming 
-language, as well as using the Catanatron open source 
-libary for simulating \emph{Catan} games and training our models.
-We will also utilize React and JavaScript as 
-our web framework for building the user interface and 
-digital twin. For computer vision models, we will be using
-openCV and yolov9 for image recognition and processing.
-We will be using GitHub Actions to implement CI for automated testing and potentially CD for deployment pipelines.
+The selection of the \progname{} technology stack is based on a trade-off analysis between development velocity, library ecosystem support, and performance requirements for real-time reinforcement learning and computer vision.
 
+\subsection{Programming Languages and Core Libraries}
+\textbf{Python} was selected as the primary language for the backend and AI development. 
+
+\begin{itemize}
+    \item \textbf{Pros:} Extensive ecosystem for Reinforcement Learning RL and Computer Vision CV; seamless integration with \texttt{PyTorch} and \texttt{OpenAI Gym}.
+    \item \textbf{Cons:} Slower execution speed compared to compiled languages like C++.
+    \item \textbf{Comparison:} While C++ offers superior performance for game simulations, Python’s development speed and the availability of the \textbf{Catanatron} library, which provides a high-performance, Gym-compatible interface for \textit{Catan}, outweighing the raw execution benefits of a lower-level language for this project's scope.
+\end{itemize}
+
+\subsection{Frontend and Digital Twin}
+We will utilize \textbf{React} and \textbf{TypeScript} for the web-based User Interface.
+
+\begin{itemize}
+    \item \textbf{Pros:} Component-based architecture is ideal for building a DigitalTwin that requires real-time state synchronization; strong support for \texttt{WebSocket} integration.
+    \item \textbf{Cons:} Higher initial setup complexity compared to vanilla JavaScript or lightweight libraries like Alpine.js.
+    \item \textbf{Comparison:} Unlike Angular or Vue, React’s virtual DOM and hooks pattern allow for more efficient re-rendering of complex board states. This is critical for providing a smooth experience during fast-paced AI move suggestions and real-time state updates.
+\end{itemize}
+
+\subsection{Computer Vision Stac (DEFFERED)}
+For image processing and object detection, the project will implement \textbf{OpenCV} and \textbf{YOLOv9}.
+
+\begin{table}[h!]
+\centering
+\caption{Comparison of Computer Vision Technologies}
+\label{tab:cv-tech-comparison}
+\begin{tabularx}{\textwidth}{|l|X|X|}
+\hline
+\textbf{Technology} & \textbf{Pros} & \textbf{Comparison / Alternative} \\ \hline
+\textbf{YOLOv9} & State-of-the-art accuracy and real-time inference speed. & Superior to YOLOv8 and Faster R-CNN due to Programmable Gradient Information (PGI), which improves detection of small board assets. \\ \hline
+\textbf{OpenCV} & Industry standard for image pre-processing and calibration. & Preferred over PIL or Scikit-Image due to robust support for camera calibration and perspective transforms required for skewed board views. \\ \hline
+\end{tabularx}
+\end{table}
+
+\subsection{DevOps and Automation}
+We will implement \textbf{GitHub Actions} for our CI/CD pipelines.
+
+\begin{itemize}
+    \item \textbf{Pros:} Deep integration with our existing repository; zero-cost infrastructure for student organizations; simple YAML-based configuration.
+    \item \textbf{Cons:} Limited customization for highly complex deployment environments compared to self-hosted solutions.
+    \item \textbf{Comparison:} While Jenkins offers more plugin-based customization, GitHub Actions eliminates the need for managing a separate build server. This allow the team to focus entirely on software development rather than infrastructure maintenance, which is vital given the eight-month project timeline.
+\end{itemize}
 
 \section{Coding Standard}
 
