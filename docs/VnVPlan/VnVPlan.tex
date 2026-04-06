@@ -55,7 +55,7 @@
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
 10/19/2025 & Draft & Initial VnV plan without Unit Testing\\
-... & ... & ...\\
+04/05/2026. & Final & Feedback from TA for final documentation\\
 \bottomrule
 \end{tabularx}
 
@@ -146,23 +146,38 @@ This document presents the Verification and Validation (VnV) plan for RLCatan. T
   is to provide optimal move suggestions to human players
   based on real-time analysis of the game state.
 
-\subsection{Objectives}
+  \subsection{Objectives}
 
-
-The objective is to build confidence 
-in the correctness, reliability, and functional performance of the RLCatan system.
- Verification will focus on ensuring that the reinforcement learning agent generates 
- valid moves, that the computer vision module correctly interprets game states, and 
- that data exchange between system components is accurate and consistent.
-
-\medskip
-
- Out of scope are extensive usability studies and large-scale performance benchmarking,
- as these exceed the project’s time and resource constraints. Additionally, external
-  dependencies such as Catanatron, OpenCV, and YOLOv9 are assumed to be verified by
-   their developers, and will only be tested for correct integration within RLCatan.
-
-\subsection{Challenge Level and Extras}
+  The objective of this V\&V plan is to build confidence in the correctness, 
+  reliability, and functional performance of the RLCatan system by verifying 
+  that all implemented system components satisfy the requirements defined in 
+  the Software Requirements Specification (SRS).
+  
+  Verification will focus on ensuring that the reinforcement learning agent
+   generates valid moves and that data exchange between system components is 
+   accurate and consistent.
+  
+  The V\&V plan is primarily derived from the Software Requirements Specification 
+  (SRS), which defines all functional and non-functional requirements used to
+   construct system-level test cases. In addition, the Hazard Analysis document
+    is used to prioritize verification effort toward safety-critical and 
+    failure-prone components, particularly in the game state synchronization logic.
+     System architecture and design documentation further support test design by 
+     identifying component boundaries, data flow points, and integration interfaces
+      that must be validated during system integration testing.
+  
+  \medskip
+  
+  Out of scope are large-scale usability studies and extensive performance
+   benchmarking beyond defined acceptance thresholds, as these exceed the 
+   project’s time and resource constraints. The Computer Vision module is also
+    out of scope, as it was not implemented in the final system; therefore, no
+     verification activities are performed for CV functionality. 
+     External dependencies such as Catanatron and the OpenAI Gym environment
+     are not verified internally; instead, verification focuses on 
+     correct integration and usage within the RLCatan system.
+  
+  \subsection{Challenge Level and Extras}
 
 
 
@@ -412,7 +427,7 @@ This area verifies that the system correctly manages, displays, and archives gam
 
 \end{enumerate}
 
-\subsubsection{Computer Vision and Game State Capture}
+\subsubsection{Computer Vision and Game State Capture(DEFERRED)} 
 
 This area focuses on verifying the accuracy and reliability of the Computer Vision (\CV{}) Model ($\FR{}$.S.1.x) and the Game State Manager's ($\FR{}$.S.7.x) ability to convert visual input into a consistent digital representation ($\GameState{}$). The tests ensure the system can accurately detect board elements ($\hyperref[FR.S.1.1]{FR.S.1.1}$), translate them into structured data ($\hyperref[FR.S.1.2]{FR.S.1.2}$), and maintain synchronization ($\hyperref[FR.S.7.1]{FR.S.7.1}$).
 
