@@ -1,0 +1,46 @@
+@use "../variables.scss";
+
+.log {
+    overflow-y: auto;
+    font-size: 0.8rem;
+    // height: 100%; // Let parent control height
+
+    // To ensure always clipped towards bottom
+    display: flex;
+    flex-direction: column-reverse;
+    scrollbar-width: thin;
+    scrollbar-color: #454545 variables.$dark-gray;
+
+    .action {
+      padding: variables.$sm-gutter;
+      font-weight: bold; // Bold text
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      // Use colors directly from variables.scss
+      &.RED { color: variables.$red; }
+      &.BLUE { color: variables.$blue; }
+      &.ORANGE { color: variables.$orange; }
+      &.WHITE { color: variables.$white; text-shadow: 0 0 2px black; }
+    }
+
+    &.explain-mode-active .action.clickable {
+      cursor: pointer;
+    }
+}
+
+@media (max-width: variables.$md-breakpoint) {
+  .log {
+    font-size: 0.5rem;
+
+    .action {
+      gap: 4px;
+      padding: 3px 5px;
+    }
+
+    &.explain-mode-active .action.clickable {
+      cursor: pointer;
+    }
+  }
+}

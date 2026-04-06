@@ -5,6 +5,7 @@ by current player). Main function is generate_playable_actions.
 
 import operator as op
 from functools import reduce
+from enum import Enum
 from typing import Any, Dict, List, Set, Tuple, Union
 
 from catanatron.models.decks import (
@@ -30,6 +31,7 @@ from catanatron.models.enums import (
     WOOD,
 )
 from catanatron.state_functions import (
+    get_actual_victory_points,
     get_player_buildings,
     get_player_freqdeck,
     player_can_afford_dev_card,
@@ -86,7 +88,7 @@ def generate_playable_actions(state) -> List[Action]:
             actions.extend(maritime_trade_possibilities(state, color))
         return actions
     elif action_prompt == ActionPrompt.DISCARD:
-        return discard_possibilities(color)
+        return discard_possibilities(state, color)
     elif action_prompt == ActionPrompt.DECIDE_TRADE:
         actions = [Action(color, ActionType.REJECT_TRADE, state.current_trade)]
 
@@ -204,6 +206,19 @@ def city_possibilities(state, color) -> List[Action]:
 
 
 def robber_possibilities(state, color) -> List[Action]:
+    actions = _robber_possibilities_without_friendly_robber(state, color)
+    if not getattr(state, "friendly_robber", False):
+        return actions
+
+    filtered_actions = [
+        action
+        for action in actions
+        if not _robber_action_blocks_low_vp_enemy(state, color, action)
+    ]
+    return filtered_actions if len(filtered_actions) > 0 else actions
+
+
+def _robber_possibilities_without_friendly_robber(state, color) -> List[Action]:
     actions = []
     for coordinate, tile in state.board.map.land_tiles.items():
         if coordinate == state.board.robber_coordinate:
@@ -237,6 +252,24 @@ def robber_possibilities(state, color) -> List[Action]:
     return actions
 
 
+def _robber_action_blocks_low_vp_enemy(state, color, action) -> bool:
+    coordinate, _, _ = action.value
+    tile = state.board.map.land_tiles[coordinate]
+    for node_id in tile.nodes.values():
+        building = state.board.buildings.get(node_id, None)
+        if building is None:
+            continue
+
+        candidate_color = building[0]
+        if color == candidate_color:
+            continue
+
+        if get_actual_victory_points(state, candidate_color) < 3:
+            return True
+
+    return False
+
+
 def initial_road_possibilities(state, color) -> List[Action]:
     # Must be connected to last settlement
     last_settlement_node_id = state.buildings_by_color[color][SETTLEMENT][-1]
@@ -248,24 +281,13 @@ def initial_road_possibilities(state, color) -> List[Action]:
     return [Action(color, ActionType.BUILD_ROAD, edge) for edge in buildable_edges]
 
 
-def discard_possibilities(color) -> List[Action]:
-    return [Action(color, ActionType.DISCARD, None)]
-    # TODO: Be robust to high dimensionality of DISCARD
-    # hand = player.resource_deck.to_array()
-    # num_cards = player.resource_deck.num_cards()
-    # num_to_discard = num_cards // 2
-
-    # num_possibilities = ncr(num_cards, num_to_discard)
-    # if num_possibilities > 100:  # if too many, just take first N
-    #     return [Action(player, ActionType.DISCARD, hand[:num_to_discard])]
-
-    # to_discard = itertools.combinations(hand, num_to_discard)
-    # return list(
-    #     map(
-    #         lambda combination: Action(player, ActionType.DISCARD, combination),
-    #         to_discard,
-    #     )
-    # )
+def discard_possibilities(state, color) -> List[Action]:
+    freqdeck = get_player_freqdeck(state, color)
+    return [
+        Action(color, ActionType.DISCARD, resource)
+        for resource, count in zip(RESOURCES, freqdeck)
+        if count > 0
+    ]
 
 
 def ncr(n, r):
@@ -317,3 +339,28 @@ def inner_maritime_trade_possibilities(hand_freqdeck, bank_freqdeck, port_resour
                     trade_offers.add(trade_offer)
 
     return trade_offers
+
+
+def _serialize_value(value: Any) -> Any:
+    """Actions can come in various types based on what they represent.
+    This helper function recursively converts them into serializable formats."""
+
+    if isinstance(value, Enum):
+        return value.value
+    if isinstance(value, tuple):
+        return [_serialize_value(v) for v in value]
+    if isinstance(value, list):
+        return [_serialize_value(v) for v in value]
+    if isinstance(value, dict):
+        return {str(k): _serialize_value(v) for k, v in value.items()}
+
+    return value
+
+
+def serialize_action(action: Action) -> Dict[str, Any]:
+    """Convert an Action object into a serializable dictionary."""
+    return {
+        "color": action.color.value,
+        "action_type": action.action_type.value,
+        "value": _serialize_value(action.value),
+    }

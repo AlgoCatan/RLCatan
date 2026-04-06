@@ -1,8 +1,12 @@
 \documentclass[12pt, titlepage]{article}
-
+\usepackage{float}
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
+\usepackage{pgfplots}
+\usepackage{comment}
+\pgfplotsset{compat=1.18}
+\usepackage[table]{xcolor}
 \hypersetup{
     colorlinks,
     citecolor=black,
@@ -11,6 +15,7 @@
     urlcolor=blue
 }
 \usepackage[round]{natbib}
+\usepackage{graphicx}
 
 \input{../Comments}
 \input{../Common}
@@ -30,8 +35,8 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+March 4th & 1.0 & Draft from VNV plan\\
+March 9th & 1.1 & Final VNV report\\
 \bottomrule
 \end{tabularx}
 
@@ -44,11 +49,9 @@ Date 2 & 1.1 & Notes\\
   \toprule		
   \textbf{symbol} & \textbf{description}\\
   \midrule 
-  T & Test\\
+  AI & Artifical Intelligence\\
   \bottomrule
 \end{tabular}\\
-
-\wss{symbols, abbreviations or acronyms -- you can reference the SRS tables if needed}
 
 \newpage
 
@@ -62,17 +65,380 @@ Date 2 & 1.1 & Notes\\
 
 \pagenumbering{arabic}
 
-This document ...
-
 \section{Functional Requirements Evaluation}
+
+\subsection{AI Agent Decision Logic} 
+\begin{enumerate}
+
+\item test-FR-AI-1-1:
+
+\textbf{Initial State:} A game state is loaded where Player A is only able to legally place a road at one specific location on the board.
+
+\textbf{Input:} The structured GameState is sent to the AI agent via the Game State Manager.
+
+\textbf{Expected Output:} The AI agent must select the action BuildRoad at the single remaining legal location.
+
+\textbf{Actual Output:} The AI correctly selected the single legal road placement and executed the action without attempting any illegal moves.
+
+\textbf{Result:} Pass
+
+\textbf{Trace:} FR.S.3.1, FR.S.3.2, FR.S.2.1
+
+
+\item test-FR-AI-1-2:
+
+\textbf{Initial State:} GameState where Player A is 1 Victory Point away from winning and an unblocked node for the winning settlement is available.
+
+\textbf{Input:} GameState where the immediate winning move is available.
+
+\textbf{Expected Output:} The AI must select the action BuildSettlement at the winning node to secure the victory.
+
+\textbf{Actual Output:} The AI selected the settlement placement at the winning node and the game concluded with Player A reaching the winning condition.
+
+\textbf{Result:} Pass
+
+\textbf{Trace:} FR.S.3.1, FR.S.3.2
+
+
+\end{enumerate}
+
+
+
+\subsection{User Interface and Data Management}
+
+\begin{enumerate}
+
+
+
+\item test-FR-UI-1-1:
+
+\textbf{Initial State:} A completed 50-turn game with a full history stored in the accumulator.
+
+\textbf{Input:} Request for replay including all dice rolls and development card purchases.
+
+\textbf{Expected Output:} Successful return of UI game history with accurate logs of all actions, dice rolls, and card purchases.
+
+\textbf{Actual Output:} System is able to retrieve and display the complete game history without errors, and the logs match the expected sequence of events.
+
+\textbf{Result:} Pass
+
+\textbf{Trace:} FR.S.5.1, FR.S.5.5, FR.S.7.3
+
+\end{enumerate}
 
 \section{Nonfunctional Requirements Evaluation}
 
-\subsection{Usability}
-		
-\subsection{Performance}
+\subsection{Performance and Scalability}
 
-\subsection{etc.}
+\begin{enumerate}
+\item test-NFR-P-1:
+
+\textbf{Initial State:} Full system stack deployed on the test server.
+
+\textbf{Input/Condition:} Manually start 1, 2, and 3 concurrent games with multiple players, performing typical actions (build, trade, roll dice) in each session.
+Response times and update latencies are measured throughout all sessions.
+
+\textbf{Testing Methodology:}
+To ensure consistent and reliable measurements, the following approach was used:
+\begin{itemize}
+    \item \textbf{Timing Instrumentation:} Browser Developer Tools (Chrome DevTools) were used to measure network latency and rendering performance.
+    Server-side logging with timestamp precision (milliseconds) captured API response times and state update propagation times.
+    \item \textbf{Latency Measurement Points:}
+    \begin{itemize}
+        \item AI Move Suggestion latency measured from when the AI model receives a game state (server timestamp) to when the suggestion is rendered on the client (browser timestamp)
+        \item Board State Update propagation measured from when the server completes a state transition to when the update is received and rendered on all connected clients
+        \item UI Render time captured via Chrome Performance API frame timing
+    \end{itemize}
+    \item \textbf{Consistency Verification:} Multiple runs (minimum 5 iterations per action type per session) ensured results were repeatable and consistent.
+    Peak and average metrics are reported to demonstrate variance.
+    \item \textbf{Load Simulation:} Concurrent sessions were maintained throughout to simulate realistic multi-player load and verify performance did not degrade under concurrent usage.
+\end{itemize}
+
+\textbf{Expected Output:} The system remains responsive; actions in each game update within acceptable time (no noticeable lag), and no crashes or errors occur.
+Specifically, AI move suggestions should be displayed within 500ms, and board state updates should propagate to all clients within 200ms.
+
+\textbf{Actual Output:} System remained responsive in all three concurrent sessions.
+Measured performance metrics:
+\begin{itemize}
+    \item \textbf{AI Move Suggestion Latency:} Average 350ms (peak 480ms), consistently under the 500ms threshold across all test runs
+    \item \textbf{Board State Update Propagation:} Average 85ms (peak 150ms), consistently under the 200ms threshold across all test runs
+    \item \textbf{UI Render Time:} Average 45ms per frame, maintaining smooth visual updates (target: 60fps = 16.67ms per frame; achieved ~22 fps average)
+    \item \textbf{No system crashes or errors} during any of the three concurrent game sessions (total test duration: 45+ minutes across all sessions)
+    \item \textbf{Consistency Verified:} Standard deviation of latency measurements remained low (\textless{}50ms for AI suggestions, \textless{}25ms for state updates), indicating reliable and predictable performance
+\end{itemize}
+
+\textbf{Result:} Pass
+
+\textbf{Trace:} NFR.S.1
+\end{enumerate}
+
+\subsection{Usability (QUALITY EVALUATED)}
+
+\begin{enumerate}
+\item test-NFR-U-1:
+
+\textbf{Initial State:} Final prototype deployed in a browser.
+
+\textbf{Input/Condition:} 5--7 participants familiar with Catan (novice to intermediate skill level) were recruited to play a full game against the AI bot and explore all interface options.
+
+\textbf{Testing Methodology:}
+A structured usability evaluation was conducted using the following approach:
+\begin{itemize}
+    \item \textbf{Participant Selection:} Participants were screened to ensure familiarity with Catan rules and basic gameplay, minimizing learning curve effects during testing.
+
+    \item \textbf{Test Session Structure:}
+    \begin{itemize}
+        \item \textbf{Introduction (5 min):} Facilitator explained the purpose of testing and confirmed participants understood they were evaluating the UI/UX, not their own gameplay ability
+        \item \textbf{Guided Exploration (10 min):} Participants were guided to interact with key UI elements (resource displays, action buttons, AI suggestion highlighting, board navigation)
+        \item \textbf{Full Game Play (30--45 min):} Participants played a complete 2--4 player game against the AI bot, making natural decisions and using AI suggestions as desired
+        \item \textbf{Survey Administration (10 min):} Post-game, participants completed a structured survey (see below)
+    \end{itemize}
+
+    \item \textbf{Survey Design:} Participants rated three distinct usability dimensions using a 1--5 Likert scale:
+    \begin{itemize}
+        \item \textbf{Clarity:} ``How clear were the UI elements, labels, and visual indicators? (1=Very Unclear, 5=Very Clear)''
+        \item \textbf{Game Flow:} ``How smoothly could you navigate through turns and interact with the AI suggestions? (1=Very Difficult, 5=Very Easy)''
+        \item \textbf{Catan-to-Bot Intuition:} ``How well did the digital representation match your expectations from playing physical Catan? (1=Not at All, 5=Perfectly)''
+    \end{itemize}
+
+    \item \textbf{Additional Feedback:} Participants were asked open-ended questions: ``What was most confusing?'' and ``What would improve your experience?'' to capture qualitative insights
+
+    \item \textbf{Observation Notes:} Facilitator observed and noted user interactions, hesitations, and errors during gameplay to contextualize quantitative scores
+\end{itemize}
+
+\textbf{Expected Output:} Players can understand the interface and perform actions without guidance; overall experience is intuitive.
+
+\textbf{Actual Output:} All 7 participants successfully completed games without requiring interface guidance. Quantitative survey results:
+\begin{itemize}
+    \item Overall average rating across all dimensions: 3.5/5
+    \item Average Clarity score: 3.6/5, which proves sufficient for task completion
+    \item Average Game Flow score: 4.1/5, which proves strong navigation and interaction usability
+    \item Average Catan-to-Bot Intuition score: 2.8/5 (area needing improvement for physical-to-digital mapping)
+\end{itemize}
+
+Qualitative feedback indicated:
+\begin{itemize}
+    \item 5 participants reported difficulty matching digital piece colors/representations to physical game expectations
+    \item 4 participants requested clearer labeling of hexagon types (resource types)
+    \item 6 participants appreciated responsive AI suggestions and found them helpful for strategy
+\end{itemize}
+
+\textbf{Result:} Pass
+
+\textbf{Trace:} NFR.S.2
+
+\subsubsection*{Verification with Data}
+
+The usability requirement was verified by collecting quantitative feedback across three core components. Data indicates that while game flow and general interface clarity are sufficient, there is a distinct "mid-range" dip in scores regarding the **Intuition between Real-Life Catan and the Bot UI**, specifically regarding color-coding and piece representation.
+
+\textbf{Usability Test Categories:}
+\begin{itemize}
+    \item \textbf{Clarity (1-5 scale):} Measures whether UI elements, text labels, and visual feedback are understandable without guidance.
+    Specifically, this assesses the legibility of game state information (resources, settlements, roads) and the clarity of action buttons and AI suggestion displays.
+
+    \item \textbf{Game Flow (1-5 scale):} Evaluates how smoothly users can navigate through game turns, execute actions (build, trade, roll dice), and interact with the AI bot's suggestions.
+    This reflects whether the interface supports natural game progression without confusion or unnecessary steps.
+
+    \item \textbf{Catan-to-Bot Intuition (1-5 scale):} Assesses how well the digital representation maps to the physical Catan board game.
+    This includes:
+    \begin{itemize}
+        \item Color-coding consistency (e.g., whether player colors in the UI match expectations from the physical game)
+        \item Piece and element representation (e.g., visual clarity of settlements, cities, roads, and resource tokens relative to physical counterparts)
+        \item Board layout mapping (e.g., whether the hexagonal board, nodes, and edges on screen align intuitively with how players perceive the physical board)
+        \item Overall \("\)feel\("\) that the digital experience mirrors the real game (bridge between physical and digital contexts)
+    \end{itemize}
+    This category had the lowest average score (2.8/5), indicating participants struggled to immediately recognize how digital elements corresponded to real-world Catan components.
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Participant} & \textbf{Clarity} & \textbf{Flow} & \textbf{Catan-to-Bot Intuition} & \textbf{User Avg.} \\ \hline
+Participant 1 & 3.5 & 4.0 & 2.5 & \textbf{3.3} \\ \hline
+Participant 2 & 4.0 & 4.5 & 3.0 & \textbf{3.8} \\ \hline
+Participant 3 & 3.0 & 3.5 & 2.5 & \textbf{3.0} \\ \hline
+Participant 4 & 4.5 & 4.5 & 3.0 & \textbf{4.0} \\ \hline
+Participant 5 & 3.5 & 4.0 & 3.0 & \textbf{3.5} \\ \hline
+Participant 6 & 3.0 & 3.5 & 2.5 & \textbf{3.0} \\ \hline
+Participant 7 & 4.0 & 4.5 & 3.0 & \textbf{3.8} \\ \hline
+\rowcolor[HTML]{F2F2F2} 
+\textbf{Component Avg.} & \textbf{3.6} & \textbf{4.1} & \textbf{2.8} & \textbf{3.5} \\ \hline
+\end{tabular}
+\caption{Usability Component Breakdown (NFR.S.2)}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    ybar,
+    bar width=25pt,
+    ylabel={Average Score (1-5)},
+    symbolic x coords={Clarity, Game Flow, Intuition},
+    xtick=data,
+    ymin=0, ymax=5,
+    ytick={1,2,3,4,5},
+    nodes near coords,
+    nodes near coords align={vertical},
+    ymajorgrids=true,
+    grid style=dashed,
+    width=0.85\textwidth,
+    height=7cm,
+    title={Usability Scores by Component}
+]
+\addplot[fill=blue!50] coordinates {
+    (Clarity,3.6) (Game Flow,4.1) (Intuition,2.8)
+};
+\end{axis}
+\end{tikzpicture}
+\caption{Visual Comparison of Usability Categories}
+\end{figure}
+
+\item test-NFR-U-2:
+
+\textbf{Initial State:} UI opened in Chrome/Firefox with accessibility tools enabled.
+
+\textbf{Input/Condition:} Apply simulated color-blindness filters and vary browser zoom levels between 80\% and 150\%.
+
+\textbf{Expected Output:} All critical UI elements remain legible; actions can still be performed correctly.
+
+\textbf{Actual Output:} Text, buttons, and board elements remained readable and interactive under all tested conditions.
+
+\textbf{Result:} Pass
+
+\textbf{Trace:} NFR.S.2
+\end{enumerate}
+
+\subsection{Maintainability (QUALITY EVALUATED)}
+
+\begin{enumerate}
+\item test-NFR-M-1:
+
+\textbf{Initial State:} Complete codebase committed to repository.
+
+\textbf{Input/Condition:} Run static analysis (SonarQube) and perform peer review of module structure (AI bot, CV, UI, Database).
+
+\textbf{Expected Output:} High rating for maintainability (B or higher), meaning code is modular and well-documented for easy updates.
+
+\textbf{Actual Output:} Static analysis with SonarQube reported an A rating for maintainability. As an aside, the codebase also passed SonarQube's quality gate, although it seems there are some security issues we will need to consider (out of scope for now). Peer review confirmed clear module separation and sufficient documentation.
+
+\textbf{Result:} Pass
+
+\textbf{Trace:} NFR.S.3
+\end{enumerate}
+
+Verification with Data:
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{sonarqube_report}
+    \caption{SonarQube Quality Report}
+\end{figure}
+
+\subsection{Installability}
+
+\begin{enumerate}
+\item test-NFR-I-1:
+
+\textbf{Initial State:} Packaged release candidate available.
+
+\textbf{Input/Condition:} Install and launch the system on Windows 11 and macOS using Chrome and Firefox.
+
+\textbf{Expected Output:} Application installs and runs correctly on all platforms.
+
+\textbf{Actual Output:} Successful installation and execution on all tested platforms. Minor permission prompts appeared but did not affect functionality.
+
+\textbf{Result:} Pass
+
+\textbf{Trace:} NFR.S.4
+\end{enumerate}
+
+\subsection{Data Integrity}
+
+\begin{enumerate}
+\item test-NFR-D-1:
+
+\textbf{Initial State:} Active game session connected to the database.
+
+\textbf{Input/Condition:} Perform multiple manual game actions and simulate a sudden network interruption during one action.
+
+\textbf{Expected Output:} The database remains consistent; interrupted updates do not corrupt data.
+
+\textbf{Actual Output:} Interrupted update rolled back successfully. All game states remained valid and accurate.
+
+\textbf{Result:} Pass
+
+\textbf{Trace:} NFR.S.5
+
+\item test-NFR-D-2:
+
+\textbf{Initial State:} Active game session.
+
+\textbf{Input/Condition:} Attempt to input invalid game actions manually (e.g., building where not allowed, invalid resource quantities).
+
+\textbf{Expected Output:} Invalid actions are rejected by the system; user is informed of the error.
+
+\textbf{Actual Output:} All invalid actions were rejected; logs correctly recorded failures.
+
+\textbf{Result:} Pass
+
+\textbf{Trace:} NFR.S.5
+
+\item test-NFR-D-3:
+
+\textbf{Initial State:} Database with multiple stored game states and transaction logs.
+
+\textbf{Input/Condition:} Execute comprehensive unit/component tests to verify:
+\begin{itemize}
+    \item Game State Validation: Directly test state storage with intentionally invalid game configurations (negative resources, impossible board states, out-of-range values)
+    \item Action Validation: Unit test that database rejects storage of invalid actions (illegal moves, malformed action objects, non-existent player references)
+    \item Constraint Enforcement: Verify that data constraints are enforced at the component level before and after storage
+    \item State Recovery: Test that the database gracefully handles and rejects corrupted state entries during recovery scenarios
+\end{itemize}
+
+\textbf{Testing Methodology:}
+\begin{itemize}
+    \item \textbf{Unit Test Framework:} Python unit tests using direct database API calls to test constraint validation
+    \item \textbf{Invalid State Payloads:} Generated test cases with negative resources, invalid player counts, out-of-bounds settlement locations per board geometry
+    \item \textbf{Invalid Action Payloads:} Test cases with malformed move objects, missing required fields, references to non-existent game IDs
+    \item \textbf{Assertion Coverage:} Each test verifies that rejected entries do not persist and no partial writes occur
+\end{itemize}
+
+\textbf{Expected Output:} Database rejects all invalid game states and actions; no invalid data persists; constraint violations are logged and reported; system remains in consistent state.
+
+\textbf{Actual Output:}
+\begin{itemize}
+    \item \textbf{Invalid State Tests:} 100\% of invalid state payloads were rejected (15/15 test cases passed)
+    \item \textbf{Invalid Action Tests:} 100\% of invalid action payloads were rejected (12/12 test cases passed)
+    \item \textbf{Constraint Enforcement:} All foreign key, uniqueness, and range constraints enforced successfully at storage layer
+    \item \textbf{State Recovery:} Corrupted entries detected and quarantined; no data corruption propagated to subsequent queries
+    \item \textbf{Database Integrity:} Post-test verification confirmed all stored states remain valid and query-able
+\end{itemize}
+
+\textbf{Result:} Pass
+
+\textbf{Trace:} NFR.S.5
+\end{enumerate}
+
+\subsection{Availability}
+
+\begin{enumerate}
+\item test-NFR-AV-1:
+
+\textbf{Initial State:} System running with an active game.
+
+\textbf{Input/Condition:} Manually terminate the server process mid-game and restart.
+
+\textbf{Expected Output:} System restores previous game state within one minute, allowing the game to continue without data loss.
+
+\textbf{Actual Output:} Service restarted in 32 seconds; last committed game state restored and session resumed successfully.
+
+\textbf{Result:} Pass
+
+\textbf{Trace:} NFR.S.6
+\end{enumerate}
+
 	
 \section{Comparison to Existing Implementation}	
 
@@ -80,23 +446,310 @@ This section will not be appropriate for every project.
 
 \section{Unit Testing}
 
+This section outlines the unit testing strategy and details the specific test cases used to verify individual components of the RLCatan system.
+The automated unit tests focus on ensuring that API endpoints, internal path resolution logic, and analysis interfaces function correctly in isolation.
+
+\subsection{Unit Testing Scope}
+
+The scope of these unit tests covers the backend API endpoints, path resolution utilities, and the Monte Carlo Tree Search (MCTS) analysis integration.
+Modules and underlying models developed by external dependencies are out of scope for these unit tests and are assumed to be verified by their respective maintainers.
+
+\subsection{Tests for Functional Requirements}
+
+\subsubsection{API and Game Management Module}
+
+\begin{enumerate}
+
+\item
+\texttt{test\_get\_bots\_endpoint}
+
+Type: Functional, Dynamic, Automatic
+
+Initial State: The API server is initialized and ready to receive requests.
+
+Input: A simple HTTP GET request to the \texttt{/api/bots} URL.
+
+Output: A 200 OK status code and a JSON response containing a list of available bot objects.
+
+Test Case Derivation: Ensures the bot registry is populated correctly by checking that the returned list includes standard bot IDs like \texttt{catanatron\_ab\_2}, \texttt{random}, and \texttt{human}, and confirms that the total number of available bots is at least 10.
+
+How test will be performed: Automated unit test using an HTTP test client.
+
+\item
+\texttt{test\_stress\_test\_endpoint}
+
+Type: Functional, Dynamic, Automatic
+
+Initial State: The API server is initialized.
+
+Input: An HTTP GET request to the \texttt{/api/stress-test} endpoint.
+
+Output: A 200 OK status code and a JSON object representing the game state.
+
+Test Case Derivation: Verifies that the system can successfully create and advance a game instance without crashing by validating that the response contains essential game data structures, specifically "nodes" and "edges".
+
+How test will be performed: Automated unit test using an HTTP test client.
+
+\item
+\texttt{test\_player\_factory\_custom\_bot}
+
+Type: Functional, Dynamic, Automatic
+
+Initial State: Internal functions are mocked to simulate a custom bot named \"my\_custom\_bot\".
+
+Input: A POST request to \texttt{/api/games} with "BOT:my\_custom\_bot" in the player list.
+
+Output: A successful 200 OK response containing a \texttt{game\_id}.
+
+Test Case Derivation: Confirms that the backend correctly identifies the custom bot prefix, retrieves the mocked configuration, and attempts to instantiate the appropriate player class (like PPOPlayer) with the correct model path.
+
+How test will be performed: Automated unit test with mocked dependencies.
+
+\item
+\texttt{test\_create\_game\_all\_player\_types}
+
+Type: Functional, Dynamic, Automatic
+
+Initial State: The API server is initialized.
+
+Input: A series of POST requests to \texttt{/api/games}, where each request uses a different player type (e.g., CATANATRON, VALUE\_FUNCTION, HUMAN) in the configuration.
+
+Output: A 200 OK status code and a valid \texttt{game\_id} for each request.
+
+Test Case Derivation: Serves as a comprehensive smoke test to verify that every registered player class is correctly implemented and can be initialized by the game engine.
+
+How test will be performed: Automated unit test iterating through all supported built-in player types.
+
+\end{enumerate}
+
+\subsubsection{Path Resolution Module}
+
+This module tests the utility functions responsible for safely and accurately resolving file paths for model assets across different deployment environments.
+
+\begin{enumerate}
+
+\item
+\texttt{test\_resolve\_model\_path\_absolute\_hpc}]
+
+Type: Functional, Dynamic, Automatic
+
+Initial State: Path resolution utilities are loaded.
+
+Input: A specific string representing an absolute file path typical of an HPC setup (e.g., \texttt{/nfs/features/rlcatan/...}).
+
+Output: A normalized string path that has been rebased to the application's local directory structure (e.g., starting with \texttt{/app}).
+
+Test Case Derivation: Ensures that absolute paths from training environments are correctly mapped to valid paths in the deployment environment.
+
+How test will be performed: Automated unit test.
+
+\item
+\texttt{test\_resolve\_model\_path\_relative}
+
+Type: Functional, Dynamic, Automatic
+
+Initial State: Path resolution utilities are loaded.
+
+Input: A standard relative path string (e.g., \texttt{data/models/v2}).
+
+Output: An absolute path that correctly appends the input to the application's root directory.
+
+Test Case Derivation: Confirms the system can locate local model files correctly by asserting that the resolved path ends with the expected \texttt{app/data/models/v2} suffix.
+
+How test will be performed: Automated unit test.
+
+\end{enumerate}
+
+\subsubsection{Game Analysis Module}
+
+This module verifies the integration with the Monte Carlo Tree Search (MCTS) engine to ensure active games can be properly analyzed.
+
+\begin{enumerate}
+
+\item
+\texttt{test\_mcts\_analysis\_endpoint}
+
+Type: Functional, Dynamic, Automatic
+
+Initial State: A valid game is created via the API, and the GameAnalyzer is mocked to return fixed win probabilities.
+
+Input: A GET request to that game's analysis URL (\texttt{.../mcts-analysis}).
+
+Output: A 200 OK status and a JSON response where success is True.
+
+Test Case Derivation: Proves the endpoint correctly interfaces with the analysis engine by validating that the returned win probabilities match the mocked values (e.g., RED=0.5).
+
+How test will be performed: Automated unit test with a mocked GameAnalyzer.
+
+\item
+\texttt{test\_mcts\_analysis\_endpoint\_not\_found}
+
+Type: Functional, Dynamic, Automatic
+
+Initial State: The API server is initialized.
+
+Input: A GET request to the analysis endpoint with a non-existent game ID (e.g., 99999).
+
+Output: An error status code, specifically checking for either a 404 Not Found or a 500 Internal Server Error.
+
+Test Case Derivation: Confirms that the application handles invalid game IDs without crashing or returning a false success.
+
+How test will be performed: Automated unit test using an HTTP test client.
+
+\end{enumerate}
+
 \section{Changes Due to Testing}
 
-\wss{This section should highlight how feedback from the users and from 
-the supervisor (when one exists) shaped the final product.  In particular 
-the feedback from the Rev 0 demo to the supervisor (or to potential users) 
-should be highlighted.}
+Based on testing results, we have identified and prioritized changes as follows:
+
+\subsection*{High Priority (Rev 1 Implementation)}
+The following critical changes will be implemented before or immediately after the final demo to address major usability and quality gaps:
+\begin{itemize}
+    \item \textbf{UI/UX Overhaul:} We identified significant usability issues in testing.
+    We will implement a more intuitive layout, clearer visual cues for game actions, and improved color-coding to enhance the connection between the real-life Catan game and the bot's interface.
+    \item \textbf{High Severity Code Issues:} SonarQube analysis revealed high severity maintainability and security issues, largely dependency-based.
+    These will be resolved to ensure code stability and security.
+\end{itemize}
+
+\subsection*{Medium Priority (Post-Rev 1 / Backlog)}
+The following improvements are valuable but can be deferred to future iterations:
+\begin{itemize}
+    \item \textbf{Medium/Low Severity Maintainability Issues:} SonarQube flagged many medium and low severity maintainability issues.
+    While our codebase received a high maintainability rating overall, we will address these issues through module restructuring, improved code comments, and consistent coding standards across the project.
+    \item \textbf{Deployment Expiry Date:} Currently the team is paying to host the application on paid third-party services like Render and Render's Postgres DB.
+    Once the project is complete, the team will need to decide on a plan for how long to keep the application hosted, and whether to switch to a free-tier hosting solution or shut down the service entirely.
+\end{itemize}
+
+\subsection*{Out of Scope}
+The following findings from testing will not be addressed due to time constraints or project priorities:
+\begin{itemize}
+    \item \textbf{Low-Impact Security Issues:} Some security issues identified in static analysis are considered low-risk given the system's deployment context and will not be addressed in the current release cycle.
+    \item \textbf{Advanced Model Optimizations:} Initially, we prioritized improving the AI model's decision-making.
+    However, testing revealed that user experience is a larger bottleneck.
+    Further model optimization is deferred in favor of usability improvements.
+\end{itemize}
+
+\subsection*{Summary}
+Overall, testing conclusions have shifted our priorities from improving the model's decision-making to enhancing the user experience and code quality.
+We believe this focus will have a more significant impact on the success of the project as we pursue the path of turning our model into a method of experiential learning.
 
 \section{Automated Testing}
-		
+
+For our functional and non-functional requirements evaluation, we employed bash scripts for specific testing purposes:
+\begin{itemize}
+    \item \textbf{Load/Stress Testing:} Bash scripts were used to send repeated requests to the API endpoints to measure response times and identify performance bottlenecks under load (satisfying NFR.E.4 and FR.S.6.3).
+    \item \textbf{Game Simulation Testing:} Scripts automated the execution of multiple game scenarios to validate that the AI model produces legal moves and handles edge cases correctly (satisfying FR.S.3.1 and FR.S.3.2).
+    \item \textbf{Integration Testing:} Bash scripts coordinated calls between modules to verify data flow and state consistency across the system (supporting FR.S.7 game state database requirements).
+\end{itemize}
+
+However, comprehensive unit testing with pytest (Python) and Jest (JavaScript) was not fully implemented during this revision due to time constraints and the team's focus on system-level validation and usability testing. The CI/CD pipeline was expanded to incorporate the bash scripts and static analysis tools, ensuring code stability and catching issues early in the development cycle. The automated testing process includes running integration tests, linting, and coverage reporting through the GitHub Actions pipeline.
+
 \section{Trace to Requirements}
-		
-\section{Trace to Modules}		
+
+\subsection{Functional Requirements Trace}
+
+\begin{table}[H]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Test Case ID} & \textbf{Traced Requirements} \\ \hline
+test-FR-AI-1-1 & FR.S.3.1, FR.S.3.2, FR.S.2.1 \\ \hline
+test-FR-AI-1-2 & FR.S.3.1, FR.S.3.2 \\ \hline
+test-FR-UI-1-1 & FR.S.5.1, FR.S.5.5, FR.S.7.3 \\ \hline
+\texttt{test\_get\_bots\_endpoint} & FR.S.7.5 \\ \hline
+\texttt{test\_stress\_test\_endpoint} & FR.S.7.1, NFR.S.1 \\ \hline
+\texttt{test\_player\_factory\_custom\_bot} & FR.S.2.5 \\ \hline
+\texttt{test\_create\_game\_all\_player\_types} & FR.S.2.1, FR.S.2.5 \\ \hline
+\texttt{test\_resolve\_model\_path\_absolute\_hpc} & NFR.E.3, FR.S.2.2 \\ \hline
+\texttt{test\_resolve\_model\_path\_relative} & NFR.E.3, FR.S.2.2 \\ \hline
+\texttt{test\_mcts\_analysis\_endpoint} & FR.S.3.1, FR.S.3.4, FR.S.2.4 \\ \hline
+\texttt{test\_mcts\_analysis\_endpoint\_not\_found} & FR.S.7.5 \\ \hline
+\end{tabular}
+} %
+\caption{Functional Test Case Traceability}
+\label{tab:functional-trace}
+\end{table}
+
+\subsection{Nonfunctional Requirements Trace}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Test Case ID} & \textbf{Traced Requirements} \\ \hline
+test-NFR-P-1 & NFR.S.1 \\ \hline
+test-NFR-U-1 & NFR.S.2 \\ \hline
+test-NFR-U-2 & NFR.S.2 \\ \hline
+test-NFR-M-1 & NFR.S.3 \\ \hline
+test-NFR-I-1 & NFR.S.4 \\ \hline
+test-NFR-D-1 & NFR.S.5 \\ \hline
+test-NFR-D-2 & NFR.S.5 \\ \hline
+test-NFR-D-3 & NFR.S.5 \\ \hline
+test-NFR-AV-1 & NFR.S.6 \\ \hline
+\end{tabular}
+\caption{Nonfunctional Test Case Traceability}
+\label{tab:nonfunctional-trace}
+\end{table}
+
+\medskip
+\section{Trace to Modules}
+\subsection{Functional Modules Trace}
+
+\begin{table}[H]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Test Case ID} & \textbf{Traced Modules} \\ \hline
+test-FR-AI-1-1 & AI Model, Game State Manager \\ \hline
+test-FR-AI-1-2 & AI Model, Game State Manager \\ \hline
+test-FR-UI-1-1 & User Interface, Game State Database \\ \hline
+\texttt{test\_get\_bots\_endpoint} & Game State Manager \\ \hline
+\texttt{test\_stress\_test\_endpoint} & Game State Manager, Reinforcement Learning Environment \\ \hline
+\texttt{test\_player\_factory\_custom\_bot} & Reinforcement Learning Environment \\ \hline
+\texttt{test\_create\_game\_all\_player\_types} & Reinforcement Learning Environment, Game State Manager \\ \hline
+\texttt{test\_resolve\_model\_path\_absolute\_hpc} & AI Model, Reinforcement Learning Environment \\ \hline
+\texttt{test\_resolve\_model\_path\_relative} & AI Model, Reinforcement Learning Environment \\ \hline
+\texttt{test\_mcts\_analysis\_endpoint} & AI Model, Game State Manager \\ \hline
+\texttt{test\_mcts\_analysis\_endpoint\_not\_found} & Game State Manager \\ \hline
+\end{tabular}
+} %
+\caption{Functional Test Case to Module Traceability}
+\label{tab:functional-module-trace}
+\end{table}
+
+\subsection{Nonfunctional Modules Trace}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Test Case ID} & \textbf{Traced Modules} \\ \hline
+test-NFR-P-1  & AI Model, Game State Manager, User Interface \\ \hline
+test-NFR-U-1  & User Interface \\ \hline
+test-NFR-U-2  & User Interface \\ \hline
+test-NFR-M-1  & All Modules \\ \hline
+test-NFR-I-1  & User Interface \\ \hline
+test-NFR-D-1  & Game State Database \\ \hline
+test-NFR-D-2  & Game State Database, User Interface \\ \hline
+test-NFR-D-3  & Game State Database \\ \hline
+test-NFR-AV-1 & Game State Manager, Game State Database \\ \hline
+\end{tabular}
+\caption{Nonfunctional Test Case to Module Traceability}
+\label{tab:nonfunctional-module-trace}
+\end{table}
 
 \section{Code Coverage Metrics}
+We have been using Coveralls for coverage tracking as part of our CI/CD pipeline throughout the project.
+As of the latest report (at time of writing), our code coverage is ~81\%. The report can be seen below.
+It appears to have dipped somewhat recently due to the addition of rev1 code, which has yet to be fully covered.
 
-\bibliographystyle{plainnat}
-\bibliography{../../refs/References}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{coveralls_report}
+    \caption{Coveralls Code Coverage Report}
+\end{figure}
 
 \newpage{}
 \section*{Appendix --- Reflection}
@@ -120,6 +773,51 @@ graduate attribute of Reflection.
   predict a feasible amount of effort and the right tasks needed to build the
   evidence that demonstrates the required quality?  (It is expected that most
   teams will have had to deviate from their original VnV Plan.)
+  \item Reflect on your use of CI for continuous integration testing (regression
+  testing). Did your CI work to gatekeep your PRs?  Would it have been helpful
+  if you got your CI working earlier in the project?  What are your plans to use
+  CI for testing in future projects?
 \end{enumerate}
+    
+\subsection{Answers}
+For this reflection, we decided all of the questions were better answered as one cohesive reflection rather than answering each question individually.
+    \begin{enumerate}
+        \item We would say that overall this deliverable went quite smoothly.
+        It certainly felt like less of a time crunch than previous documents, such as the SRS.
+        This was mostly because we created a solid original VnV plan, so carrying it out did not present many major hurdles.
+        As we will mention in a later answer, we had to make some minor modifications to certain planned tests, but for the most part, they were executed very closely to how they were originally written.
+        \item
+        The main pain point was recruiting participants for the usability study. Because Catan has a steep learning curve, we needed testers who already understood the game to provide meaningful feedback. Finding enough qualified users was challenging. We resolved this by reaching out to student groups and personal networks to recruit seven participants, which allowed us to complete the usability evaluation despite a tighter schedule.  
+        Another significant challenge was the shift away from the original Computer Vision (CV)
+        system. The technical complexity of real-time board detection proved to be too resource-intensive
+        We resolved this by pivoting to a browser-based bot that users could play against or watch,
+        which kept the focus on learning and gameplay rather than CV hardware issues.
+        \item
+        Several decisions in this deliverable were guided by client and proxy feedback.
+        The suggestion of an LLM-based explanation system came from our supervisor, who
+        suggested a tool that could explain its reasoning in natural language after hearing about our usability issues.
+        Usability insights were collected from a proxy group of peers and acquaintances familiar with Catan, 
+        helping us refine interface clarity, navigation, and tooltip visibility. 
+        Other decisions, including removing the CV module and shifting from an AI recommendation
+        engine to a playable learning bot, were internal pivots to make the system more practical and 
+        accessible in a browser environment.
+        \item
+        The Verification and Validation activities deviated from the original plan due to these
+        shifts in scope and architecture. Initial plans emphasized CV accuracy and board 
+        reconstruction, but these were replaced with evaluations of UI responsiveness and AI logic 
+        transparency. We also transitioned from testing recommendation accuracy to assessing the 
+        educational value and gameplay flow of the bot. Furthermore, many planned requirement 
+        tests were written before the final codebase structure was known, making some tests 
+        redundant or infeasible. In future projects, we would treat the VnV Plan as a living document, 
+        updating it alongside code development to better anticipate architectural changes and evolving project goals.
+      \item CI/CD was a critical part of our development process.
+        It was actually one of the first things we set up when we started the project, since our project integrates with the Catanatron simulator.
+        It was essential to have automated testing in place to ensure that new code didn’t break existing functionality.
+        We also set up linting and coveralls for coverage reports on each commit at that time, which has helped us maintain code quality and came in handy for the coverage section of this report.
+        We always checked for passing tests before merging any PRs, and on a couple occasions that helped catch some regressions and integration issues before they became a problem.
+        I'll be sticking to this approach for future projects, as it's been a great help keeping the codebase in order.
+        After working with SonarQube in this report, I'm also considering adding that to the pipeline for future projects as well, to get more info on quality over time rather than the single snapshot we took here.
+      \end{enumerate}
+    
 
 \end{document}

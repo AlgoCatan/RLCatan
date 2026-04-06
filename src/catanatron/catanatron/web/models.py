@@ -2,12 +2,21 @@ import os
 import json
 import pickle
 from contextlib import contextmanager
+from datetime import datetime, timezone
 from typing import Any, Tuple
 from catanatron.json import GameEncoder
 
 from catanatron.game import Game
 from catanatron.state_functions import get_state_index
-from sqlalchemy import MetaData, Column, Integer, String, LargeBinary, create_engine
+from sqlalchemy import (
+    MetaData,
+    Column,
+    Integer,
+    String,
+    LargeBinary,
+    DateTime,
+    create_engine,
+)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session
 from flask_sqlalchemy import SQLAlchemy
@@ -37,6 +46,21 @@ class GameState(Base):
             state_index=get_state_index(game.state),
             state=state,
             pickle_data=pickle_data,
+        )
+
+
+class UserStart(Base):
+    __tablename__ = "user_starts"
+
+    id = Column(Integer, primary_key=True)
+    ip = Column(String(64), nullable=False)
+    timestamp = Column(DateTime(timezone=True), nullable=False)
+
+    @staticmethod
+    def from_ip(ip_address: str):
+        return UserStart(
+            ip=ip_address,
+            timestamp=datetime.now(timezone.utc),
         )
 
 

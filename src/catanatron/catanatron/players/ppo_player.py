@@ -1,23 +1,21 @@
 from __future__ import annotations
 
-import os.path
 from pathlib import Path
-from typing import Iterable, List, Optional, cast
+from typing import Iterable, List, Optional
 
 import numpy as np
-from gymnasium.spaces import Discrete
-from sb3_contrib.ppo_mask import MaskablePPO
 
+from catanatron.action_space import (
+    ACTIONS_ARRAY,
+    ACTION_SPACE_SIZE,
+    LEGACY_PPO_ACTIONS_ARRAY,
+    LEGACY_PPO_ACTION_SPACE_SIZE,
+    from_action_space,
+    to_action_space,
+)
 from catanatron.models.player import Player, Color
 from catanatron.models.enums import Action, ActionType
 from catanatron.features import create_sample, get_feature_ordering
-
-from catanatron.gym.envs.catanatron_env import (
-    ACTIONS_ARRAY,
-    to_action_space,
-    from_action_space,
-)
-
 from catanatron.gym.action_type_filtering import (
     COMPLEX_DEV_CARD_ACTION_TYPES,
     PLAYER_TRADING_ACTION_TYPES,
@@ -32,7 +30,7 @@ class PPOPlayer(Player):
       - 1v1 game (PPO agent vs one opponent)
       - BASE map
       - Vector observation created with `create_sample` + `get_feature_ordering(2)`
-      - Model file at `models/ppo_v2.zip` if no path is provided
+      - Model file at `models/ppo_v4.zip` if no path is provided
     """
 
     def __init__(
@@ -46,13 +44,24 @@ class PPOPlayer(Player):
 
         if model_path is None:
             # Load the default trained PPO model (.zip extension is added automatically)
-            base_dir = (
-                Path(__file__).resolve().parents[3]
-            )
-            model_path = base_dir / "rlcatan" / "models" / "ppo_v2"
+            base_dir = Path(__file__).resolve().parents[3]
+            model_path = base_dir / "rlcatan" / "models" / "ppo_v4"
+
+        from sb3_contrib.ppo_mask import MaskablePPO
 
         self.model: MaskablePPO = MaskablePPO.load(model_path, device=device)
         self.deterministic = deterministic
+        self.action_space_size = int(self.model.action_space.n)
+
+        if self.action_space_size == ACTION_SPACE_SIZE:
+            self.action_templates = ACTIONS_ARRAY
+        elif self.action_space_size == LEGACY_PPO_ACTION_SPACE_SIZE:
+            self.action_templates = LEGACY_PPO_ACTIONS_ARRAY
+        else:
+            raise ValueError(
+                f"Unsupported PPO action space size {self.action_space_size}. "
+                f"Expected {LEGACY_PPO_ACTION_SPACE_SIZE} or {ACTION_SPACE_SIZE}."
+            )
 
         # Feature ordering must match training
         # During training, we're currently using num_players=2, BASE map.
@@ -60,7 +69,13 @@ class PPOPlayer(Player):
 
         # Need to exclude the same ActionType groups as in training
         # TODO: Setup curriculum learning with progressively fewer exclusions
-        self.excluded_type_groups = []
+        self.excluded_type_groups = [
+            COMPLEX_DEV_CARD_ACTION_TYPES,
+            PLAYER_TRADING_ACTION_TYPES,
+        ]
+
+        # Stores the info to pass to the LLM move explainer. Updated on each decide() call
+        self._pending_decision_details = None
 
     def _build_observation(self, game) -> np.ndarray:
         """
@@ -78,7 +93,7 @@ class PPOPlayer(Player):
         Map each playable Action to its discrete action index using the same
         encoding as CatanatronEnv (to_action_space).
         """
-        return [to_action_space(a) for a in playable_actions]
+        return [to_action_space(a, self.action_templates) for a in playable_actions]
 
     def _apply_action_type_filters(self, indices: List[int]) -> List[int]:
         """
@@ -91,7 +106,7 @@ class PPOPlayer(Player):
         filtered: List[int] = []
 
         for idx in indices:
-            action_type, _ = ACTIONS_ARRAY[idx]
+            action_type, _ = self.action_templates[idx]
 
             # Changed logic from action_type_filtering to use any() over excluded groups, not sure which approach is more efficient
             if any(action_type in group for group in self.excluded_type_groups):
@@ -108,9 +123,7 @@ class PPOPlayer(Player):
 
         This mask is passed into MaskablePPO.predict(action_masks=...).
         """
-        action_space = cast(Discrete, self.model.action_space)
-        n_actions = action_space.n
-        mask = np.zeros(n_actions, dtype=bool)
+        mask = np.zeros(self.action_space_size, dtype=bool)
         mask[valid_indices] = True
 
         return mask
@@ -139,6 +152,9 @@ class PPOPlayer(Player):
         # 3. Apply v1 simplification filters (no complex dev cards, no player trades)
         filtered_indices = self._apply_action_type_filters(all_valid_indices)
 
+        if not filtered_indices:
+            filtered_indices = all_valid_indices
+
         # 4. Build mask over the entire action space
         action_mask = self._build_action_mask(filtered_indices)
 
@@ -152,14 +168,33 @@ class PPOPlayer(Player):
 
         # 6. Map index -> concrete Action from playable_actions
         #    This will pick the first matching Action in playable_actions whose
-        #    normalized (action_type, value) matches ACTIONS_ARRAY[chosen_index].
-        chosen_action = from_action_space(chosen_index, list(playable_actions))
+        #    normalized (action_type, value) matches the active PPO action template.
+        chosen_action = from_action_space(
+            chosen_index, list(playable_actions), self.action_templates
+        )
+
+        # 7. Store info for move explanation (LLM)
+        self._pending_decision_details = {
+            # Observation data and actions presented/chosen. Knowing what the other move options were is important for explaining why a move was chosen
+            "obs": obs.tolist(),
+            "all_valid_indices": all_valid_indices,
+            "filtered_indices": filtered_indices,
+            "chosen_index": chosen_index,
+            "deterministic": self.deterministic,
+        }
 
         return chosen_action
 
+    def get_decision_details(self, game, playable_actions, chosen_action):
+        """Return the details of the last decision, for use in LLM move explanation."""
+        details = getattr(self, "_pending_decision_details", {})
+        self._pending_decision_details = {}
+
+        return details
+
     def reset_state(self):
         """
-        We can mess with this if we want to reset any internal
-        per-game state. For now, it just defers to the base class.
+        Reset any internal state between games. For PPOPlayer, that's just clearing the last_decision_info for now.
         """
+        self._pending_decision_details = None
         super().reset_state()

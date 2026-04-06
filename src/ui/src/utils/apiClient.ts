@@ -3,11 +3,63 @@ import axios from "axios";
 import { API_URL } from "../configuration";
 import type { Color, GameAction, GameState } from "./api.types";
 
-type Player = "HUMAN" | "RANDOM" | "CATANATRON";
+export type PlayerArchetype =
+  | "HUMAN"
+  | "RANDOM"
+  | "CATANATRON"
+  | "FINAL_BOSS"
+  | "PPO_PLAYER"
+  | "VALUE_FUNCTION"
+  | "MCTS_PLAYER"
+  | "VP_PLAYER"
+  | "PLACEMENT_PLAYER"
+  | "WEIGHTED_RANDOM";
+export type MapTemplate = "BASE" | "MINI" | "TOURNAMENT";
 export type StateIndex = number | `${number}` | "latest";
 
-export async function createGame(players: Player[]) {
-  const response = await axios.post(API_URL + "/api/games", { players });
+export type CreateGameOptions = {
+  players: PlayerArchetype[];
+  mapTemplate: MapTemplate;
+  vpsToWin: number;
+  discardLimit: number;
+  friendlyRobber: boolean;
+  familiarity: "HIGH" | "MEDIUM" | "LOW";
+};
+
+export type UserStartRow = {
+  id: number;
+  ip: string;
+  timestamp: string;
+};
+
+export async function logUserStart() {
+  const response = await axios.post(API_URL + "/api/analytics/start");
+  return response.data;
+}
+
+export async function getUserStarts(limit = 50): Promise<UserStartRow[]> {
+  const response = await axios.get(`${API_URL}/api/admin/user-starts`, {
+    params: { limit },
+  });
+  return response.data;
+}
+
+export async function createGame({
+  players,
+  mapTemplate,
+  vpsToWin,
+  discardLimit,
+  friendlyRobber,
+  familiarity,
+}: CreateGameOptions) {
+  const response = await axios.post(API_URL + "/api/games", {
+    players,
+    map_template: mapTemplate,
+    vps_to_win: vpsToWin,
+    discard_limit: discardLimit,
+    friendly_robber: friendlyRobber,
+    familiarity,
+  });
   return response.data.game_id;
 }
 
@@ -76,4 +128,42 @@ export async function getMctsAnalysis(
     });
     throw error;
   }
+}
+
+export type PlayerKey = string;
+
+export type BotMeta = {
+  id: string;
+  name?: string;
+  elo: number;
+  key: PlayerKey;
+};
+
+export async function getBots(): Promise<BotMeta[]> {
+  const response = await axios.get(API_URL + "/api/bots");
+  return response.data;
+}
+
+export type CreateGameConfig =
+  | { mode: "human_vs_bot"; numPlayers: number; opponentKey: PlayerKey }
+  | { mode: "bot_vs_bot"; numPlayers: number; botAKey: PlayerKey; botBKey: PlayerKey };
+
+export async function createGameConfigured(cfg: CreateGameConfig) {
+  let players: PlayerKey[] = [];
+
+  if (cfg.mode === "human_vs_bot") {
+    players = ["HUMAN", ...Array(Math.max(0, cfg.numPlayers - 1)).fill(cfg.opponentKey)];
+  } else {
+    const pair: PlayerKey[] = [cfg.botAKey, cfg.botBKey];
+    players = Array.from({ length: cfg.numPlayers }, (_, i) => pair[i % 2]); // A,B,A,B...
+  }
+
+  const response = await axios.post(API_URL + "/api/games", { players });
+  return response.data.game_id;
+}
+
+// Fetch an explanation for a move using the same API_URL/axios configuration
+export async function getMoveExplanation(gameId: string, index: number) {
+  const response = await axios.get(`${API_URL}/api/games/${gameId}/explain/${index}`);
+  return response.data;
 }

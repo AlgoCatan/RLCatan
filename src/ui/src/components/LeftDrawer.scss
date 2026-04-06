@@ -12,6 +12,13 @@ $dark-divider: rgb(0 0 0 / 80%);
     background: $dark-divider;
   }
 
+  .player-section {
+    .player-state-box {
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+    }
+  }
+
   .MuiDrawer-paperAnchorDockedLeft {
     border-color: $dark-divider;
   }
@@ -27,6 +34,13 @@ $dark-divider: rgb(0 0 0 / 80%);
     scrollbar-color: #454545 variables.$dark-gray;
     .action {
       padding: variables.$sm-gutter;
+      font-weight: bold; // Bold text
+
+      // Use colors directly from variables.scss
+      &.RED { color: variables.$red; }
+      &.BLUE { color: variables.$blue; }
+      &.ORANGE { color: variables.$orange; }
+      &.WHITE { color: variables.$white; text-shadow: 0 0 2px black; } 
     }
   }
 }

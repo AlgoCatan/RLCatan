@@ -4,3 +4,11 @@ logs
 assets
 venv
 .git
+db-data
+.pytest_cache
+tests
+docs
+documentation
+examples
+__pycache__
+*.pyc

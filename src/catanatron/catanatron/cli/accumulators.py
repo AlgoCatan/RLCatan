@@ -3,6 +3,7 @@ import os
 import json
 from collections import defaultdict
 
+from catanatron.explanations.packet_builder import ExplanationPacketBuilder
 from catanatron.game import GameAccumulator, Game
 from catanatron.json import GameEncoder
 from catanatron.state_functions import (
@@ -12,7 +13,11 @@ from catanatron.state_functions import (
     get_longest_road_color,
     get_player_buildings,
 )
-from catanatron.models.enums import VICTORY_POINT, SETTLEMENT, CITY
+from catanatron.models.enums import (
+    VICTORY_POINT,
+    SETTLEMENT,
+    CITY,
+)
 
 
 class VpDistributionAccumulator(GameAccumulator):
@@ -128,3 +133,73 @@ class JsonDataAccumulator(GameAccumulator):
         filepath = os.path.join(self.output, f"{game.id}.json")
         with open(filepath, "w") as f:
             f.write(json.dumps(game, cls=GameEncoder))
+
+
+class ExplanationAccumulator(GameAccumulator):
+    """
+    Accumulates structured bot decision packets for use in explanation.
+
+    The packet is layered:
+      - decision_info: from Player, possibly extended by specific Player subclasses
+      - player_summary: compact actor summary
+      - board_context: broad board/race/opponent context
+      - action_context: exact interpretation of the chosen move
+    """
+
+    def __init__(self, output_dir=None, recent_action_count=5, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.output_dir = output_dir
+        self.recent_action_count = recent_action_count  # How many recent actions to include in the explanation packet for context
+        self.packets = []
+        self.current_game_id = None
+
+        self.builder = ExplanationPacketBuilder(recent_action_count=recent_action_count)
+
+        if self.output_dir is not None:
+            os.makedirs(self.output_dir, exist_ok=True)
+
+    def before(self, game):
+        # Reset for the new active game
+        self.current_game_id = game.id
+        self.packets = []
+
+    def step(self, game_before_action, _):
+        """Capture pre-action state and decision info before execute() mutates the game."""
+        player = game_before_action.state.current_player()
+
+        # I originally had player move explanations disabled, but we've decided that it's
+        # actually more consistent to capture explanations for all decisions, not just bots.
+        # If we want to filter out human player decisions later, we can do that in the analysis
+        # phase instead of here in the accumulation phase.
+
+        # if not player.is_bot:
+        #     return
+
+        snapshot = game_before_action.copy()
+        decision_info = getattr(player, "last_decision_info", None)
+
+        packet = self.builder.build_explanation_packet(snapshot, decision_info)
+        self.store_for_later(packet)
+
+    def store_for_later(self, packet):
+        """Store the packet in memory and optionally write it to disk for later analysis."""
+        self.packets.append(packet)
+
+        # Adding the option to write to disk in case we want to do analysis on the packets for debugging
+        if self.output_dir is not None:
+            filepath = os.path.join(
+                self.output_dir, f"{self.current_game_id}_explanations.jsonl"
+            )
+
+            with open(filepath, "a", encoding="utf-8") as f:
+                f.write(json.dumps(packet) + "\n")
+
+    def get_packet(self, action_index):
+        if action_index < 0 or action_index >= len(self.packets):
+            raise IndexError(
+                f"Action index {action_index} out of range. "
+                f"Valid range: 0..{len(self.packets) - 1}"
+            )
+
+        return self.packets[action_index]

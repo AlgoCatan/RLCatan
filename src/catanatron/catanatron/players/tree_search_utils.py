@@ -171,6 +171,8 @@ def prune_robber_actions(current_color, game, actions):
             actions,
         )
     )
+    if len(robber_moves) == 0:
+        return actions
 
     production_features = build_production_features(True)
 

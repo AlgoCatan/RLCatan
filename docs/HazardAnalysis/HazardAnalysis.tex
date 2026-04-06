@@ -47,7 +47,8 @@
 \toprule
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
-2025-10-05 & Jake Read, Sunny Yao, Created first version of document.\\
+2025-10-05 & Jake Read, Sunny Yao & Created first version of document.\\
+2026-04-05 & Jake Read & Updated doc with new hazards and requirements for final doc.\\
 
 \bottomrule
 \end{tabularx}
@@ -68,41 +69,54 @@
 
 
 \subsection{Background}\label{subsec:background}
-Our project, RLCatan, is an AI-assisted tool that observes a physical game of Catan via camera feed and provides real-time strategic advice to players.
-The system integrates computer vision, game state modeling, and AI-based decision-making.
+
+Our project, AlgoCatan, is a reinforcement learning agent capable of playing \emph{Catan}.
+Additionally, we provide a web-based system for playing and analyzing games of \emph{Catan} against bots.
+In the current scope, users can play against trained bots through a web interface, replay past games,
+and request natural-language explanations of bot decisions.
+The system integrates game-state management, backend services, persistent storage, reinforcement learning,
+and frontend visualization.
+Computer vision for reading a physical board is a deferred future extension rather than part of the
+current implementation.
 
 \subsection{Hazard Definition}\label{subsec:hazard-definition}
 A hazard is defined as a property or condition in the system together
 with a condition in the environment that has the potential to cause harm or
-damage. We define harm as the underperformance of our system
-that leads to the incorrect instruction of players. In addition, we consider
-disruption of play, loss of game data/state as harm.
+damage.
+For this project, harm includes incorrect or misleading gameplay information,
+invalid bot actions, misleading replay or explanation output, disruption of play,
+and loss or corruption of game state or model-related data.
 
 
 \section{Scope and Purpose of Hazard Analysis}\label{sec:scope-and-purpose-of-hazard-analysis}
 
+The losses that can result from these hazards include disrupted gameplay or replay sessions,
+incorrect strategic understanding caused by misleading output, inability to continue a match,
+loss of historical game data, and loss of trust in the product.
 
+Since the current implementation does not include live physical-board capture,
+hazards tied specifically to camera streaming and image-based board recognition are treated as
+deferred/future-scope hazards for traceability, rather than as core operational hazards of the
+implemented system.
 
-The loss that can be incurred because of the hazards include the
-forfeiture or inability to continue a game of Catan. This can affect the
-user experience of our software and lead to a loss of trust in the product.
 
 
 \section{System Boundaries and Components}\label{sec:system-boundaries-and-components}
 
 
 
-Components: 
+Components:
 \begin{itemize}
-
-\item User Interface
-\item Game State Manager
-\item AI Model
-\item Computer Vision Model
-\item Reinforcement Learning Environment
-\item Image Queue
-\item Game State Database
-
+    \item User Interface
+    \item Game State Manager
+    \item AI Model
+    \item Training Pipeline
+    \item Elo League System
+    \item Curriculum Learning Manager
+    \item Game State Database
+    \item Backend API Server
+    \item Explanation Pipeline
+    \item Computer Vision Model (Deferred)
 \end{itemize}
 
 \begin{figure}[H]
@@ -114,18 +128,20 @@ Components:
 
 \section{Critical Assumptions}\label{sec:critical-assumptions}
 
+We assume that users of the system are familiar with the rules of \emph{Catan}
+and have a basic understanding of how to use a web interface.
+We assume that the browser, network connection, and backend services are reliable enough
+to support normal gameplay and replay use.
+We also assume that the Catanatron-based simulator remains sufficiently accurate to the official game rules,
+and that stored model versions and metadata remain loadable and internally consistent.
+Finally, we assume that external services such as the LLM provider may fail occasionally,
+and that such failures must be handled gracefully by the system.
 
 
-We assume that the users of our system will be familiar with the rules of Catan and
-know how to play the game. Another assumption is that the users will have a basic understanding
-of how to interact with a digital interface. Finally, we assume that existing consumer
-hardware will be able to run full-depth processing of our AI model.
-
+\begin{landscape}
 \section{Failure Mode and Effect Analysis}\label{sec:failure-mode-and-effect-analysis}
 
-
 % Finally, a table that spans multiple pages and doesn't look horrendous, only took 2 hours to get the formatting right...
-\begin{landscape}
     The following FMEA table summarizes identified hazards, their effects and causes, and corresponding mitigation strategies.
     Each row represents a unique failure mode for one of the components listed in Figure~\ref{fig:component-diagram}.
 
@@ -168,7 +184,7 @@ hardware will be able to run full-depth processing of our AI model.
         \endlastfoot
 
         % Table Rows...
-        Computer Vision Model &
+        Computer Vision Model (Deferred) &
         Incorrect parsing of the physical board state (e.g., misidentifies road or settlement). &
         AI advice is based on false information, leading to invalid or poor recommendations. &
         - CV model misclassifies pieces due to lighting, angle, or occlusion. &
@@ -179,10 +195,10 @@ hardware will be able to run full-depth processing of our AI model.
         \hline
 
         Game State Manager &
-        Loss of synchronization between physical game and digital representation. &
-        System provides advice for the wrong game state, disrupting play. &
-        - Failure to read new game state to model. \newline - Additional moves made by players after CV scan. &
-        Provide a resynchronization mechanism, such as an option to rescan the board or manually enter current state. &
+        Loss of synchronization between the authoritative simulator state, stored state, and displayed state. &
+        The system shows the wrong board state, replay step, or explanation context, disrupting play and analysis. &
+        Failed state update, stale frontend state, partial database write, or mismatch between runtime and stored state. &
+        Provide a resynchronization mechanism, such as manual correction, reloading the authoritative state, or re-scan in future CV versions. &
         FR.Sa.2 &
         H2-a \\
 
@@ -192,7 +208,7 @@ hardware will be able to run full-depth processing of our AI model.
         AI suggests an illegal or nonsensical move. &
         Users may become confused or game flow disrupted if they attempt an invalid action. &
         -AI loses track of game state. \newline AI misinterprets rules. \newline - Rules are not properly encoded. &
-        AI-suggested moves are validated against the official rules of Catan before display. &
+        AI-suggested moves are validated against the official rules of \emph{Catan} before display. &
         FR.Sa.3 &
         H3-a \\
 
@@ -207,18 +223,18 @@ hardware will be able to run full-depth processing of our AI model.
         \hline
 
         User Interface &
-        Advice not displayed on time. &
-        Player's turn timer runs out, causing them to miss their turn as they wait. &
-        - Model takes too long to compute next move. \newline - There are delays in CV processing. &
-        Limit the processing time of the model or timeout early and inform user of failure before their turn ends. &
+        Move updates, replay state, or explanation is not displayed on time. &
+        Gameplay flow is disrupted and the user may believe the system has failed. &
+        Model inference delay, backend/API latency, database lag, or LLM timeout. &
+        Limit processing time where possible, timeout early, and provide a clear error message if output cannot be generated. &
         NFR.Sa.1 \newline FR.Sa.4 &
         H4-a \\
 
-        &
+        User Interface (Continued) &
         Incorrect or confusing rendering of the game state. &
-        Players misinterpret advice or system status, leading to wrong actions. &
-        Suggested move is not easy to quickly spot on the displayed board. &
-        Visually distinguish the move(s) suggested by AI, e.g., using highlights or arrows. &
+        Players misinterpret bot actions or system status, leading to confusion. &
+        Most recent move is not easy to quickly spot on the displayed board. &
+        Visually distinguish the move(s) made most recently, e.g., using highlights or arrows. &
         FR.Sa.7 &
         H4-b \\
 
@@ -226,7 +242,7 @@ hardware will be able to run full-depth processing of our AI model.
 
         Game State Database &
         Failure to save game states. &
-        LLM is unable to summarize "what could have been" from previous game states. &
+        Game replay option will not load past games correctly. &
         - Game moves too quickly for state to be saved (Mostly applicable to bot vs. bot games). &
         Ensure that the current game state is saved correctly before the recommended move is sent to the user. &
         FR.Sa.5 &
@@ -234,17 +250,17 @@ hardware will be able to run full-depth processing of our AI model.
 
         \hline
 
-        Image Queue &
-        Dropped connection between user device and processing server. &
-        Advice delayed or not delivered, leading to disrupted play. &
-        - External server goes down \newline - WiFi connectivity issues occur. &
-        Attempt to reconnect, and notify the user that connection has dropped. &
+        Backend API Server &
+        Dropped connection between frontend and backend services. &
+        Gameplay, replay, or explanation requests are interrupted or never delivered. &
+        Server outage, network instability, or transport-layer failure. &
+        Attempt automatic reconnection and notify the user that the connection has dropped. &
         NFR.Sa.2 \newline FR.Sa.6 &
         H6-a \\
 
         \hline
 
-        Camera &
+        Camera (Deferred) &
         Game stream is cut off. &
         The model will have no data with which to make predictions, so no move will be displayed to the user. &
         - Recording device runs out of battery. \newline - Recording device is damaged. &
@@ -270,13 +286,43 @@ hardware will be able to run full-depth processing of our AI model.
 
         \hline
 
-        Reinforcement Learning Environment &
+        Training Pipeline &
         Simulation dynamics differ from real gameplay conditions. &
         AI trained in the RLE performs poorly when deployed in the physical/digital hybrid system. &
         - Simplified or idealized simulation parameters. \newline - Missing randomness or noise present in real games. \newline - Limited variability in opponent strategies. &
         Align RLE parameters with real-world data; periodically validate model behavior against live or recorded game sessions. &
         FR.Sa.12 &
         H8-a \\
+
+        \hline
+
+        Explanation Pipeline &
+        LLM fails to generate an explanation. &
+        User receives no explanation or an error message, which may lead to frustration. &
+        LLM service outage, timeout, or input formatting issue. &
+        Provide a clear error message if an explanation cannot be generated, and consider fallback options such as a simpler rule-based explanation. &
+        FR.Sa.13 &
+        H9-a \\
+
+        \hline
+
+        Curriculum Learning Manager &
+        Curriculum progression stalls or regresses. &
+        AI fails to improve or even worsens over time, leading to poor performance. &
+        - Curriculum criteria are too strict or not well-aligned with learning objectives. \newline - Unintended consequences of curriculum adjustments. &
+        Monitor training metrics closely and allow for manual intervention to adjust curriculum parameters if progress stalls. &
+        FR.Sa.14 &
+        H10-a \\
+
+        \hline
+
+        Elo League System &
+        Elo ratings become inaccurate or unstable. &
+        Self-play matchups become unbalanced, leading to poor training data and suboptimal model performance. &
+        - Rating inflation or deflation due to small sample sizes. \newline - Unintended consequences of rating adjustments. &
+        Implement safeguards such as minimum match requirements for rating changes, and monitor rating distributions to detect and address instability. &
+        FR.Sa.15 &
+        H11-a \\
     \end{tabularx}
 \end{landscape}
 
@@ -290,16 +336,19 @@ Each requirement is traced to a hazard in the FMEA table (Table~\ref{TblFMEA}). 
 \begin{itemize}
     \item FR.Sa.1: The system shall enable users to manually confirm the parsed board state before generating advice.
     \item FR.Sa.2: The system shall provide a resynchronization mechanism (manual correction or re-scan).
-    \item FR.Sa.3: The system shall validate all AI-suggested moves against the official rules of Catan before display.
-    \item FR.Sa.4: The system shall provide a clear error message if advice cannot be generated.
-    \item FR.Sa.5: The system shall ensure current game state is saved correctly before recommending move(s) to the user.
+    \item FR.Sa.3: The system shall validate all AI moves against the official rules of \emph{Catan} before display.
+    \item FR.Sa.4: The system shall provide a clear error message if UI updates cannot be generated.
+    \item FR.Sa.5: The system shall ensure current game state is saved correctly before requesting state updates from the simulator.
     \item FR.Sa.6: The system shall attempt automatic reconnection at least 3 times before failing.
-    \item FR.Sa.7: The system shall visually distinguish the move(s) suggested by AI.
+    \item FR.Sa.7: The system shall visually distinguish the most recent move(s).
     \item FR.Sa.8: The system shall notify the user in the event board streaming ceases.
     \item FR.Sa.9: The system shall warn the user when incomplete game data is read where possible.
     \item FR.Sa.10: The system shall enable the user to roll back to previous model versions.
-    \item FR.Sa.11: The system shall only capture and process game board area, not player faces or personal content.
-    \item FR.Sa.12: Iterations of the reinforcement learning environment shall be automatically validated to ensure its simulation dynamics remain consistent with real gameplay conditions. \newline
+    \item FR.Sa.11: The system shall restrict image capture and processing to the game board region, and shall ignore, discard, or mask non-board content such as player faces or personal items when detected.
+    \item FR.Sa.12: The system shall automatically validate iterations of the reinforcement learning environment to ensure its simulation dynamics remain consistent with real gameplay conditions.
+    \item FR.Sa.13: The system shall provide a clear error message or fallback simple explanation if the LLM API cannot be reached.
+    \item FR.Sa.14: The system shall notify developers if curriculum-based progress stalling occurs.
+    \item FR.Sa.15: The system shall implement safeguards to prevent Elo rating instability, such as minimum match requirements for rating changes. \newline
 \end{itemize}
 
 \subsection{Non-Functional Safety Requirements}
@@ -314,28 +363,30 @@ Each requirement is traced to a hazard in the FMEA table (Table~\ref{TblFMEA}). 
 \subsection{Requirements Planned During Capstone}\label{subsec:requirements-planned-during-capstone}
 The following requirements will be implemented as part of the capstone timeline:
 \begin{itemize}
-    \item FR.Sa.1: Being able to confirm the board state is crucial in the early stages to ensure the system is functioning correctly.
-          It will be valuable for both users and developers to have this feature implemented early.
     \item FR.Sa.2: Resynchronization is important to maintain the integrity of the game state.
           This feature will help recover from potential errors in board state detection, which is likely to occur during initial testing and development.
-    \item FR.Sa.3: If the AI suggests illegal moves, the entire purpose of the system is defeated.
-          This requirement is essential to ensure the system provides valid advice.
+    \item FR.Sa.3: If the AI makes illegal moves, the entire purpose of the system is defeated.
+          This requirement is essential to ensure the system provides valid actions.
     \item FR.Sa.4: Clear error messages are important not only for user experience but also for debugging during development, so it makes sense to add them early.
     \item FR.Sa.5: The issues caused by game states not being saved correctly will likely be a problem primarily in bot vs. bot games.
           This will be most useful while training the AI, which is naturally within the scope of the capstone.
-    \item FR.Sa.7: Clear visualization of AI suggestions is important for user experience and should be relatively straightforward to implement.
-          This will help users quickly understand the AI's advice, which is a core functionality of the system.
     \item FR.Sa.10: We will likely make mistakes when training the model, so the ability to roll back to old model versions will be critical in development.
     \item FR.Sa.12: Automated validation will help us catch issues with new iterations of the model during development.
+    \item FR.Sa.13: LLM failures will likely be a common occurrence during development, so having clear error messages for them will be important for debugging and user experience.
+    \item FR.Sa.14: Curriculum-based progress stalling is likely to occur during development, so having a notification system for it will help us identify and address the issue more quickly.
+    \item FR.Sa.15: Elo rating instability is likely to occur during development, especially as we make adjustments to the training process, so implementing safeguards for it will help maintain a more stable training environment.
 \end{itemize}
 
 \subsection{Delayed Requirements}\label{subsec:delayed-requirements}
 The following requirements are planned for future implementation:
 \begin{itemize}
+    \item FR.Sa.1: The computer vision component is a deferred future extension, so the manual confirmation of the parsed board state will also be deferred until that component is implemented.
+           This requirement is important for user trust and to prevent incorrect advice, but since the CV component is not in scope for capstone, this requirement will be deferred as well.
     \item NFR.Sa.1: While timely advice is important, it may be challenging to guarantee a strict time limit during the initial development phase.
     \item NFR.Sa.2: Connection loss handling is important, but it may be less critical during initial development when the focus is on core functionalities.
           For now, we'll assume a stable connection.
     \item FR.Sa.6: See above.
+    \item FR.Sa.7: Clear visualization of recent moves is a nice user experience feature, but isn't immediately critical. If it comes up in usability testing we'll handle it.
     \item FR.Sa.8: While error messages for streaming failures are important, this will be a rare occurrence, and thus is not a priority.
     \item FR.Sa.9: Camera misalignment may be a problem users face when using the tool, but for demos we'll ensure the camera feed is correct, so it's not critical for the scope of capstone.
     \item FR.Sa.11: The video stream exposing personal details is only a concern once the tool is released.
