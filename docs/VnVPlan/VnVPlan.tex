@@ -354,7 +354,7 @@ This area focuses on verifying the core $\AI{}$ functionality, including strateg
 
 \textbf{Input:} $\GameState{}$ where the immediate winning move is available.
 
-\textbf{Output:} The $\AI{}$ must provide the suggestion to \texttt{BuildSettlement} at the winning node, with a high confidence score ($\hyperref[FR.S.3.4]{FR.S.3.4}$). The textual reasoning should explicitly state that this move secures the victory.
+\textbf{Output:} The $\AI{}$ must provide the suggestion to \texttt{BuildSettlement} at the winning node, with a confidence score greater than 0.85 ($\hyperref[FR.S.3.4]{FR.S.3.4}$). The textual reasoning should explicitly state that this move secures the victory.
 
 \textbf{Test Case Derivation:} Verifies $\hyperref[FR.S.3.1]{FR.S.3.1}$ (Strategy Prediction) by testing the $\AI{}$'s ability to identify and prioritize an immediate game-winning condition over resource maximization.
 
@@ -390,7 +390,7 @@ This area verifies that the system correctly manages, displays, and archives gam
 \textbf{Input:} Player A performs the action \texttt{BuildRoad} at node X, which is processed by the Game State Manager ($\hyperref[FR.S.7.4]{FR.S.7.4}$) and updated in the $\GameState{}$ Database ($\hyperref[FR.S.5.1]{FR.S.5.1}$) using the Image Queue ($\hyperref[FR.S.6.1]{FR.S.6.1}$).
 
 \textbf{Output:}
-    a) The UI must immediately reflect the change, showing the new road on the board visualization ($\hyperref[FR.S.4.1]{FR.S.4.1}$) and Player A's resource inventory accurately reduced ($\hyperref[FR.S.4.2]{FR.S.4.2}$).
+    a) The UI must reflect the change within less than 0.1 seconds, showing the new road on the board visualization ($\hyperref[FR.S.4.1]{FR.S.4.1}$) and Player A's resource inventory accurately reduced ($\hyperref[FR.S.4.2]{FR.S.4.2}$).
     b) The $\GameState{}$ Database entry for this turn must be complete, correctly logging the pre-move state, the move performed, and the resulting post-move state ($\hyperref[FR.S.5.2]{FR.S.5.2}$).
 
 \textbf{Test Case Derivation:} Verifies the real-time data flow requirements ($\hyperref[FR.S.6.1]{FR.S.6.1}$) and the system's ability to automatically and accurately update all components after a player action ($\hyperref[FR.S.7.4]{FR.S.7.4}$).
@@ -404,7 +404,7 @@ This area verifies that the system correctly manages, displays, and archives gam
 
 \textbf{Input:} Request historical game data ($\hyperref[FR.S.5.5]{FR.S.5.5}$) for the completed game, specifically requesting all dice rolls and all development card purchases.
 
-\textbf{Output:} The system successfully returns the complete list of 50 turn records, including the dice roll for each turn, and a timestamped record of every development card purchased, demonstrating access to historical data ($\hyperref[FR.S.7.3]{FR.S.7.3}$).
+\textbf{Output:} The system successfully returns the list of 50 turn records, including the dice roll, and a timestamped record of every development card purchased, demonstrating access to historical data ($\hyperref[FR.S.7.3]{FR.S.7.3}$).
 
 \textbf{Test Case Derivation:} Verifies the requirements for historical logging and structured access to past game data ($\hyperref[FR.S.5.5]{FR.S.5.5}$).
 
@@ -440,7 +440,7 @@ This area focuses on verifying the accuracy and reliability of the Computer Visi
 
 \textbf{Input:} A captured image of the board with the occlusion.
 
-\textbf{Output:} The system successfully detects the presence of Player A's 2 settlements, 1 city, and 8 roads, correctly applying logical constraints to infer the state despite the occlusion. The system provides a diagnostic confidence metric ($\hyperref[FR.S.1.5]{FR.S.1.5}$) for the occluded area.
+\textbf{Output:} The system successfully detects the presence of Player A's 2 settlements, 1 city, and 8 roads, correctly applying logical constraints to infer the state despite the occlusion. The system provides a diagnostic confidence metric ($\hyperref[FR.S.1.5]{FR.S.1.5}$) for the occluded area, and must be $\leq 0.6$.
 
 \textbf{Test Case Derivation:} Verifies $\hyperref[FR.S.1.3]{FR.S.1.3}$ (Error Detection and Correction) and $\hyperref[FR.S.1.5]{FR.S.1.5}$ (Diagnostic Feedback) under sub-optimal real-world conditions.
 
@@ -706,7 +706,7 @@ This area verifies that the system automatically recovers from failures within o
 
 \textbf{Input/Condition:} Force a server crash or database disconnect mid-turn.
 
-\textbf{Output/Result:} System restarts and restores previous game state within 60~seconds.
+\textbf{Output/Result:} System restarts and restores previous game state within 60~seconds. If recovery fails within 60 seconds, the system must load the last valid checkpoint and log a recovery failure event.
 
 \textbf{Test Case Derivation:} Verifies NFR.S.6 (Availability) by measuring recovery time following induced failure.
 
