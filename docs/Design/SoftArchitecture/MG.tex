@@ -342,9 +342,9 @@ requirements and between the modules and the anticipated changes.
 \caption{Trace Between Requirements and Modules}
 \label{TblRT}
 \begin{tabularx}{\textwidth}{|l|X|}
-\toprule
-\textbf{Requirement(s)} & \textbf{Modules}\\
-\midrule
+\hline
+\textbf{Requirement(s)} & \textbf{Mod}\\
+\hline
 FR.S.1.x (CV Model) & \mref{mCV} \\
 \hline
 FR.S.2.x (RL Environment) & \mref{mEnv} \\
@@ -384,7 +384,7 @@ FR.Sa.9, FR.Sa.11 (CV Safety) & \mref{mCV} \\
 FR.Sa.10 (AI Rollback) & \mref{mAI} \\
 \hline
 FR.Sa.12 (Env. Validation) & \mref{mEnv} \\
-\bottomrule
+\hline
 \end{tabularx}
 \end{table}
 
@@ -393,9 +393,9 @@ FR.Sa.12 (Env. Validation) & \mref{mEnv} \\
 \caption{Trace Between Anticipated Changes and Modules}
 \label{TblACT}
 \begin{tabular}{|l|l|}
-\toprule
+\hline
 \textbf{Anticipated Change (AC)} & \textbf{Modules}\\
-\midrule
+\hline
 \acref{acAIModel} & \mref{mAI} \\
 \hline
 \acref{acCVModel} & \mref{mCV} \\
@@ -407,7 +407,7 @@ FR.Sa.12 (Env. Validation) & \mref{mEnv} \\
 \acref{acDatabase} & \mref{mDB} \\
 \hline
 \acref{acComm} & \mref{mQueue} \\
-\bottomrule
+\hline
 \end{tabular}
 \end{table}
 
@@ -416,11 +416,11 @@ FR.Sa.12 (Env. Validation) & \mref{mEnv} \\
 \caption{Trace Between Unlikely Changes and Modules}
 \label{TblUCT}
 \begin{tabular}{|l|l|}
-\toprule
+\hline
 \textbf{Unlikely Change (UC)} & \textbf{Modules}\\
-\midrule
-\ucref{ucGameRules} & \mref{mEnv} \\
-\bottomrule
+\hline
+\uref{ucGameRules} & \mref{mEnv} \\
+\hline
 \end{tabular}
 \end{table}
 
