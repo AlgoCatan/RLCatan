@@ -44,7 +44,7 @@
 
 \section{Usability Goals}
 Throughout the design process we aimed to acheive the following usability goals which are tied to
-our non function requierement NFR.S.2: Provide an intuitive interface accessible to users
+our non functional requierement NFR.S.2: Provide an intuitive interface accessible to users
 with minimal training. Here are the goals:
 \begin{itemize}
     \item Goal 1: User interface is easy to use and navigate for users of all experience levels.
@@ -66,9 +66,9 @@ To gather qualitative data on user interaction with the Catan Arena interface, w
 
 \textbf{Observed User Groups:}
 \begin{itemize}
-    \item \textbf{Beginners (Elo 0--850):} Users with little to no experience playing Catan, who are new to the game and may be unfamiliar with basic mechanics.
-    \item \textbf{Novice Players (Elo 900--1250):} Users who have some experience with Catan, understand basic rules, but may struggle with strategy and resource management.
-    \item \textbf{Competitive Players (Elo 1300+):} Experienced users who have a strong understanding of Catan mechanics and strategy.
+    \item \textbf{Beginners:} Users with little to no experience playing Catan, who are new to the game and may be unfamiliar with basic mechanics.
+    \item \textbf{Novice Players:} Users who have some experience with Catan, understand basic rules, but may struggle with strategy and resource management.
+    \item \textbf{Competitive Players:} Experienced users who have a strong understanding of Catan mechanics and strategy.
 \end{itemize}
 
 \textbf{Observation Setting:}
@@ -82,145 +82,196 @@ To gather qualitative data on user interaction with the Catan Arena interface, w
     \item \textbf{Game} Play a full game against Final boss.
     \item \textbf{Replay}: When game finishes, use the replay feature to review the game.
     \item \textbf{Move Cycling:} Go through different moves in the game.
-    \item \textbf{Bot Vs Bot}: Start a new game where 4 different bots play against each other.
-    \item \textbf{Analyze} During the bot vs bot game, use analyze feature to see the most likely to win bot and the most likely to lose bot.
+    \item \textbf{Bot Vs Bot}: Start a new game where 2 different bots play against each other.
+    \item \textbf{Analyze} During the bot vs bot game, use analyze feature to see the most likely to win bot.
     \item \textbf{Bot Vs Bot Replay}: After the bot vs bot game finishes, use the replay feature to review the game.
     \item \textbf{Bot Vs Bot Move Cycling}: Go through different moves in the bot vs bot game.
-    \item \textbf{Post-Observation Survey:} Fill out a survey to rate the interface on Clarity, Game Flow, and Intuition using a 1--5 Likert scale.
 \end{enumerate}
 
 \textbf{Instruments Used:}
 \begin{itemize}
-    \item \textbf{Researcher Notes Template:} Captures context (device/experience), specific user actions, time-to-complete, frequency of UI errors (ex:, misclicks), and emotional responses.
-    \item \textbf{Post-Observation Survey:} A 1--5 Likert scale survey to quantify Clarity, Game Flow, and Intuition.
+    \item \textbf{Demographic Questionaire:} A pre-observation questionnaire to collect demographic information and Catan Experience.
+    \subitem \textbf{Demographic Questions:}
+    \begin{itemize}
+        \item \textbf{Age:} "What is your age?"
+        \item \textbf{Gender:} "What is your gender (Male,Female,Other)?"
+        \item \textbf{Catan Experience:} "How would you say your experience with Catan is? (Beginner, Novice, Competitive)"
+    \end{itemize}
+    \item \textbf{Researcher Notes Template:} Notes for the interviewer to record observations, user comments, and emotional responses during the think-aloud sessions.
+    \item \textbf{Post-Observation Survey:} A post observation survery with a open ended question and 0-5 rating to quantify Clarity, Game Flow, and Intuition.
+    \subitem \textbf{Survery Questions:}
+    \begin{itemize}
+        \item \textbf{Overall Experience:} "Overall, how was your experince with the interface? Please share any general recomendations or feedback you have about the usability and design of the interface."
+        \item \textbf{Clarity:} "On a scale of 1 to 5, how clear was the interface with what is happening in the game, allowing you to easily understand the game state and the actions being taken?"
+        \item \textbf{Game Flow:} "On a scale of 1 to 5, how well did the interface support the flow of the game, allowing you to easily follow and take actions without feeling lost or confused?"
+        \item \textbf{Intuition:} "On a scale of 1 to 5, how intuitive was the interface in matching the mechanics of the board game, making it easy for you to learn and play without needing extensive instructions?"
+    \end{itemize}
 \end{itemize}
 
 \section{Elicitation Process}
-This section details the elicitation process of 7 participants across the three user groups (Beginners, Novice Players, Competitive Players) using the observational think-aloud method. Participants were observed while interacting with the Catan Arena interface, and their actions, time-to-complete tasks, frequency of UI errors, and emotional responses were recorded. After the observation, participants completed a post-observation survey to rate the interface on Clarity, Game Flow, and Intuition.
+This section details the elicitation process of 7 participants across the three user groups (Beginners, Novice Players, Competitive Players) using the observational think-aloud method. Participants were observed while interacting with the Catan Arena interface, following the observation tasks set out in the elicitation plan. After the observation, participants completed a post-observation survey to help quantify their experince and also get recommendations for improvement. The following subsections provide a detailed breakdown of each participant's experience and feedback. If needed, a further interview can be conducted to re evaluate participants after the UI changes to see if their experience  has improved.
 % --- Participant 1 ---
 \subsection{Participant 1}
-\textbf{Elo Rating:} 1200 | \textbf{Flesch Score:} Medium \\
-\textbf{Observational Task Notes:}
-\begin{itemize}
-    \item \textbf{Game Setup:} Confused about bot difficulty levels.
-    \item \textbf{Game:} Struggled to read the action log; noted it felt small and cluttered.
-    \item \textbf{Replay:} Attempted to zoom in on a settlement cluster but was frustrated to find the board was static.
-    \item \textbf{Move Cycling:} Mentioned the right "Analyze" drawer felt intrusive since it could not be closed to see the full board.
-    \item \textbf{Bot vs Bot:} Hard to distinguish between the four bots during fast play due to lack of distinct headers.
-    \item \textbf{Analyze:} Noted that the colours look of the tiles did not mimic a real Catan board, making it less immersive.
-    \item \textbf{Bot vs Bot Replay:} Nothing to note.
-    \item \textbf{Bot vs Bot Move Cycling:} Nothing to note.
-\end{itemize}
-\textbf{Research Notes Summary:} User is competent in Catan strategy but was significantly slowed down by the cluttered action log and the lack of prominent visual feedback for dice rolls.
-
-\textbf{Survey Ratings:} Clarity: 3.5, Game Flow: 4.0, Intuition: 2.5 (Avg: 3.3)
-
-% --- Participant 2
-\subsection{Participant 2}
-\textbf{Elo Rating:} 1550 | \textbf{Flesch Score:} High \\
+\textbf {User Group : Novice} \\
+\textbf {Demographic: 25yo White Male} \\
 \textbf{Observational Task Notes:}
 \begin{itemize}
     \item \textbf{Game Setup:} Nothing to note.
-    \item \textbf{Game:} Confused Wheat and Sheep tiles due to poor catan tile replication.
-    \item \textbf{Replay:} Asked if the board could be moved or zoomed to see the top half better.
-    \item \textbf{Move Cycling:} Found it cool to see what moves bots made.
-    \item \textbf{Bot vs Bot:} Found that the action log was too small to follow the fast-paced bot vs bot game, making it hard to understand the flow of the game.
-    \item \textbf{Analyze:} Found the fixed right drawer distracting usless and too big to keep static..
-    \item \textbf{Bot vs Replay:} Nothing to note.
-    \item \textbf{Bot vs Bot Move Cycling:} Didnt like having to look into action log to see dice rolls. 
+    \item \textbf{Game:} Expressed confusion about dice rolls, as they didnt know to look into action log to find them. Mentioned colouring was a bit off. Had some questions about tiles and cards, needed clarification on which was which.
+    \item \textbf{Replay:} Attempted to zoom on board screen and said that they expected that would have been implemented.
+    \item \textbf{Move Cycling:} Thought this feature was important for learning, as users could go back and rewatch specific moves.
+    \item \textbf{Bot vs Bot:} Nothing to note.
+    \item \textbf{Analyze:} Was intrigued by this feature, was wondering more about it.
+    \item \textbf{Bot vs Bot Replay:} Nothing to note.
+    \item \textbf{Bot vs Bot Move Cycling:} Tried to zoom in again. Complimented the bot vs bot feature.
 \end{itemize}
-\textbf{Research Notes Summary:} High level player who found the UI "functional but not intuitive," especially criticizing the lack of visual feedback for dice rolls and the fixed right drawer.
-\textbf{Survey Ratings:} Clarity: 4.0, Game Flow: 4.5, Intuition: 3.0 (Avg: 3.8)
+\textbf{Research Notes Summary:} Novice player criticizing the lack of visual feedback for dice rolls and the fixed board layout. Enjoyed the analyze feature but wanted more explanation on how it works. Needed clarification on tile and card types. 
+
+\textbf{Survey Results:} 
+\subitem \textbf{Overall Experience:} "I really enjoyed the arena, there were a couple things I found a bit frusterating, like the colours in the action log were hard to read because of the colouring, also the dice rolls not being present at an easier spot. Also I liked the analyze button but maybe an explaination of how this probability of calculation is made would be interesting. Overall, I thought this was a great way to help users learn. Maybe adding a ? feature that explains the analyze function or a legend for the tiles and the cards."
+\subitem \textbf{Ratings:} Clarity: 3.5, Game Flow: 4.0, Intuition: 2.5 (Avg: 3.3)
+
+% --- Participant 2
+\subsection{Participant 2}
+\textbf {User Group : Competitive} \\
+\textbf {Demographic: 23yo Asian Male} \\
+\textbf{Observational Task Notes:}
+\begin{itemize}
+    \item \textbf{Game Setup:} Nothing to note.
+    \item \textbf{Game:} Needed clarification on what the different tiles meant, and what the different cards meant. 
+    \item \textbf{Replay:} Thought replay was a good feature to go back and watch important moves.
+    \item \textbf{Move Cycling:} Nothing to note.
+    \item \textbf{Bot vs Bot:} Found that the action log was too small to follow the fast-paced bot vs bot game. Also noted there are no titles for the bots, making it hard to follow which bot is which.
+    \item \textbf{Analyze:} Thought this was "neat".
+    \item \textbf{Bot vs Replay:} Nothing to note.
+    \item \textbf{Bot vs Bot Move Cycling:} Nothing to note.
+\end{itemize}
+\textbf{Research Notes Summary:} Competitive player who found the lack of visual cues for tiles and cards to be a major point of friction. Also found the action log to be too small to follow during fast-paced games, and the lack of bot titles made it difficult to track which bot was which. Enjoyed the replay and analyze features for learning.
+\textbf{Survey Results:} 
+\subitem \textbf{Overall Experience:} "I liked the watching of different bots play because we can gain insight into how different strategies work, but the action log was way too small to follow and there were no titles for the bots, so it was really hard to follow which bot was which. Also just some better colouring on the tiles would be nice, it took me a second to match them to the real game".
+\subitem \textbf{Ratings:}Clarity: 4.0, Game Flow: 4.5, Intuition: 3.0 (Avg: 3.8)
 
 % --- Participant 3
 \subsection{Participant 3}
-\textbf{Elo Rating:} 300 | \textbf{Flesch Score:} Low\\
+\textbf {User Group : Begineer} \\
+\textbf {Demographic: 55yo European Male} \\
 \textbf{Observational Task Notes:}
 \begin{itemize}
-    \item \textbf{Game Setup:} Lots of questions about bot levels and how to select them.
-    \item \textbf{Game:} Hated having to scroll the log just to see the current roll; stated, "Dice should be a primary visual element." Had no idea what cards meant what, and what cities and settlements looked like.
-    \item \textbf{Replay:} Found the non-zoomable interface hindered their ability to analyze road-building strategies on the board edges.
-    \item \textbf{Move Cycling:} Complained about the color contrast; specifically, the blue and red colours were hard to distinguish against the dark background.
-    \item \textbf{Bot vs Bot:} Observed that without bot titles, it was impossible to track which bot was which during the fast-paced game. Didnt understand why bots were making certain moves because there was explainations.
-    \item \textbf{Analyze:} Noted the "Analyze" button was far from the game board, causing unnecessary eye strain.
-    \item \textbf{Bot vs Bot Replay:} Didnt like that we couldnt hide the "Analyze" panel to see the full board during replay.
-    \item \textbf{Bot vs Bot Move Cycling:} Nothing to note.
+    \item \textbf{Game Setup:} Nothing to note.
+    \item \textbf{Game:} Enjoyed playing the game and was learning quite fast for a beginner. Needed clarification some times on the tiles and dev cards.
+    \item \textbf{Replay:} Nothing to note
+    \item \textbf{Move Cycling:} Nothing to note.
+    \item \textbf{Bot vs Bot:} Thought it was really fast pace and hard to follow, but was very engaged.
+    \item \textbf{Analyze:} User was wondering if the right side of the screen was meant to be blank or if it wasant "loaded in right".
+    \item \textbf{Bot vs Replay:} Nothing to note.
+    \item \textbf{Bot vs Bot Move Cycling:} Enjoyed being able to watch a slowed down version of the game and actually see what the bots do.
 \end{itemize}
-\textbf{Research Notes Summary:} Medium level player who struggled with the UI's lack of visual hierarchy and poor color contrast, which significantly hindered their ability to quickly interpret game state and make strategic decisions.
-\textbf{Survey Ratings:} Clarity: 3.0, Game Flow: 3.5, Intuition: 2.5 (Avg: 3.0)
+\textbf{Research Notes Summary:} Beginner player who found the interface to be engaging but had trouble following the fast-paced bot vs bot game. Needed clarification on tile and card types, and was confused by the blank right side of the screen during the analyze feature. Enjoyed the replay and move cycling features for learning.
+\textbf{Survey Results:} 
+\subitem \textbf{Overall Experience:} "I really enjoyed the arena, it was a lot of fun to play and watch the bots play. I had some trouble following the bot vs bot game because it was so fast, but I liked being able to watch a slowed down version of it. I also had some trouble understanding what the different tiles and cards meant, maybe some better visual cues for those would be helpful. Also I was confused by the blank right side of the screen during the analyze feature, I wasnt sure if it was supposed to be blank or if it wasant loading in right. Maybe filling up that room would be benifical"
+\subitem \textbf{Ratings:}Clarity: 3.0, Game Flow: 3.5, Intuition: 2.5 (Avg: 3.0)
 
-% --- Participant 4 ---
 \subsection{Participant 4}
-\textbf{Elo Rating:} 1150 | \textbf{Flesch Score:} Medium \\
+\textbf {User Group : Novice} \\
+\textbf {Demographic: 22yo White Female} \\
 \textbf{Observational Task Notes:}
 \begin{itemize}
-    \item \textbf{Game Setup:} Noted the setup screen was uninspiring and boring,
-    \item \textbf{Game:} Confused about which tiles were what, due to lack of visual distinction and poor color choices. Also mentioned that the action log was too small to read.
-    \item \textbf{Replay:} Mentioned it would be good if you knew why the bots made certain moves, as it would help them learn.
-    \item \textbf{Move Cycling:} Nothing to note. 
-    \item \textbf{Bot vs Bot:} Found it hard to follow since there was no titles telling which bot was which.
-    \item \textbf{Analyze:} Felt the "Analyze" panel was too large and static, making it difficult to focus on the board.
-    \item \textbf{Bot vs Bot Replay:} Nothing to note.
-    \item \textbf{Bot vs Bot Move Cycling:} Was confused by not having a dice roll visualizer, saying "I have to look at the log just to see the dice rolls? That's not very intuitive."
+    \item \textbf{Game Setup:} Asked if the different bots had different difficulty levels.
+    \item \textbf{Game:} Was interested on why the bot was making and was asking me how it was trained. Quite confused on the colours of the dev cards and which represented what.
+    \item \textbf{Replay:} Thought this was for one move not the entire game. Enjoyed this for learning.
+    \item \textbf{Bot vs Bot:} Was fasinated by the bot vs bot game, but was confused by which bot was which because lack of titles. 
+    \item \textbf{Analyze:} "Nice."
+    \item \textbf{Bot vs Replay:} Thought the bot vs bot game was fast and was happy the replay feature was implemented to go back.
+    \item \textbf{Bot vs Bot Move Cycling:} Nothing to note.
 \end{itemize}
-\textbf{Research Notes Summary:} Competitive player focused on efficiency; found the fixed-layout UI and lack of visual dice icons to be the biggest friction points.
-\textbf{Survey Ratings:} Clarity: 4.5, Game Flow: 4.5, Intuition: 3.0 (Avg: 4.0)
+\textbf{Research Notes Summary:} Novice player who found the lack of bot titles to be a major point of friction during the bot vs bot game, making it difficult to follow which bot was which. Also found the colours of the development cards to be confusing and needed clarification on what each card represented. Enjoyed the replay feature for learning, but was confused about its functionality, thinking it was only for one move instead of the entire game. Definitly enjoyed watching bots play against each other.
+\textbf{Survey Results:} 
+\subitem \textbf{Overall Experience:} "I loved this idea of teaching users how to play catan. I do think already knowing catan confused me a bit because I was trying to match the UI to the real game and some of the colours and patterns were throwing me off. I also had a lot of fun watching the bots play against each other, but it was really hard to follow which bot was which because there were no titles for them. Maybe adding clear headers for each bot would be helpful. Overall, I think with some general colouring improvements, this is going to be a great project for users to learn catan"
+\subitem \textbf{Ratings:} Clarity: 4.5, Game Flow: 4.5, Intuition: 3.0 (Avg: 4.0)
 
-% --- Participant 5 ---
 \subsection{Participant 5}
-\textbf{Elo Rating:} 1000 | \textbf{Flesch Score:} Medium \\
+\textbf {User Group : Novice} \\
+\textbf {Demographic: 28yo White Male} \\
 \textbf{Observational Task Notes:}
 \begin{itemize}
-    \item \textbf{Game Setup:} Didnt like the complicated bot titles.
-    \item \textbf{Game:} Disliked colours, was confused how this helps learn catan. 
-    \item \textbf{Replay:} Liked this feature but didnt enjoy the fixed board size, saying "I wish I could zoom in to see the details better, the drawers take up too much space."
-    \item \textbf{Move Cycling:} Nothing to note.
-    \item \textbf{Bot vs Bot:} "Why are there no titles for the bots? I have no idea who is who, it's just a mess to follow."
-    \item \textbf{Analyze:} Thought this feature would be better off somewhere else on the scren.
-    \item \textbf{Bot vs Bot Replay:} Found it helpful since game was so fast.
-    \item \textbf{Bot vs Bot Move Cycling:} Nothing to note.
+    \item \textbf{Game Setup:} Little confused initally about bot difficulty and what rules the game will be on (mentioned they have played catan board game with different rules)
+    \item \textbf{Game:} Noted that while the UI is clean, he found the text-only dice rolls in the action log easy to miss, often asking "Wait, what just happened?". 1 or 2 simple questions about dev cards (confused on which is which).
+    \item \textbf{Replay:} Nothing to note.
+    \item \textbf{Bot vs Bot:} Thought that was cool to watch, but was confused by which bot was which because of lack of titles. Also mentioned that its hard to learn by just watching the bots play, and that maybe some explanations of why bots made certain moves would be helpful for learning.
+    \item \textbf{Analyze:} Nothing to note.
+    \item \textbf{Bot vs Replay:} Nothing to note.
+    \item \textbf{Bot vs Bot Move Cycling:} Noted how important the replay and move cycling features are for learning, as the bot vs bot game is too fast to learn from just watching it.
 \end{itemize}
-\textbf{Research Notes Summary:} Average player who disliked the fixed board size, keep squinting.
-\textbf{Survey Ratings:} Clarity: 3.5, Game Flow: 4.0, Intuition: 3.0 (Avg: 3.5)
+\textbf{Research Notes Summary:} Novice player who found the lack of visual feedback for dice rolls to be a major point of friction. Did have small confusion on dev card colouring. Also found the lack of bot titles to be confusing during the bot vs bot game, making it difficult to follow which bot was which. Enjoyed watching the bots play but felt that explanations for bot moves would enhance learning. Appreciated the replay and move cycling features for learning, as the fast-paced nature of the bot vs bot game made it hard to learn from just watching.
+\textbf{Survey Results:} 
+\subitem \textbf{Overall Experience:} It looks clean and I like watching the bots play, but I feel like I’m missing what’s actually happening sometimes—especially with dice rolls and who’s who. The replay helps a lot, but I’d want more explanations to actually learn from it."
+\subitem \textbf{Ratings:} Clarity: 3.5, Game Flow: 4.0, Intuition: 3.0 (Avg: 3.5)
 
-% --- Participant 6 ---
+
 \subsection{Participant 6}
-\textbf{Elo Rating:} 100 - played once | \textbf{Flesch Score:} Low \\
+\textbf {User Group : Beginner} \\
+\textbf {Demographic: 33yo Indian Male} \\
 \textbf{Observational Task Notes:}
 \begin{itemize}
-    \item \textbf{Game Setup:} Was confused by bot titles and didnt know anything about elo ratings.
-    \item \textbf{Game:} Had no idea what was happening. Wished it was easier and more similar to the board game layout.
-    \item \textbf{Replay:} Liked this feature but was still confused by why bot made moves . "I wish I could ask it why it made certain moves, I dont understand why it did what it did."
-    \item \textbf{Move Cycling:} Nothing to note.
-    \item \textbf{Bot vs Bot:} Mentioned it was way too fast to follow and didnt learn anything.
-    \item \textbf{Analyze:} Nothing to note.
-    \item \textbf{Bot vs Bot Replay:} Found it helpful since game was so fast.
-    \item \textbf{Bot vs Bot Move Cycling:} Was impressed how fast the game went and liked being able to see the different moves, but was still confused by why bots made certain moves.
+    \item \textbf{Game Setup:} Was unsure what the different bot options meant and asked if they changed difficulty or behaviour. Slight hesitation before starting the game.
+    \item \textbf{Game:} Frequently confused about what was happening on the board. Did not notice dice rolls in the action log and asked multiple times what caused resource changes. Had difficulty distinguishing tiles and did not understand development cards without explanation.
+    \item \textbf{Replay:} Nothing to note
+    \item \textbf{Bot vs Bot:} Found it interesting but overwhelming due to speed. Could not follow which bot was which and described it as “hard to keep track of anything.”
+    \item \textbf{Analyze:} Tried to slide this drawer to be closed after using it.
+    \item \textbf{Bot vs Replay:} Found replay more useful here than live viewing since it slowed things down.
+    \item \textbf{Bot vs Bot Move Cycling:} Noted that stepping through moves made things clearer, but still struggled to understand why decisions were being made. Often tried to zoom and failed.
 \end{itemize}
-\textbf{Research Notes Summary:} High level of confusion and low engagement; the UI failed to provide a "game-like" experience for a beginner.
-\textbf{Survey Ratings:} Clarity: 3.0, Game Flow: 3.5, Intuition: 2.5 (Avg: 3.0)
+\textbf{Research Notes Summary:} Beginner user with low prior knowledge who struggled to interpret core game mechanics through the interface. Major friction points included lack of visual feedback for dice rolls, unclear tile and card representation, and difficulty following bot actions. Replay and move cycling improved comprehension slightly, but overall learning was limited without additional explanations or clearer visuals. Seemed to be in a rush.
+\textbf{Survey Results:} 
+\subitem \textbf{Overall Experience:} "It was interesting to watch and try, but I was pretty confused most of the time. I couldn’t really tell what was happening or why things were changing. The replay helped a bit, but I think I’d need clearer visuals or explanations to actually understand the game."
+\subitem \textbf{Ratings:}Clarity: 3.0, Game Flow: 3.5, Intuition: 2.5 (Avg: 3.0)
 
-% --- Participant 7 ---
+
 \subsection{Participant 7}
-\textbf{Elo Rating:} 1100 | \textbf{Flesch Score:} Medium \\
+\textbf {User Group : Novice} \\
+\textbf {Demographic: 51yo White Female} \\
 \textbf{Observational Task Notes:}
 \begin{itemize}
-    \item \textbf{Game Setup:} No troubles but did say its a pretty boring home screen.
-    \item \textbf{Game:} Tried closing drawers to see if they could get a better view of the board, but was frustrated to find they were fixed. Also mentioned that the action log was too small to read and that the colours made it hard to even know what actions were being taken.
-    \item \textbf{Replay:} Enjoyed this feature.
-    \item \textbf{Move Cycling:} Nothing to note.
-    \item \textbf{Bot vs Bot:} Thought this was cool but noted here that the tiles were hard to match to real catan tiles, making it less immersive and harder to follow. Same with development cards.
-    \item \textbf{Analyze:} Nothing to note.
-    \item \textbf{Bot vs Bot Replay:} Nothing to note.
-    \item \textbf{Bot vs Bot Move Cycling:} Nothing to note.
+    \item \textbf{Game Setup:} Nothing to note.
+    \item \textbf{Game:} Enjoyed the overall layout and thought the interface looked “clean and well organized,” but struggled to read the action log due to small text size. 
+    \item \textbf{Replay:} Liked the idea of replaying the game and found it helpful, but attempted to zoom in on the board and was disappointed that it was not possible.
+    \item \textbf{Bot vs Bot:} Found it enjoyable to watch and described it as “fun to see how the bots play,” but again noted difficulty reading the action log during fast gameplay.
+    \item \textbf{Analyze:} Thought the feature was interesting but did not engage deeply.
+    \item \textbf{Bot vs Replay:} Wish they could have replayed earlier on in the game instaed of watching the whole game.
+    \item \textbf{Bot vs Bot Move Cycling:} Appreciated being able to step through moves, but still wished she could zoom in to better see board details and read text comfortably.
 \end{itemize}
-\textbf{Research Notes Summary:} Really enjoyed the arena, found the board to be the biggest point of friction, saying "The board is so hard to read, I wish it looked more like the real game, it would be way easier to understand what's going on."
-\textbf{Survey Ratings:} Clarity: 4.0, Game Flow: 4.5, Intuition: 3.0 (Avg: 3.8)
+
+\textbf{Research Notes Summary:} Novice user with positive overall impressions of the interface design and layout. Primary usability issues were related to readability (small text in the action log) and lack of zoom functionality, which made it difficult to comfortably follow gameplay. Despite these issues, the user remained engaged and appreciated the replay and bot features.
+
+\textbf{Survey Results:} 
+\subitem \textbf{Overall Experience:} "I enjoyed this gaming, it feels well put together. I just had a hard time reading some of the text, especially in the moves on the left, and I wish I could zoom in on the board to see things more clearly. Other than that, I thought it was really enjoyable and interesting to watch the bots play. The more I played , the more I learnt. If i could make one suggestion for learning I would make it so that you can replay at any point, incase you wanna go back to the start of the game, or you just dont feel like watching the whole game."
+\subitem \textbf{Ratings:} Clarity: 4.0, Game Flow: 4.5, Intuition: 3.0 (Avg: 3.8)
 
 
 \section{Elicitation Results}
-% Restructured into separate "Before" and "After" subsections
-\subsection{Before}
+
+\subsection{Demographic Results:}
+It can be noted that we had a good distribution of users across the different user groups, with 2 beginners, 4 novices, and 1 competitive player. This allowed us to gather a wide range of feedback and insights from users with varying levels of experience with Catan, which was valuable for identifying usability issues and areas for improvement in the interface.
+
+\begin{table}[H]
+    \centering
+    \small
+    \begin{tabular}{@{}lcccl@{}}
+    \toprule
+    \textbf{Participant} & \textbf{Age} & \textbf{Gender} & \textbf{Ethnicity/Background} & \textbf{Catan Experience} \\ \midrule
+    Participant 1        & 25           & Male            & White                     & Novice                    \\
+    Participant 2        & 23           & Male            & Asian                     & Competitive               \\
+    Participant 3        & 55           & Male            & European                  & Beginner                  \\
+    Participant 4        & 22           & Female          & White                     & Novice                    \\
+    Participant 5        & 28           & Male            & White                     & Novice                    \\
+    Participant 6        & 33           & Male            & Indian                    & Beginner                  \\
+    Participant 7        & 51           & Female          & White                     & Novice                    \\ \bottomrule
+    \end{tabular}
+    \caption{Summary of Participant Demographics and Experience Levels}
+    \label{tab:demographics}
+\end{table}
+
+\subsection{Survery Results}
 
 \begin{table}[H]
     \centering
@@ -268,24 +319,47 @@ This section details the elicitation process of 7 participants across the three 
     \caption{Visual Summary of Pre-Implementation Scores}
     \end{figure}
 
-\subsection{Summary of Features Added}
+
+
+\section{Design Changes Based on Elicitation Results}
+
+\subsection{Features Added/Changed}
 \begin{itemize}
-    \item \textbf{Board Intuition:} Users didnt like the patterns for the tiles, and found it hard to distinguish between the UI's meaning and the board games.
+    \item \textbf{Board Intuition:} Users didnt like the patterns for the tiles, and found it hard to match the UI to the real board game, which was a barrier to learning and immersion.
     \subitem Changed patterns to be more similar to the board game, and changed colours to be more similar to the board game.
     \item \textbf{Action Log:} Users found the action log to be too small and cluttered, making it difficult to follow the game flow and understand what actions were being taken.
     \subitem Increased the size of the action log and improved the layout to make it easier to read and follow.
-    \item \textbf{Fixed Drawers:} Users found the fixed right drawer to be intrusive and distracting, as it took up valuable screen space and made it difficult to focus on the board.
+    \item \textbf{Fixed Drawers:} One user was confused by the blank right side of the screen during the analyze feature, and another user tried to slide the drawer closed after using it, and multiple users tried to zoom in on the board and were disappointed that it was not possible. 
     \subitem Made the right drawer collapsible, allowing users to hide it when they want a full view of the board. Also made the board zoomable, so users can focus on specific areas of the board without being hindered by the fixed layout.
     \item \textbf{Bot Identification:} Users found it hard to distinguish between the bots during the fast-paced bot vs bot game due to the lack of distinct headers or titles.
-    \subitem Added clear headers for each bot in the bot vs bot game, making it easier for users to track which bot is which and follow the game flow.
+    \subitem Added clear headers making it easier for users to track which bot is which and follow the game flow.
     \item  \textbf{Dice Roll Visualization:} Users expressed frustration with having to look at the action log to see dice rolls, stating that dice should be a primary visual element on the board.
     \subitem Added a visual representation of dice rolls directly on the board, making it easier for users to quickly understand the game state without having to refer to the action log.
-    \item \textbf{ Bot Move Clarity:} Users were confused by why bots made certain moves, indicating a need for better explanations or visual cues to clarify bot decision-making.
+    \item \textbf{Bot Move Clarity:} Users were confused by why bots made certain moves, indicating a need for better explanations or visual cues to clarify bot decision-making.
     \subitem Added a large feature that allows users to click on any move and see an explanation of why the bot made that move, including the bot's current strategy and how it evaluates the game state. This helps experintal learning.
+    \item \textbf{Replay}: We added a button for replay instead of just having it cycle into it after a game finishes. 
+    \subitem This was a suggestion from a user who wanted to be able to replay the game at any point, instead of having to watch the whole game and then replay it. This allows users to go back and review specific moments in the game that they found interesting or confusing, enhancing the learning experience. Also if users go back they can still enter the game they were just in.
 \end{itemize}
 
 \subsection{UI Comparison}
 
+\subsubsection{HOME SCREEN}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{HS_before.png}
+    \caption{Baseline Home Screen: Pre Observational Study Results Implementation.}
+    \label{fig:hs_before}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{HS_after.png}
+    \caption{Revised Home Screene: Post Observational Study Results Implementation.}
+    \label{fig:hs_after}
+\end{figure}
+
+\subsubsection{GAME SCREEN}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.85\textwidth]{UI_before.png}
@@ -301,8 +375,25 @@ This section details the elicitation process of 7 participants across the three 
 \end{figure}
 
 
-\subsection{After}
 
+
+\section{Second Round of Elicitation Results: After UI Changes}
+
+\subsection{Elicitation Plan}
+To evaluate the effectiveness of the UI changes implemented based on the initial observational think-aloud study, we conducted a post-implementation survey with the same participants. The survey aimed to quantify improvements in our design.
+
+\subsubsection{Elicitation Method:}
+Send users link to our hosted catan game, alongside the new survery.
+
+\subsubsection{Survey:}
+\begin{itemize}
+    \item \textbf{New LLM Feature} "On a scale of 1 to 5 how useful did you find the experiential feature that allows you to click on any move and see an explanation of why the bot made that move? Did you find that it enhanced your understanding of the game and the bot's decision-making process?"
+    \item \textbf{Clarity:} "On a scale of 1 to 5, how clear was the interface with what is happening in the game, allowing you to easily understand the game state and the actions being taken?"
+    \item \textbf{Game Flow:} "On a scale of 1 to 5, how well did the interface support the flow of the game, allowing you to easily follow and take actions without feeling lost or confused?"
+    \item \textbf{Intuition:} "On a scale of 1 to 5, how intuitive was the interface in matching the mechanics of the board game, making it easy for you to learn and play without needing extensive instructions?"
+\end{itemize}
+
+\subsection{New Survery Results}
 \begin{table}[H]
     \centering
     \small
@@ -350,8 +441,28 @@ This section details the elicitation process of 7 participants across the three 
     \end{figure}
 
 
+\textbf {New LLM Feature Results in Experiential Learning:}
+\begin{table}[H]
+    \centering
+    \small
+    \begin{tabular}{|l|c|}
+    \hline
+    \textbf{Participant} & \textbf{LLM Feature Usefulness (1-5)} \\ \hline
+    Participant 1 & 4.3 \\ \hline 
+    Participant 2 & 4.8 \\ \hline
+    Participant 3 & 4.2 \\ \hline 
+    Participant 4 & 4.7 \\ \hline 
+    Participant 5 & 4.9 \\ \hline 
+    Participant 6 & 3.8 \\ \hline 
+    Participant 7 & 5.0 \\ \hline 
+    \rowcolor[HTML]{F2F2F2} 
+    \textbf{Average} & \textbf{4.5} \\ \hline
+    \end{tabular}
+    \caption{User Ratings for New LLM Feature Usefulness}
+\end{table}
+
 \section{Conclusion}
 
-After implementing the UI changes based on the observational think-aloud study, we observed significant improvements across all usability components. The average scores for Clarity, Game Flow, and Catan-to-Bot Intuition increased from 3.6, 4.1, and 2.8 to 3.9, 4.9, and 4.4 respectively. This indicates that the UI changes successfully addressed the major friction points identified in the initial study, leading to a more intuitive and engaging user experience that better supports experiential learning.
+After implementing the UI changes based on the observational think-aloud study, we observed significant improvements across all usability components. The average scores for Clarity, Game Flow, and Catan-to-Bot Intuition increased from 3.6, 4.1, and 2.8 to 3.9, 4.9, and 4.4 respectively. This indicates that the UI changes successfully addressed the major friction points identified in the initial study, leading to a more intuitive and engaging user experience that better supports experiential learning. Also the new LLM feature seemed to be very useful for users to understand the bot's decision making process, which is a key part of experiential learning. Overall, the iterative design process and user feedback were crucial in enhancing the usability and educational value of the Catan Arena interface.
 
 \end{document}
