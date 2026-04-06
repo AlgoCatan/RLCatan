@@ -3,6 +3,9 @@
 The folders and files for this project are as follows:
 
 - 'catanatron' - The modified Catanatron library, which includes the game logic and environment for simulating games.
+  - The 'explanations' folder contains our explanation pipeline
+  - The 'players' folder contains our bots, ppo_player.py and placement.py
+  - The 'web' folder contains the modified API we used to interface with our UI
 - 'docs' and 'documentation' - Documentation for Catanatron. (If you're looking for AlgoCatan docs, see the docs folder in the root directory)
 - 'examples' - Example scripts for interfacing with Catanatron.
 - 'rlcatan' - Our training scripts. Our bots can be found in Catanatron's 'players' folder.
