@@ -8,6 +8,7 @@ from catanatron.action_space import (
     ACTION_SPACE_SIZE,
     from_action_space,
     to_action_space,
+    to_action_type_space,
 )
 from catanatron.game import Game, TURNS_LIMIT
 from catanatron.models.player import Color, Player, RandomPlayer

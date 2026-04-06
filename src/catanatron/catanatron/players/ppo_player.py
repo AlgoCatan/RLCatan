@@ -21,6 +21,9 @@ from catanatron.gym.action_type_filtering import (
     PLAYER_TRADING_ACTION_TYPES,
 )
 
+# PLACEMENT IMPORTS
+from collections import defaultdict
+
 
 class PPOPlayer(Player):
     """
