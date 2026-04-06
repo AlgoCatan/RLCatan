@@ -876,31 +876,30 @@ This is where you can place additional information.
 
 \subsection{Symbolic Parameters}
 
-The definition of the test cases will call for SYMBOLIC\_CONSTANTS.
-Their values are defined in this section for easy maintenance.
-
+The definition of the test cases calls for the following SYMBOLIC\_CONSTANTS. Defining these here ensures that performance thresholds and iteration counts are applied consistently across the system-level test suite.
 
 \begin{table}[h!]
     \centering
     \caption{Symbolic Constants for System Tests}
     \label{tab:symbolic-parameters}
-    \begin{tabularx}{\textwidth}{|c|p{2.0cm}|X|}
+    \begin{tabularx}{\textwidth}{|c|p{2.5cm}|X|}
     \hline
-    \textbf{Constant} & \textbf{Value} & \textbf{Description} \\
+    \textbf{Constant} & \textbf{Value} & \textbf{Description (Associated Test Cases)} \\
     \hline
-    $T\_\text{RESP}$ & 5 seconds & Maximum allowed time for the $\AI{}$ to display a move recommendation ($\hyperref[NFR.E.4]{NFR.E.4}$, $\hyperref[NFR.Sa.1]{NFR.Sa.1}$). \\
+    $T_{\text{AI\_LAT}}$ & 1 second & Maximum response time for AI move suggestions (Used in T.FR.API.7.1). \\
     \hline
-    $N\_\text{BATCH}$ & 100 & Number of $\GameState{}$ objects used in a batch test for latency measurement. \\
+    $T_{\text{UI\_LAT}}$ & 100 ms & Maximum latency for real-time UI synchronization (Used in T.FR.API.7.1). \\
     \hline
-    $N\_\text{RECONNECT}$ & 3 & Minimum number of automatic reconnection attempts after connection loss ($\hyperref[FR.Sa.6]{FR.Sa.6}$). \\
+    $N_{\text{LEAGUE}}$ & 125 & Capacity limit for the Elo League model registry (Used in T.FR.ELO.3.1). \\
     \hline
-    $N\_\text{BOARD\_SETUP}$ & 5 & Number of legally generated board setups used to test CV initialization. \\
+    $N_{\text{BATCH}}$ & 100 & Number of Game State samples required for model benchmarking (Used in T.FR.AI.2.1). \\
     \hline
-    $N\_\text{SIM\_RUNS}$ & 10 & Number of simulation runs for verifying $\RL{}$ move validation and rule application. \\
+    $N_{\text{BOARD}}$ & 5 & Minimum unique board configurations for setup verification (Used in T.FR.CV.1.1). \\
+    \hline
+    $N_{\text{SIM\_RUNS}}$ & 10 & Number of automated iterations required to verify move logic and rule compliance (Used in T.FR.AI.2.1). \\
     \hline
     \end{tabularx}
 \end{table}
-
 
 
 \subsection{Usability Survey Questions}
