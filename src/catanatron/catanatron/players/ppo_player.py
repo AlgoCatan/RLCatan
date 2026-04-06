@@ -88,7 +88,9 @@ class PPOPlayer(Player):
 
         return obs_vec
 
-    def _indices_from_playable_actions(self, playable_actions: Iterable[Action]) -> List[int]:
+    def _indices_from_playable_actions(
+        self, playable_actions: Iterable[Action]
+    ) -> List[int]:
         """
         Map each playable Action to its discrete action index using the same
         encoding as CatanatronEnv (to_action_space).
