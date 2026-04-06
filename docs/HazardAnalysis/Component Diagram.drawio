@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0">
   <diagram name="Page-1" id="rL6wYzq297fijbXMsxHL">
-    <mxGraphModel dx="619" dy="1473" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="889" dy="1636" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -193,10 +193,10 @@
         <mxCell id="9L7EpdU-ZJei7otof8Hw-8" parent="1" style="shape=providedRequiredInterface;html=1;verticalLabelPosition=bottom;sketch=0;rotation=-93;" value="" vertex="1">
           <mxGeometry height="20" width="20" x="389.9996549099752" y="169.9996549099752" as="geometry" />
         </mxCell>
-        <mxCell id="9L7EpdU-ZJei7otof8Hw-28" parent="1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" value="Generate Snapshots" vertex="1">
-          <mxGeometry height="30" width="190" x="270.99" y="275.5" as="geometry" />
+        <mxCell id="9L7EpdU-ZJei7otof8Hw-28" parent="1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" value="Selects Opponent" vertex="1">
+          <mxGeometry height="30" width="190" x="280" y="275.5" as="geometry" />
         </mxCell>
-        <mxCell id="9L7EpdU-ZJei7otof8Hw-29" parent="1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" value="Matchmakes" vertex="1">
+        <mxCell id="9L7EpdU-ZJei7otof8Hw-29" parent="1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" value="Updates Phase" vertex="1">
           <mxGeometry height="30" width="190" x="287.5" y="400" as="geometry" />
         </mxCell>
         <mxCell id="9L7EpdU-ZJei7otof8Hw-31" parent="1" style="shape=providedRequiredInterface;html=1;verticalLabelPosition=bottom;sketch=0;rotation=-93;" value="" vertex="1">
