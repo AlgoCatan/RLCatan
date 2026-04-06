@@ -55,7 +55,7 @@
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
 10/19/2025 & Draft & Initial VnV plan without Unit Testing\\
-04/05/2026. & Final & Feedback from TA for final documentation\\
+04/05/2026 & Final & Feedback from TA for final documentation\\
 \bottomrule
 \end{tabularx}
 
@@ -127,7 +127,8 @@ The following glossary headers are hyperlinked to their online definitions for f
 
 \pagenumbering{arabic}
 
-This document presents the Verification and Validation (VnV) plan for RLCatan. The plan will be updated and refined after the MIS (detailed design document) is completed.
+This document presents the Verification and Validation (VnV) plan for AlgoCatan.
+The plan has been updated and refined since the MIS (detailed design document) was completed.
 
 
 \section{General Information}
@@ -135,21 +136,25 @@ This document presents the Verification and Validation (VnV) plan for RLCatan. T
 \subsection{Summary}
 
 
-  The software being tested is RLCatan,
- an $\AI{}$  system that learns to play the board game $\Catan{}$
- competitively through reinforcement learning. 
- It includes a learning agent trained in a simulated
-  environment, a computer vision module for detecting 
-  and interpreting the physical game board, and a
-  interface that displays the game state and $\AI{}$-generated
-  move suggestions to users. The general purpose of RLCatan
-  is to provide optimal move suggestions to human players
-  based on real-time analysis of the game state.
 
-  \subsection{Objectives}
+The software being tested is AlgoCatan, an \AI{} system for training, serving,
+and interacting with \emph{Catan} bots through a web-based interface.
+The implemented system includes a reinforcement learning training pipeline,
+an \AI{} model, an Elo league system, a curriculum learning manager,
+a backend API server, a game state manager, a game state database,
+a user interface, and an explanation pipeline that generates natural-language
+descriptions of bot decisions.
+
+The general purpose of AlgoCatan is to provide users with skill-matched bot
+opponents, replay and analysis tools, and natural-language explanations of
+strategic decisions.
+Computer vision for reading a physical board is deferred
+and not part of the implemented system being validated in this document.
+
+\subsection{Objectives}
 
   The objective of this V\&V plan is to build confidence in the correctness, 
-  reliability, and functional performance of the RLCatan system by verifying 
+  reliability, and functional performance of the AlgoCatan system by verifying
   that all implemented system components satisfy the requirements defined in 
   the Software Requirements Specification (SRS).
   
@@ -168,34 +173,30 @@ This document presents the Verification and Validation (VnV) plan for RLCatan. T
   
   \medskip
   
-  Out of scope are large-scale usability studies and extensive performance
+  Out of scope are extensive performance
    benchmarking beyond defined acceptance thresholds, as these exceed the 
    project’s time and resource constraints. The Computer Vision module is also
     out of scope, as it was not implemented in the final system; therefore, no
      verification activities are performed for CV functionality. 
      External dependencies such as Catanatron and the OpenAI Gym environment
      are not verified internally; instead, verification focuses on 
-     correct integration and usage within the RLCatan system.
+     correct integration and usage within the AlgoCatan system.
   
   \subsection{Challenge Level and Extras}
 
+The challenge level for this project is Advanced, as outlined in the problem
+statement and confirmed with the course instructor. This project reflects the
+complexity of developing a reinforcement learning agent capable of mastering
+\textit{Settlers of \Catan{}}, while also integrating a training pipeline,
+curriculum learning, Elo-based opponent selection, a web interface,
+backend APIs, replay support, and an \LLM{}-based explanation feature.
 
-
-The challenge level for this project is Advanced,
- as outlined in the problem statement and confirmed 
- with the course instructor. This project
-  reflects the complexity of developing a 
-  reinforcement learning agent capable of
-   mastering \textit{Settlers of $\Catan{}$},
-    integrating computer vision for real-time game state 
-    analysis, and ensuring seamless interaction between
-     system components.
 
 \medskip
 The approved extras for this project include:
 \begin{itemize}
     \item User Instructional Video: A walkthrough video that explains how to set up, run, and interact with the software, helping users understand its functionality and workflow.
-    \item Performance Report: A comprehensive report summarizing the $\AI{}$'s performance metrics, learning progression, and evaluation results based on various test scenarios.
+    \item Usability Testing Report: A comprehensive report summarizing the results of usability testing sessions, including user feedback, identified issues, and recommendations for improving the user experience.
 \end{itemize}
 
 \subsection{Relevant Documentation}
@@ -203,7 +204,7 @@ The approved extras for this project include:
 The following documents provide essential background for the VnV plan:
 
 \begin{enumerate}
-  \item \textbf{Software Requirements Specification (\citet{SRS}):} This document outlines the functional and non-functional requirements for RLCatan, serving as the primary reference for the verification and validation plan.
+  \item \textbf{Software Requirements Specification (\citet{SRS}):} This document outlines the functional and non-functional requirements for AlgoCatan, serving as the primary reference for the verification and validation plan.
   \item \textbf{Hazard Analysis (\citet{HA}):} This document identifies potential system-level hazards, their causes, and their effects.
   The functional and non-functional safety requirements derived in the Hazard Analysis are the basis for many of the critical system tests in this VnV plan.
 \end{enumerate}
@@ -211,7 +212,7 @@ The following documents provide essential background for the VnV plan:
 
 \section{Plan}
 
-This section outlines the strategy for Verification and Validation (VnV) across all phases of the RLCatan project lifecycle.
+This section outlines the strategy for Verification and Validation (VnV) across all phases of the AlgoCatan project lifecycle.
 The plan details the roles and responsibilities of the VnV team, and specifies structured approaches for verifying the Software Requirements Specification (SRS), Design, and Implementation, as well as the strategy for Software Validation.
 This systematic approach is designed to increase confidence in the correctness, functional performance, and reliability of the final system.
 (insert visual roadmap)
@@ -250,7 +251,7 @@ The SRS will be verified against the project’s objectives to ensure all requir
 
 \begin{itemize}
     \item \textbf{Structured Review with Supervisor:} A dedicated meeting will be scheduled with Dr. Istvan David, the Project Supervisor.
-    The team will present the consolidated functional, non-functional, and safety requirements, specifically focusing on the formalizations (e.g., Z-Notation) and the key constraints (e.g., $\leq 5$ second response time for advice).
+    The team will present the consolidated functional, non-functional, and safety requirements, specifically focusing on the formalizations (e.g., Z-Notation) and the key constraints (e.g., $\leq 1$ second response time for advice).
     Specific questions will be prepared beforehand to validate the technical accuracy of the $\RL{}$ requirements (e.g., reward function structure).
     \item \textbf{Peer Review and Inspection:} Classmates and primary reviewers will be engaged to perform an ad-hoc review of the SRS, targeting clarity and consistency.
     We will aim for a minimum of 5 reviews, ranging across the whole document.
@@ -266,8 +267,14 @@ The SRS will be verified against the project’s objectives to ensure all requir
 Design verification will occur after the Design Document is completed (Milestone: Nov. 10) to ensure the architectural design meets all requirements and is ready for implementation.
 
 \begin{itemize}
-    \item \textbf{Interface Inspection:} The Researcher will lead an inspection of the component interfaces (e.g., the data contract between the Computer Vision Model and the Game State Manager) defined in the Design Document.
-    This ensures modularity and that the design supports FR and NFR related to communication and data exchange.
+
+\item \textbf{Interface Inspection:} The Researcher will lead an inspection of
+the implemented component interfaces, such as the request/response contracts
+between the User Interface and the Backend API Server, and the explanation
+request/response flow between the Backend API Server and the Explanation Pipeline.
+This ensures modularity and that the design supports FR and NFR related to
+communication and data exchange.
+
     \item \textbf{Structured Peer Review:} The design will be reviewed by all team members to check for feasibility, proper component decomposition, and adherence to design principles (e.g., modularity).
     \item \textbf{External Review:} Classmates will be asked to review the design, focusing on potential bottlenecks or single points of failure, particularly regarding real-time operation and $\AI{}$ performance constraints.
 \end{itemize}
@@ -306,7 +313,7 @@ Automated VnV tools are central to maintaining code quality and continuous integ
 
 \begin{itemize}
     \item \textbf{Unit Testing Frameworks:} Python's built-in \texttt{unittest} or \texttt{pytest} were planned for backend unit testing, and Jest was planned for the frontend React components. However, during implementation, the team prioritized system-level integration testing and usability validation over comprehensive unit test coverage, given time constraints and the need to validate the AI agent's effectiveness in the broader system context. Unit testing infrastructure remains in place for future development iterations.
-    \item \textbf{Continuous Integration (CI):} GitHub Actions will be implemented to run automated tests, linters, and build checks upon every push or pull request.
+    \item \textbf{Continuous Integration (CI):} GitHub Actions has been implemented to run automated tests, linters, and build checks upon every push or pull request.
     \item \textbf{Static Analysis:} SonarQube will be used to analyze the codebase, identify code smells, potential bugs, and security vulnerabilities.
     \item \textbf{Code Coverage:} Tools like Coverage.py (for Python) will be integrated into the CI pipeline to report and track unit test coverage metrics, aiming for a minimum of 80\% coverage for core logic modules.
     \item \textbf{Linters:} \texttt{flake8} will enforce the PEP 8 standard for all Python backend code. ESLint will enforce the Google Style Guide for the JavaScript/React frontend.
@@ -320,14 +327,14 @@ Software validation ensures the final product meets the actual needs of the end-
 
 \begin{itemize}
     \item \textbf{Revision 0 Demonstration with Supervisor:} The Revision 0 Demonstration (Feb. 2) will be specifically used to validate that the core functionality and $\AI{}$ performance meet the project goals. Dr. Istvan David will provide critical feedback on the $\AI{}$'s strategic viability and adherence to the project scope. A key success metric for this validation is that all intended Revision 0 requirements are demonstrably met, with no major unresolved scope or functionality gaps identified.
-    \item \textbf{User-Centric Validation (Usability Survey):} A partial usability survey will be conducted (using the final class presentation or an informal user testing session with competitive $\Catan{}$ players) to validate the $\NFR{}$ related to usability (NFR.S.2) and the clarity of the $\AI{}$ advice. Survey questions will be included in the Appendix. The target metric is an average rating of at least 4/5 for clarity, ease of navigation, and understanding of $\AI{}$ feedback.
-    \item \textbf{External Data Validation:} The $\RL{}$ agent's performance will be validated longitudinally by running thousands of game simulations and comparing its win rate and strategic output against existing benchmark $\Catan{}$ opponents (e.g., baseline bots), and potentially against human gameplay data provided by competitive players. This output will be summarized in the \textbf{Performance Report} extra. The primary metric for this validation is improved win rate and stable strategic output over the benchmark runs.
+    \item \textbf{User-Centric Validation (Usability Survey):} A partial usability survey will be conducted (using the final class presentation or an informal user testing session with competitive $\Catan{}$ players) to validate the $\NFR{}$ related to usability (NFR.S.2) and the clarity of the $\AI{}$ advice. Survey questions will be included in the usability testing extra. The target metric is an average rating of at least 4/5 for clarity, ease of navigation, and understanding of $\AI{}$ feedback.
+    \item \textbf{External Data Validation:} The $\RL{}$ agent's performance will be validated longitudinally by running thousands of game simulations and comparing its win rate and strategic output against existing benchmark $\Catan{}$ opponents (e.g., baseline bots), and potentially against human gameplay data provided by competitive players. The primary metric for this validation is improved win rate and stable strategic output over the benchmark runs.
 \end{itemize}
 
 
 \section{System Tests}
 
-This section details the system-level tests for validating the functional and non-functional requirements of the RLCatan system. These tests are designed to be run once the integrated system is complete, using representative data to simulate actual gameplay and training cycles.
+This section details the system-level tests for validating the functional and non-functional requirements of the AlgoCatan system. These tests are designed to be run once the integrated system is complete, using representative data to simulate actual gameplay and training cycles.
 
 \subsection{Tests for Functional Requirements}
 
@@ -489,7 +496,7 @@ The tests below are categorized by the major functional modules defined in Secti
 
 This section outlines the system-level tests for validating the nonfunctional requirements (NFRs) defined in Section~S.2.8 of the SRS. These include scalability, usability, maintainability, installability, data integrity, and availability. 
 
-Each subsection corresponds to a major nonfunctional quality attribute of the RLCatan system. Some tests produce summary statistics or qualitative evaluations (e.g., graphs or surveys) rather than strict pass/fail outcomes.  
+Each subsection corresponds to a major nonfunctional quality attribute of the AlgoCatan system. Some tests produce summary statistics or qualitative evaluations (e.g., graphs or surveys) rather than strict pass/fail outcomes.  
 
 Accuracy-related nonfunctional qualities are validated implicitly through the functional tests defined in Section~4.2 (T.FR.AI.2.1--2.3 and T.FR.CV.1.1--1.2), which record relative error and correctness metrics.
 
@@ -503,7 +510,7 @@ This area ensures acceptable responsiveness and throughput under varying load.
 \item{\hypertarget{T.NFR.P.1}{T.NFR.P.1}\\}
 \textbf{Control:} Automatic
 
-\textbf{Initial State:} RLCatan server running full stack with no concurrent load.
+\textbf{Initial State:} AlgoCatan server running full stack with no concurrent load.
 
 \textbf{Input/Condition:} Single 4-player game with standard actions (build, trade, roll dice, 100+ repetitions).
 
@@ -525,7 +532,7 @@ This area ensures acceptable responsiveness and throughput under varying load.
 \item{\hypertarget{T.NFR.P.2}{T.NFR.P.2}\\}
 \textbf{Control:} Automatic
 
-\textbf{Initial State:} RLCatan server running full stack.
+\textbf{Initial State:} AlgoCatan server running full stack.
 
 \textbf{Input/Condition:} Simulate 1, 3, and 5 concurrent games.
 Measure response time scaling.
@@ -571,7 +578,7 @@ This area focuses on confirming that the interface is intuitive and accessible t
 \item{\hypertarget{T.NFR.U.2}{T.NFR.U.2}\\}
 \textbf{Control:} Manual
 
-\textbf{Initial State:} RLCatan UI loaded in browser.
+\textbf{Initial State:} AlgoCatan UI loaded in browser.
 
 \textbf{Input/Condition:} Apply color-blindness filters and vary display scaling.
 
@@ -605,7 +612,7 @@ This area ensures the modular design and structure of the codebase support effic
 
 \subsection{Installability}
 
-This area validates that RLCatan installs and operates correctly across all supported operating systems and browsers.
+This area validates that AlgoCatan installs and operates correctly across all supported operating systems and browsers.
 
 \textbf{Test Case: Cross-Platform Installation Validation}
 
@@ -615,7 +622,7 @@ This area validates that RLCatan installs and operates correctly across all supp
 
 \textbf{Initial State:} Packaged release available.
 
-\textbf{Input/Condition:} Install and execute RLCatan on Windows~11 and macOS using Chrome and Firefox browsers.
+\textbf{Input/Condition:} Install and execute AlgoCatan on Windows~11 and macOS using Chrome and Firefox browsers.
 
 \textbf{Output/Result:} Application installs and runs successfully on all tested platforms.
 
@@ -682,23 +689,27 @@ This area ensures that the Game State Database maintains consistent, valid, and 
 
 \subsection{Availability}
 
-This area verifies that the system automatically recovers from failures within one minute, as required in the SRS.
+This area verifies that the system maintains acceptable availability during use,
+consistent with the SRS requirement that the system have an uptime of at least 99\%.
 
-\textbf{Test Case: System Failure and Auto-Recovery}
+\textbf{Test Case: Service Availability Monitoring}
 
 \begin{enumerate}
 \item{\hypertarget{T.NFR.AV.1}{T.NFR.AV.1}\\}
-\textbf{Control:} Manual
+\textbf{Control:} Automatic
 
-\textbf{Initial State:} System running with active game session.
+\textbf{Initial State:} System deployed and running under normal usage conditions.
 
-\textbf{Input/Condition:} Force a server crash or database disconnect mid-turn.
+\textbf{Input/Condition:} Monitor backend service availability over the test period,
+including normal gameplay, replay access, and explanation requests.
 
-\textbf{Output/Result:} System restarts and restores previous game state within 60~seconds. If recovery fails within 60 seconds, the system must load the last valid checkpoint and log a recovery failure event.
+\textbf{Output/Result:} The backend API remains available for at least 99\% of the
+observed test period.
 
-\textbf{Test Case Derivation:} Verifies NFR.S.6 (Availability) by measuring recovery time following induced failure.
+\textbf{Test Case Derivation:} Verifies NFR.S.6 (Availability).
 
-\textbf{How test will be performed:} Use shell script to crash the process, record downtime using system logs, verify recovery from last snapshot.
+\textbf{How test will be performed:} Use uptime logs, health checks, and request
+success/failure counts during the evaluation period to compute observed service availability.
 \end{enumerate}
 
 \subsection{Accuracy and Correctness (Referenced)}
@@ -706,7 +717,7 @@ This area verifies that the system automatically recovers from failures within o
 Accuracy-related NFRs are verified by functional tests defined in Section~4.2:
 \begin{itemize}
     \item T.FR.AI.2.1--2.3 ($\AI{}$ Model and Recommendation Logic)
-    \item T.FR.CV.1.1--1.2 (Computer Vision and Game State Capture)
+    \item T.FR.CV.1.1 (Computer Vision and Game State Capture)
 \end{itemize}
 These tests report relative error between predicted and expected outcomes. No separate nonfunctional test cases are required.
 
@@ -866,7 +877,7 @@ How test will be performed:
 
 \bibliographystyle{plainnat}
 
-\bibliography{../../refs/References}
+%\bibliography{../../refs/References}
 
 \newpage
 
@@ -914,7 +925,7 @@ the first round we didnt have the LLM explanations, and after feedback from the
 observational think aloud study and the following survery below, we added them. We will be comparing
  the results of the two studies to see if there is a significant difference in the
   usability ratings with and without the LLM explanations, which will help us understand 
-  the impact of this feature on experiential learning ($\hyperref[FR.S.8.3]{FR.S.8.3}$).* \\
+  the impact of this feature on experiential learning ($\hyper[FR.S.8.3]{FR.S.8.3}$).* \\
 
 \begin{enumerate}
     \item \textbf{Overall Experience:} "Overall, how was your experience with the interface? Please share any general recomendations or feedback you have about the usability and design of the interface."
