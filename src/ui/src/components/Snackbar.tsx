@@ -20,7 +20,11 @@ export const snackbarActions = (closeSnackbar: (key?: SnackbarKey) => void) => (
     </>
   );
 
-export function dispatchSnackbar(enqueueSnackbar: (message: string, options: { action: (key: string) => React.ReactNode;  onClick: () => void }) => SnackbarKey , closeSnackbar: (key?: string | number) => void, gameState: GameState) {
+export function dispatchSnackbar(
+  enqueueSnackbar: (message: string, options: { action: (key: string) => React.ReactNode; onClick: () => void }) => SnackbarKey,
+  closeSnackbar: (key?: string | number) => void,
+  gameState: GameState
+) {
   enqueueSnackbar(humanizeAction(gameState, gameState.actions.slice(-1)[0]), {
     action: snackbarActions(closeSnackbar),
     onClick: () => {

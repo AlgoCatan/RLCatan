@@ -1,0 +1,111 @@
+.admin-page {
+  min-height: 100vh;
+  padding: 24px;
+  background:
+    radial-gradient(circle at top left, rgb(57 125 234 / 16%), transparent 28%),
+    radial-gradient(circle at bottom right, rgb(65 184 131 / 10%), transparent 25%),
+    linear-gradient(180deg, #050709 0%, #10161c 55%, #0d1318 100%);
+  color: rgb(244 247 250);
+}
+
+.admin-shell {
+  width: min(100%, 980px);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 16px;
+
+  h1 {
+    margin: 0 0 6px;
+    font-size: 2rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  p {
+    margin: 0;
+    color: rgb(255 255 255 / 62%);
+  }
+}
+
+.admin-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.admin-card {
+  background: linear-gradient(180deg, rgb(15 21 27 / 96%), rgb(12 17 23 / 94%));
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 22px;
+  padding: 18px;
+  box-shadow:
+    0 24px 60px rgb(0 0 0 / 34%),
+    inset 0 1px 0 rgb(255 255 255 / 4%);
+}
+
+.admin-loading,
+.admin-empty {
+  min-height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(255 255 255 / 72%);
+}
+
+.admin-table-wrap {
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: 12px 14px;
+    text-align: left;
+    border-bottom: 1px solid rgb(255 255 255 / 8%);
+  }
+
+  th {
+    color: rgb(143 190 255);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  td {
+    color: rgb(244 247 250);
+    font-size: 0.92rem;
+  }
+
+  tbody tr:hover {
+    background: rgb(255 255 255 / 3%);
+  }
+}
+
+@media (max-width: 600px) {
+  .admin-page {
+    padding: 12px;
+  }
+
+  .admin-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-actions {
+    width: 100%;
+  }
+
+  .admin-actions .MuiButton-root {
+    flex: 1 1 0;
+  }
+}

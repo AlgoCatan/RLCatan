@@ -1,49 +1,137 @@
 @use "../variables.scss";
 
+@keyframes jump {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
 .resource-cards {
-  height: 40px;
   display: flex;
   gap: 6px;
-
   margin-bottom: variables.$sm-gutter;
 
-  .card {
-    border-radius: 4px;
-    div {
-      background: #151313;
-      color: white;
+  .resource-card-container {
+    &.animate-jump {
+      animation: jump 0.3s ease-in-out;
+    }
+  }
 
-      width: 21px;
-      height: 36px;
+  // SMALL variant (mimics original design with border effect)
+  &.small {
+    height: 40px;
+    
+    .resource-card-container {
+        width: 25px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 4px;
 
+        // Container background acts as the border color
+        &.wood-cards { background: variables.$wood; }
+        &.brick-cards { background: variables.$brick; }
+        &.wheat-cards { background: variables.$wheat; }
+        &.sheep-cards { background: variables.$darker-sheep; }
+        &.ore-cards { background: variables.$ore; }
+        &.dev-cards { background: purple; }
+
+        .card-visual {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            color: white;
+            border-radius: 4px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+            
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 800;
+            position: relative;
+        }
+
+        .label {
+            display: none; 
+        }
+
+        .short-label {
+             font-size: 0.7rem; // Matches original dev-card sizing
+        }
+    }
+  }
+
+  // LARGE variant (Solid fill, rectangular, text inside card)
+  &.large {
+    height: auto;
+    // Align items to top so they don't stretch weirdly 
+    align-items: flex-start; 
+    gap: 12px;
+
+    .resource-card-container {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      font-size: 0.8rem;
-      font-weight: bold;
-      position: relative;
-    }
-  }
-  .wood-cards {
-    background: variables.$wood;
-  }
-  .brick-cards {
-    background: variables.$brick;
-  }
-  .wheat-cards {
-    background: variables.$wheat;
-  }
-  .sheep-cards {
-    background: variables.$darker-sheep;
-  }
-  .ore-cards {
-    background: variables.$ore;
-  }
-  .dev-cards {
-    background: purple;
-    div {
-      font-size: 0.7rem;
+      width: 60px;
+
+      .card-visual {
+        width: 60px;  
+        height: 90px; // Larger Rectangle
+        border-radius: 8px;
+        color: white;
+        background-color: transparent !important; // Ensure no base color leaks
+        background-image: none !important;        // Ensure no gradients
+        position: relative; 
+        box-shadow: none; // Remove shadow to address "weird artifact" concern
+        
+        display: block; // Reset flex from small if needed, but we redefine children pos
+
+        // Resource Color Fill directly on the visual part
+        // We need to target the PARENT's class to style this child
+      }
+
+      // Apply backgrounds to .card-visual based on container class
+      &.wood-cards .card-visual { background-color: variables.$wood !important; }
+      &.brick-cards .card-visual { background-color: variables.$brick !important; }
+      &.wheat-cards .card-visual { background-color: variables.$wheat !important; }
+      &.sheep-cards .card-visual { background-color: variables.$darker-sheep !important; }
+      &.ore-cards .card-visual { background-color: variables.$ore !important; }
+      &.dev-cards .card-visual { background-color: purple !important; }
+
+      .card-visual {
+
+        // Count at top-left
+        .count {
+            position: absolute;
+            top: 5px;
+            left: 8px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .label {
+            position: absolute;
+            left: 50%;
+            bottom: 6px;
+            transform: translateX(-50%);
+            width: calc(100% - 12px);
+            font-size: 0.72rem;
+            font-weight: 700;
+            line-height: 1.05;
+            text-align: center;
+            text-transform: capitalize;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+        }
+
+        // Short label (VP, KN) bottom-right or centered?
+        .short-label {
+            display: none;
+        }
+      }
     }
   }
 }
@@ -52,9 +140,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
-  width: 25px;
-  height: 40px;
 }
 
 .player-state-box {
@@ -64,9 +149,32 @@
   margin: 0 auto;
   width: 100%;
 
+  .player-header {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .bot-name {
+    font-weight: bold; // Make bot names bold
+    font-size: 1.1rem; // Slightly larger font size
+    text-align: center;
+    padding: 4px 0;
+    width: 100%;
+  }
+
   .scores {
     display: flex;
     justify-content: space-between;
+
+    .num-knights,
+    .num-roads,
+    .victory-points {
+      flex-direction: column;
+      width: 50px;
+      height: 40px;
+      font-weight: bold; // Make scores bold
+      font-size: 1.05rem; // Slightly larger font size
+    }
   }
 
   .num-knights,
@@ -79,5 +187,86 @@
 
   .bold {
     font-weight: bold;
+  }
+}
+
+@media (max-width: variables.$md-breakpoint) {
+  .player-state-box {
+    padding: 4px 6px;
+
+    .player-header {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    // Prefer compact/small resource cards on mobile; hide large visuals.
+    .resource-cards {
+      gap: 3px;
+      margin-bottom: 4px !important;
+      margin-left: auto;
+      justify-content: flex-end;
+      flex-wrap: nowrap;
+      width: 50%;
+      max-width: 50%;
+      overflow: hidden;
+      &.large { display: none !important; }
+      &.small { display: flex !important; height: 24px; }
+    }
+
+    .bot-name {
+      padding: 0 !important;
+      margin: 0 !important;
+      width: auto;
+      text-align: left;
+      flex: 1 1 50%;
+      max-width: 50%;
+      min-width: 0;
+
+      small {
+        font-size: 0.65rem !important;
+        display: block;
+        line-height: 1.05;
+      }
+    }
+
+    .scores {
+      gap: 6px;
+      display: flex;
+      align-items: center;
+
+      .num-knights,
+      .num-roads,
+      .victory-points {
+        // compact score boxes
+        width: 36px;
+        height: 32px;
+        font-size: 0.85rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+
+    // Ensure small resource card visuals are compact
+    .resource-cards.small {
+      .resource-card-container {
+        width: 16px;
+        height: 24px;
+        min-width: 16px;
+        .card-visual {
+          width: 100%;
+          height: 100%;
+          font-size: 0.72rem;
+          .count { font-size: 0.72rem; top: 3px; left: 4px; }
+        }
+
+        .short-label {
+          font-size: 0.5rem;
+        }
+      }
+    }
   }
 }

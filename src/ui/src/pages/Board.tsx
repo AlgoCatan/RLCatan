@@ -43,6 +43,7 @@ type BoardProps = {
   isMobile: boolean;
   show: boolean;
   isMovingRobber: boolean;
+  validRobberCoordinates: Set<string>;
 }
 
 export default function Board({
@@ -58,12 +59,25 @@ export default function Board({
   isMobile,
   show,
   isMovingRobber,
+  validRobberCoordinates,
 }: BoardProps) {
   // TODO: Keep in sync with CSS
-  const containerHeight = height - 144 - 38 - 40;
+  const containerHeight = isMobile ? height - 144 - 38 - 40 : height;
   const containerWidth = isMobile ? width - 280 : width;
-  const center: [number, number] = [containerWidth / 2, containerHeight / 2];
+  
   const size = computeDefaultSize(containerWidth, containerHeight);
+  
+  // Center normally on desktop. On mobile, align to top (removing vertical gap).
+  let centerY = containerHeight / 2;
+  if (!isMobile && size) {
+    // Height of board ~ 9.5 * size (based on numLevels=6)
+    const boardContentHeight = 9.5 * size;
+    // Align center such that top of board is at y=0 + padding
+    centerY = boardContentHeight / 2 + 10;
+  }
+
+  const center: [number, number] = [containerWidth / 2, centerY];
+  
   if (!size) {
     return null;
   }
@@ -75,7 +89,9 @@ export default function Board({
       coordinate={coordinate}
       tile={tile}
       size={size}
-      flashing={isMovingRobber}
+      flashing={
+        isMovingRobber && validRobberCoordinates.has(coordinate.join(","))
+      }
       onClick={() => handleTileClick(coordinate)}
     />
   ));

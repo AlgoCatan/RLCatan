@@ -20,6 +20,7 @@ dependencies = ["networkx", "click", "rich"]
 
 [project.optional-dependencies]
 gym = ["gymnasium<=0.29.1", "numpy", "pandas", "fastparquet", "sb3_contrib"]
+ppo = ["numpy", "sb3_contrib"]
 web = [
     "gunicorn",
     "flask",
@@ -27,6 +28,8 @@ web = [
     "flask_sqlalchemy",
     "sqlalchemy",
     "psycopg2-binary",
+    "pymongo",
+    "google-genai",
 ]
 dev = [
     "black",

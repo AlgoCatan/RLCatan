@@ -3,11 +3,15 @@ import gymnasium as gym
 from gymnasium import spaces
 import numpy as np
 
+from catanatron.action_space import (
+    ACTIONS_ARRAY,
+    ACTION_SPACE_SIZE,
+    from_action_space,
+    to_action_space,
+)
 from catanatron.game import Game, TURNS_LIMIT
 from catanatron.models.player import Color, Player, RandomPlayer
-from catanatron.models.map import BASE_MAP_TEMPLATE, NUM_NODES, LandTile, build_map
-from catanatron.models.enums import RESOURCES, Action, ActionType
-from catanatron.models.board import get_edges
+from catanatron.models.map import build_map
 from catanatron.features import (
     create_sample,
     get_feature_ordering,
@@ -357,9 +361,8 @@ CatanatronEnv.__doc__ += """
      - Float
 
    * - IS_DISCARDING
-     - Whether current player must discard. For now, there is only 1 
-       discarding action (at random), since otherwise action space
-       would explode in size.
+     - Whether current player must discard. Discarding is represented
+       as one action per resource type currently held.
      - 1
      - Boolean
    * - IS_MOVING_ROBBER

@@ -466,7 +466,7 @@ Game State Manager (M4)
 
 \subsubsection{Exported Constants}
 \begin{itemize}
-\item \texttt{MAX\_PLAYERS}: $\mathbb{Z}$ = 4
+\item \texttt{MAX\_PLAYERS}: $\mathbb{Z}^{+}$ = 4
 \end{itemize}
 
 \subsubsection{Exported Access Programs}
@@ -495,7 +495,7 @@ validateMove & move:MoveData & $\mathbb{B}$ & - \\
       \begin{itemize}
           \item resources: dict from resource type ($\Sigma^{*}$) to quantity ($\mathbb{Z}$)
           \item structures: seq of structure types
-          \item score: $\mathbb{Z}$
+          \item score: $\mathbb{Z}_{\ge 0}$
       \end{itemize}
 \end{itemize}
 
@@ -569,7 +569,7 @@ Reinforcement Learning Environment (M5)
 
 \subsubsection{Exported Constants}
 \begin{itemize}
-\item \texttt{MAX\_TURNS}: $\mathbb{Z}$ - maximum number of turns in an episode
+\item \texttt{MAX\_TURNS}: $\mathbb{Z}^{+}$ - maximum number of turns in an episode
 \item \texttt{REWARD\_SCALE}: $\mathbb{R}$ - scaling factor applied to reward calculation
 \end{itemize}
 
@@ -593,7 +593,7 @@ render & - & - & RenderError \\
 \item \texttt{simulatedState}: internal instance of M4 \\
       Maintains the environment's evolving game state.
 
-\item \texttt{turnCount}: $\mathbb{Z}$ \\
+\item \texttt{turnCount}: $\mathbb{Z}_{\ge 0}$ \\
       Number of turns elapsed in the current episode.
 \end{itemize}
 
@@ -784,7 +784,7 @@ Game State Database (M7)
 \subsubsection{Exported Constants}
 \begin{itemize}
 \item \texttt{DB\_PATH}: $\Sigma^{*}$ - file system path or database URI.
-\item \texttt{MAX\_ENTRIES}: $\mathbb{Z}$ - maximum number of stored states.
+\item \texttt{MAX\_ENTRIES}: $\mathbb{Z}^{+}$ - maximum number of stored states.
 \end{itemize}
 
 \subsubsection{Exported Access Programs}
@@ -964,14 +964,18 @@ None.
 \item exception: -
 \end{itemize}
 
-\subsubsection{Local Functions}
+\noindent resetQueue():
 \begin{itemize}
-\item \texttt{resetQueue()}:
+\item transition:
 \[
 \text{head} := 0, \quad \text{tail} := 0, \quad \text{size} := 0
 \]
-Resets the queue to an empty state.
+\item output: -
+\item exception: -
 \end{itemize}
+
+\subsubsection{Local Functions}
+None.
 
 \subsubsection{Formalization}
 
@@ -1087,7 +1091,7 @@ system input and output interactions. Because of this expanded definition,
 multiple hazards had to be revised. Risks that were previously limited 
 to incorrect board modeling were broadened to include incorrect state 
  synchronization, input misinterpretation, and output decision errors. 
- This led to updated mitigation strategies, such as stronger state 
+ This led to updated mitigation strategies, such as stronger state
  validation checks and clearer interface boundaries between the 
  AI agent and the game environment.
 

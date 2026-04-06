@@ -1,8 +1,27 @@
 import os
 import tempfile
+import sys
 
 from click.testing import CliRunner
 import pandas as pd
+from unittest.mock import MagicMock
+
+try:
+    import sb3_contrib
+except ImportError:
+    m = MagicMock()
+    sys.modules["sb3_contrib"] = m
+    sys.modules["sb3_contrib.common"] = m
+    sys.modules["sb3_contrib.common.maskable.utils"] = m
+    sys.modules["sb3_contrib.ppo_mask"] = m
+
+try:
+    import stable_baselines3
+except ImportError:
+    m = MagicMock()
+    sys.modules["stable_baselines3"] = m
+    sys.modules["stable_baselines3.common"] = m
+    sys.modules["stable_baselines3.common.env_util"] = m
 
 from catanatron.cli.play import simulate
 
@@ -17,6 +36,16 @@ def test_play():
 def test_play_strong():
     runner = CliRunner()
     result = runner.invoke(simulate, ["--num=1", "--players=AB,SAB,M:2:True,G:2"])
+    assert result.exit_code == 0
+    assert "Game Summary" in result.output
+
+
+def test_play_with_friendly_robber():
+    runner = CliRunner()
+    result = runner.invoke(
+        simulate,
+        ["--num=1", "--players=R,R", "--config-friendly-robber"],
+    )
     assert result.exit_code == 0
     assert "Game Summary" in result.output
 

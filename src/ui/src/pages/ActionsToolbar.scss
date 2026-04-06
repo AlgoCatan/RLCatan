@@ -1,56 +1,529 @@
 @use "../variables.scss";
 
+// State Summary (Resource Cards)
 .state-summary {
-  height: 60px;
+  min-height: 40px; // Reduced min-height
+  height: auto; 
   width: 100%;
   max-width: variables.$sm-breakpoint;
   margin: 0 auto;
   display: flex;
-  padding: variables.$sm-gutter;
+  padding: 5px variables.$sm-gutter 5px; // Reduced bottom padding
+  box-sizing: border-box; 
+  align-items: flex-start;
+  
   .open-drawer-btn {
     color: white;
     margin-right: variables.$sm-gutter;
   }
 }
 
-$btn-height: 60px;
+$toolbar-min-height: 80px; // slightly larger toolbar
+$btn-height: 56px; // make buttons a bit smaller
+
 .actions-toolbar {
-  height: $btn-height + 2 * variables.$sm-gutter;
+  height: auto; // Allow height to adjust based on content
+  min-height: $toolbar-min-height; // use larger toolbar size
   width: 100%;
   max-width: variables.$sm-breakpoint;
   margin-left: auto;
   margin-right: auto;
-  padding: variables.$sm-gutter;
+  padding: variables.$sm-gutter + 8px; // a smudge more breathing room
+  padding-right: 340px; // reserve space so toolbar buttons won't be hidden by the fixed box
   display: flex;
   justify-content: space-between;
-  gap: variables.$sm-gutter;
+  gap: 22px; // slightly more separation
+  align-items: center; // ensure vertical alignment with inline drawer box
+  position: relative;
+
+  .actions-toolbar-content {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 22px;
+    align-items: center;
+  }
+
+  .play-buttons-group {
+    display: flex;
+    gap: 20px; // larger spacing between the five buttons
+    align-items: center;
+    flex-direction: row; // horizontal layout
+    flex-wrap: nowrap;
+    width: auto; /* allow group to size to content so buttons don't get squashed */
+    justify-content: center; /* center the buttons within the toolbar area */
+  }
 
   button {
-    min-width: 60px;
-    width: 100px;
+    min-width: 110px;      /* slightly smaller than before */
     height: $btn-height;
+    padding: 0 12px;       /* slightly reduced horizontal padding */
+    flex: 0 0 auto;        /* do not force equal distribution; size to content */
+    
+    // Improved Aesthetics
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    font-size: 0.95rem;    /* slightly smaller label */
+    line-height: 1.05;
+    text-align: center;  /* center label text */
+    white-space: normal; /* allow wrapping when needed */
+    overflow: visible;   /* avoid clipping overflowing lines */
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+    
+    &:active {
+      transform: translateY(1px);
+    }
+
+    &.MuiButton-containedPrimary {
+      background: linear-gradient(45deg, #1e88e5 30%, #0d47a1 90%);
+      box-shadow: 0 3px 5px 2px rgba(13, 71, 161, .3);
+
+      &:hover {
+         box-shadow: 0 6px 10px 4px rgba(13, 71, 161, .3); 
+      }
+    }
+
+    &.MuiButton-containedSecondary {
+      background: linear-gradient(45deg, #43a047 30%, #1b5e20 90%);
+      box-shadow: 0 3px 5px 2px rgba(27, 94, 32, .3);
+
+      &:hover {
+         box-shadow: 0 6px 10px 4px rgba(27, 94, 32, .3); 
+      }
+    }
+  }
+
+  .turn-action-btn {
+    width: 136px;
+  }
+
+  .turn-action-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .dice-roll-preview {
+    min-width: 116px;
+    padding: 10px 10px 10px;
+    border-radius: 12px;
+    background: rgba(18, 22, 27, 0.94);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    z-index: 5;
+    pointer-events: none;
+    animation: dice-float-up 0.45s ease-out forwards;
+
+    &.roller-red {
+      background: linear-gradient(180deg, rgba(170, 32, 32, 0.96), rgba(112, 15, 15, 0.94));
+      border-color: rgba(255, 190, 190, 0.32);
+      box-shadow: 0 10px 24px rgba(112, 15, 15, 0.38);
+    }
+
+    &.roller-blue {
+      background: linear-gradient(180deg, rgba(18, 89, 180, 0.96), rgba(11, 54, 112, 0.94));
+      border-color: rgba(174, 212, 255, 0.3);
+      box-shadow: 0 10px 24px rgba(11, 54, 112, 0.38);
+    }
+
+    &.roller-orange {
+      background: linear-gradient(180deg, rgba(200, 113, 18, 0.96), rgba(132, 66, 8, 0.94));
+      border-color: rgba(255, 220, 170, 0.32);
+      box-shadow: 0 10px 24px rgba(132, 66, 8, 0.36);
+    }
+
+    &.roller-white {
+      background: linear-gradient(180deg, rgba(230, 234, 239, 0.97), rgba(182, 190, 200, 0.95));
+      border-color: rgba(255, 255, 255, 0.48);
+      box-shadow: 0 10px 24px rgba(145, 152, 160, 0.32);
+
+      .dice-roll-total {
+        color: #111c28;
+      }
+    }
+  }
+
+  .turn-action-wrapper .dice-roll-preview {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 10px);
+    margin-left: -76px;
+  }
+
+  > .dice-roll-preview {
+    position: absolute;
+    right: 28px;
+    bottom: calc(100% + 10px);
+  }
+
+  .dice-roll-total {
+    position: static;
+    width: 100%;
+    text-align: center;
+    font-size: 1.05rem;
+    font-weight: 900;
+    color: white;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    text-shadow: none;
+  }
+
+  .dice-roll-values {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .dice-roll-face {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.96);
+    position: relative;
+    box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.12);
+  }
+
+  .dice-roll-pip {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #111;
+    transform: translate(-50%, -50%);
+  }
+
+  .dice-roll-pip.top-left {
+    top: 25%;
+    left: 25%;
+  }
+
+  .dice-roll-pip.top-right {
+    top: 25%;
+    left: 75%;
+  }
+
+  .dice-roll-pip.middle-left {
+    top: 50%;
+    left: 25%;
+  }
+
+  .dice-roll-pip.middle-right {
+    top: 50%;
+    left: 75%;
+  }
+
+  .dice-roll-pip.center {
+    top: 50%;
+    left: 50%;
+  }
+
+  .dice-roll-pip.bottom-left {
+    top: 75%;
+    left: 25%;
+  }
+
+  .dice-roll-pip.bottom-right {
+    top: 75%;
+    left: 75%;
+  }
+
+  // Increase dev-card size specifically when resource cards are shown in the toolbar
+  .state-summary & {
+    .resource-cards.large {
+      gap: 10px;
+
+      .resource-card-container {
+        width: 68px; /* slightly wider than default 60px */
+        
+        &.dev-cards {
+          .card-visual {
+            width: 68px;
+            height: 110px; /* taller to emphasize dev-cards */
+            border-radius: 8px;
+          }
+          .card-visual .count {
+            font-size: 1.6rem;
+            top: 6px;
+            left: 8px;
+          }
+          .card-visual .label {
+            font-size: 0.8rem;
+            bottom: 8px;
+          }
+          .card-visual .short-label {
+            display: none;
+          }
+        }
+      }
+    }
   }
 
   .confirm-btn {
     width: 100%;
   }
 
-  .action-popover {
-    z-index: 1;
-
-    overflow: auto;
-    max-height: calc(100% - #{$btn-height});
-    margin-bottom: 10px;
-  }
-
   .MuiButton-label {
     display: flex;
-    flex-direction: column;
+    flex-direction: row; /* put icon and label side-by-side for more horizontal room */
     justify-content: center;
     align-items: center;
+    gap: 8px; /* spacing between icon and text */
 
     .MuiButton-startIcon {
+      margin: 0 0 0 0; /* reset margin if needed */
+    }
+  }
+
+  /* Inline right-drawer box that sits to the right of the toolbar buttons on desktop */
+  .right-drawer-inline {
+    /* fix to bottom-right of viewport so it never overlaps central buttons */
+    position: fixed;
+    right: variables.$sm-gutter;
+    bottom: variables.$sm-gutter;
+    top: auto;
+    transform: none;
+    min-width: 220px;
+    max-width: 300px;
+    width: auto;
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 12px;
+    border-radius: 12px;
+    color: white;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 1200;
+    align-items: stretch;
+  }
+}
+
+@keyframes dice-float-up {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+// Card wrapper used for AnalysisBox
+.right-drawer-card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.06);
+  overflow: hidden;
+  color: #fff;
+
+  &-header {
+    padding: 8px 12px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    h3 {
       margin: 0;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+    }
+  }
+
+  &-body {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px; // slightly bigger gap between analysis box and button
+  }
+
+  /* Ensure buttons inside the analysis card are the same size and full width */
+  .MuiButton-root {
+    width: 100% !important;   // full width inside the card
+    height: 56px !important;  // larger, consistent height for both Analyze and Watch Replay
+    min-width: 0;
+    border-radius: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+}
+
+.action-popover {
+  z-index: 1400;
+
+  .MuiPaper-root {
+    overflow-y: auto;
+    max-height: min(320px, calc(100vh - 120px));
+    margin-bottom: 10px;
+    min-width: 180px; /* give popover more room for dev-card labels */
+  }
+
+  /* Make menu items a bit larger / easier to read */
+  .MuiMenuItem-root {
+    font-size: 1rem;
+    padding: 10px 16px;
+  }
+}
+
+@media (max-width: variables.$md-breakpoint) {
+  .actions-toolbar {
+     min-height: 43px !important;
+     height: auto !important;
+     padding: 4px 6px !important;   // tighter mobile spacing
+     margin: 0 auto !important;     // center within the mobile container
+     gap: 0 !important;
+     
+     // Only add spacing if buttons are present (not empty)
+     &:not(:empty) {
+        padding: 4px 6px !important;
+     }
+
+     .actions-toolbar-content.mobile-transparent {
+       visibility: hidden;
+       pointer-events: none;
+     }
+
+     /* Keep the mobile action buttons on a single row */
+     .play-buttons-group {
+       gap: 6px;
+       flex-direction: row;
+       align-items: center;
+       justify-content: center;
+       flex-wrap: nowrap;
+       width: 100%;
+     }
+
+     button {
+        height: 35px !important;       /* ~20% shorter than previous mobile size */
+        min-width: 0 !important;
+        width: auto !important;
+        font-size: 0.72rem !important;
+        margin: 0 !important;
+        flex: 1 1 0 !important;
+        padding: 0 4px !important;
+        white-space: nowrap !important;
+        line-height: 1 !important;
+      }
+
+     .turn-action-btn {
+        width: 88px !important;
+        flex: 0 0 88px !important;
+      }
+
+     .dice-roll-preview {
+        min-width: 90px;
+        padding: 8px 8px 8px;
+        gap: 6px;
+      }
+
+     .turn-action-wrapper .dice-roll-preview {
+        bottom: calc(100% + 6px);
+        margin-left: -58px;
+      }
+
+     > .dice-roll-preview {
+        right: 10px;
+        bottom: calc(100% + 6px);
+      }
+
+     .dice-roll-total {
+        font-size: 0.86rem;
+      }
+
+     .dice-roll-values {
+        gap: 6px;
+      }
+
+     .dice-roll-face {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+      }
+
+     .dice-roll-pip {
+        width: 6px;
+        height: 6px;
+      }
+
+     .MuiButton-startIcon {
+        margin-right: 4px !important;
+        margin-left: 0 !important;
+
+        svg,
+        img {
+          width: 18px !important;
+          height: 18px !important;
+          font-size: 18px !important;
+        }
+      }
+
+     // Ensure dev cards in toolbar on small screens scale down a bit
+     .state-summary & {
+       .resource-cards.large {
+         .resource-card-container {
+           width: 48px;
+           &.dev-cards .card-visual {
+             width: 48px;
+             height: 78px;
+           }
+           .card-visual .count { font-size: 1.1rem; top: 4px; left: 6px; }
+           .card-visual .label { font-size: 0.7rem; bottom: 6px; }
+         }
+       }
+     }
+
+     /* ensure inline box hidden on mobile if present */
+     .right-drawer-inline {
+       display: none !important; /* still hidden on mobile */
+     }
+
+     /* reduce card button height on mobile */
+     .right-drawer-card {
+       background: transparent;
+       border: 0;
+       box-shadow: none;
+       border-radius: 0;
+
+       &-body {
+         padding: 0;
+       }
+
+       .MuiButton-root {
+         height: 44px !important;
+       }
+     }
+
+     .prompt {
+        padding: 0 !important;
+        margin: 0 !important;
+        min-height: 0 !important; 
+     }
+
+     .action-popover {
+       .MuiPaper-root {
+         min-width: 140px;
+       }
+       .MuiMenuItem-root {
+         font-size: 0.95rem;
+         padding: 8px 12px;
+       }
+     }
+  }
+
+  .action-popover {
+    .MuiPaper-root {
+      max-height: min(260px, calc(100vh - 80px));
     }
   }
 }

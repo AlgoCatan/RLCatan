@@ -55,7 +55,7 @@
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
 10/19/2025 & Draft & Initial VnV plan without Unit Testing\\
-... & ... & ...\\
+04/05/2026. & Final & Feedback from TA for final documentation\\
 \bottomrule
 \end{tabularx}
 
@@ -146,23 +146,38 @@ This document presents the Verification and Validation (VnV) plan for RLCatan. T
   is to provide optimal move suggestions to human players
   based on real-time analysis of the game state.
 
-\subsection{Objectives}
+  \subsection{Objectives}
 
-
-The objective is to build confidence 
-in the correctness, reliability, and functional performance of the RLCatan system.
- Verification will focus on ensuring that the reinforcement learning agent generates 
- valid moves, that the computer vision module correctly interprets game states, and 
- that data exchange between system components is accurate and consistent.
-
-\medskip
-
- Out of scope are extensive usability studies and large-scale performance benchmarking,
- as these exceed the project’s time and resource constraints. Additionally, external
-  dependencies such as Catanatron, OpenCV, and YOLOv9 are assumed to be verified by
-   their developers, and will only be tested for correct integration within RLCatan.
-
-\subsection{Challenge Level and Extras}
+  The objective of this V\&V plan is to build confidence in the correctness, 
+  reliability, and functional performance of the RLCatan system by verifying 
+  that all implemented system components satisfy the requirements defined in 
+  the Software Requirements Specification (SRS).
+  
+  Verification will focus on ensuring that the reinforcement learning agent
+   generates valid moves and that data exchange between system components is 
+   accurate and consistent.
+  
+  The V\&V plan is primarily derived from the Software Requirements Specification 
+  (SRS), which defines all functional and non-functional requirements used to
+   construct system-level test cases. In addition, the Hazard Analysis document
+    is used to prioritize verification effort toward safety-critical and 
+    failure-prone components, particularly in the game state synchronization logic.
+     System architecture and design documentation further support test design by 
+     identifying component boundaries, data flow points, and integration interfaces
+      that must be validated during system integration testing.
+  
+  \medskip
+  
+  Out of scope are large-scale usability studies and extensive performance
+   benchmarking beyond defined acceptance thresholds, as these exceed the 
+   project’s time and resource constraints. The Computer Vision module is also
+    out of scope, as it was not implemented in the final system; therefore, no
+     verification activities are performed for CV functionality. 
+     External dependencies such as Catanatron and the OpenAI Gym environment
+     are not verified internally; instead, verification focuses on 
+     correct integration and usage within the RLCatan system.
+  
+  \subsection{Challenge Level and Extras}
 
 
 
@@ -238,6 +253,7 @@ The SRS will be verified against the project’s objectives to ensure all requir
     The team will present the consolidated functional, non-functional, and safety requirements, specifically focusing on the formalizations (e.g., Z-Notation) and the key constraints (e.g., $\leq 5$ second response time for advice).
     Specific questions will be prepared beforehand to validate the technical accuracy of the $\RL{}$ requirements (e.g., reward function structure).
     \item \textbf{Peer Review and Inspection:} Classmates and primary reviewers will be engaged to perform an ad-hoc review of the SRS, targeting clarity and consistency.
+    We will aim for a minimum of 5 reviews, ranging across the whole document.
     \item \textbf{Issue Tracker for Traceability:} All feedback and identified issues will be logged on the GitHub Issues board, assigned to a team member, and traced back to the specific requirement for resolution.
     \item \textbf{Checklist-Based Inspection:} The team will employ a custom checklist (developed by the Researcher) focusing on the characteristics of a high-quality requirement (unambiguous, verifiable, complete) to systematically inspect the SRS.
 \end{itemize}
@@ -289,7 +305,7 @@ This will use a combination of dynamic (automated tests) and non-dynamic (static
 Automated VnV tools are central to maintaining code quality and continuous integration.
 
 \begin{itemize}
-    \item \textbf{Unit Testing Frameworks:} Python’s built-in \texttt{unittest} or \texttt{pytest} will be used for backend unit testing. Jest will be used for the frontend React components.
+    \item \textbf{Unit Testing Frameworks:} Python's built-in \texttt{unittest} or \texttt{pytest} were planned for backend unit testing, and Jest was planned for the frontend React components. However, during implementation, the team prioritized system-level integration testing and usability validation over comprehensive unit test coverage, given time constraints and the need to validate the AI agent's effectiveness in the broader system context. Unit testing infrastructure remains in place for future development iterations.
     \item \textbf{Continuous Integration (CI):} GitHub Actions will be implemented to run automated tests, linters, and build checks upon every push or pull request.
     \item \textbf{Static Analysis:} SonarQube will be used to analyze the codebase, identify code smells, potential bugs, and security vulnerabilities.
     \item \textbf{Code Coverage:} Tools like Coverage.py (for Python) will be integrated into the CI pipeline to report and track unit test coverage metrics, aiming for a minimum of 80\% coverage for core logic modules.
@@ -305,9 +321,9 @@ Automated VnV tools are central to maintaining code quality and continuous integ
 Software validation ensures the final product meets the actual needs of the end-users (players) and stakeholders.
 
 \begin{itemize}
-    \item \textbf{Revision 0 Demonstration with Supervisor:} The Revision 0 Demonstration (Feb. 2) will be specifically used to validate that the core functionality and $\AI{}$ performance meet the project goals. Dr. Istvan David will provide critical feedback on the $\AI{}$'s strategic viability and adherence to the project scope.
-    \item \textbf{User-Centric Validation (Usability Survey):} A partial usability survey will be conducted (using the final class presentation or an informal user testing session with competitive $\Catan{}$ players) to validate the $\NFR{}$ related to usability (NFR.S.2) and the clarity of the $\AI{}$ advice. Survey questions will be included in the Appendix.
-    \item \textbf{External Data Validation:} The $\RL{}$ agent's performance will be validated longitudinally by running thousands of game simulations and comparing its win rate and strategic output against existing benchmark $\Catan{}$ opponents (e.g., baseline bots), and potentially against human gameplay data provided by competitive players. This output will be summarized in the \textbf{Performance Report} extra.
+    \item \textbf{Revision 0 Demonstration with Supervisor:} The Revision 0 Demonstration (Feb. 2) will be specifically used to validate that the core functionality and $\AI{}$ performance meet the project goals. Dr. Istvan David will provide critical feedback on the $\AI{}$'s strategic viability and adherence to the project scope. A key success metric for this validation is that all intended Revision 0 requirements are demonstrably met, with no major unresolved scope or functionality gaps identified.
+    \item \textbf{User-Centric Validation (Usability Survey):} A partial usability survey will be conducted (using the final class presentation or an informal user testing session with competitive $\Catan{}$ players) to validate the $\NFR{}$ related to usability (NFR.S.2) and the clarity of the $\AI{}$ advice. Survey questions will be included in the Appendix. The target metric is an average rating of at least 4/5 for clarity, ease of navigation, and understanding of $\AI{}$ feedback.
+    \item \textbf{External Data Validation:} The $\RL{}$ agent's performance will be validated longitudinally by running thousands of game simulations and comparing its win rate and strategic output against existing benchmark $\Catan{}$ opponents (e.g., baseline bots), and potentially against human gameplay data provided by competitive players. This output will be summarized in the \textbf{Performance Report} extra. The primary metric for this validation is improved win rate and stable strategic output over the benchmark runs.
 \end{itemize}
 
 
@@ -319,20 +335,10 @@ The system tests are designed to be run once the integrated system is complete, 
 Traceability to specific requirements (e.g., $\hyperref[FR.S.1.1]{FR.S.1.1}$) is maintained throughout.
 
 
-
-\subsection{Tests for Functional Requirements}
-
-
-This subsection outlines test cases organized by the primary functional component responsible for the requirement.
-These tests collectively cover all functional requirements detailed in Section S.2 of the SRS, including the core components: Computer Vision, $\RL{}$ Model, and Game State Management.
-(add more references maybe)
-
-
-
 \subsection{Tests for Functional Requirements}
 
 This subsection details the system tests for all functional requirements ($\FR{}$) outlined in the SRS (Section S.2).
-The tests are categorized by the major functional areas of the RLCatan system to ensure comprehensive coverage.
+The tests are categorized by the major functional areas of the AlgoCatan system to ensure comprehensive coverage.
 The Test IDs maintain clear traceability to their corresponding requirements.
 
 \subsubsection{AI Model and Recommendation Logic}
@@ -343,7 +349,7 @@ This area focuses on verifying the core $\AI{}$ functionality, including strateg
 
 \begin{enumerate}
 
-\item{T.FR.AI.1.1\\}
+\item{\hypertarget{T.FR.AI.1.1}{T.FR.AI.1.1}\\}
 \textbf{Control:} Automatic
 
 \textbf{Initial State:} A game state is loaded where Player A has exactly 1 Wood, 1 Brick, and 2 Roads left to build. All adjacent spaces for a new road are occupied by other players' structures, leaving only one legal road placement location. Player A has no other legal moves (cannot build a settlement, city, or development card).
@@ -356,20 +362,20 @@ This area focuses on verifying the core $\AI{}$ functionality, including strateg
 
 \textbf{How test will be performed:} An automated simulation within the $\RL{}$ Environment ($\hyperref[FR.S.2.1]{FR.S.2.1}$) is run 10 times from this exact pre-set state. All 10 runs must result in the suggestion of the single legal road placement.
 
-\item{T.FR.AI.1.2\\}
+\item{\hypertarget{T.FR.AI.1.2}{T.FR.AI.1.2}\\}
 \textbf{Control:} Manual
 
 \textbf{Initial State:} $\GameState{}$ where Player A is 1 Victory Point (VP) away from winning (e.g., 9 VP + Longest Road) and has enough resources to build a settlement, but not a city. An open, unblocked node that grants the winning 10th VP is available.
 
 \textbf{Input:} $\GameState{}$ where the immediate winning move is available.
 
-\textbf{Output:} The $\AI{}$ must provide the suggestion to \texttt{BuildSettlement} at the winning node, with a high confidence score ($\hyperref[FR.S.3.4]{FR.S.3.4}$). The textual reasoning should explicitly state that this move secures the victory.
+\textbf{Output:} The $\AI{}$ must provide the suggestion to \texttt{BuildSettlement} at the winning node, with a confidence score greater than 0.85 ($\hyperref[FR.S.3.4]{FR.S.3.4}$). The textual reasoning should explicitly state that this move secures the victory.
 
 \textbf{Test Case Derivation:} Verifies $\hyperref[FR.S.3.1]{FR.S.3.1}$ (Strategy Prediction) by testing the $\AI{}$'s ability to identify and prioritize an immediate game-winning condition over resource maximization.
 
 \textbf{How test will be performed:} Load the state and manually check the UI display ($\hyperref[FR.S.4.4]{FR.S.4.4}$) to ensure the winning move is highlighted and prioritized over all other options.
 
-\item{T.FR.AI.1.3\\}
+\item{\hypertarget{T.FR.AI.1.3}{T.FR.AI.1.3}\\}
 \textbf{Control:} Automatic
 
 \textbf{Initial State:} $\GameState{}$ loaded for a 4-player game where the current player (Player A) has 6 resources and rolls a 7, triggering the Robber phase.
@@ -391,7 +397,7 @@ This area verifies that the system correctly manages, displays, and archives gam
 
 \begin{enumerate}
 
-\item{T.FR.UI.2.1\\}
+\item{\hypertarget{T.FR.UI.2.1}{T.FR.UI.2.1}\\}
 \textbf{Control:} Manual/Automatic
 
 \textbf{Initial State:} Game has just started. Player A has 2 settlements and 2 roads. The UI displays Player A's resource inventory as empty.
@@ -399,21 +405,21 @@ This area verifies that the system correctly manages, displays, and archives gam
 \textbf{Input:} Player A performs the action \texttt{BuildRoad} at node X, which is processed by the Game State Manager ($\hyperref[FR.S.7.4]{FR.S.7.4}$) and updated in the $\GameState{}$ Database ($\hyperref[FR.S.5.1]{FR.S.5.1}$) using the Image Queue ($\hyperref[FR.S.6.1]{FR.S.6.1}$).
 
 \textbf{Output:}
-    a) The UI must immediately reflect the change, showing the new road on the board visualization ($\hyperref[FR.S.4.1]{FR.S.4.1}$) and Player A's resource inventory accurately reduced ($\hyperref[FR.S.4.2]{FR.S.4.2}$).
+    a) The UI must reflect the change within less than 0.1 seconds, showing the new road on the board visualization ($\hyperref[FR.S.4.1]{FR.S.4.1}$) and Player A's resource inventory accurately reduced ($\hyperref[FR.S.4.2]{FR.S.4.2}$).
     b) The $\GameState{}$ Database entry for this turn must be complete, correctly logging the pre-move state, the move performed, and the resulting post-move state ($\hyperref[FR.S.5.2]{FR.S.5.2}$).
 
 \textbf{Test Case Derivation:} Verifies the real-time data flow requirements ($\hyperref[FR.S.6.1]{FR.S.6.1}$) and the system's ability to automatically and accurately update all components after a player action ($\hyperref[FR.S.7.4]{FR.S.7.4}$).
 
 \textbf{How test will be performed:} Perform 5 consecutive build actions and measure the time for the UI to update. After the sequence, query the $\GameState{}$ Database to confirm that 5 distinct, consistent, and sequentially correct game states were logged ($\hyperref[FR.S.5.1]{FR.S.5.1}$).
 
-\item{T.FR.UI.2.2\\}
+\item{\hypertarget{T.FR.UI.2.2}{T.FR.UI.2.2}\\}
 \textbf{Control:} Automatic
 
 \textbf{Initial State:} Game is 50 turns long and complete. The game state database contains the full history.
 
 \textbf{Input:} Request historical game data ($\hyperref[FR.S.5.5]{FR.S.5.5}$) for the completed game, specifically requesting all dice rolls and all development card purchases.
 
-\textbf{Output:} The system successfully returns the complete list of 50 turn records, including the dice roll for each turn, and a timestamped record of every development card purchased, demonstrating access to historical data ($\hyperref[FR.S.7.3]{FR.S.7.3}$).
+\textbf{Output:} The system successfully returns the list of 50 turn records, including the dice roll, and a timestamped record of every development card purchased, demonstrating access to historical data ($\hyperref[FR.S.7.3]{FR.S.7.3}$).
 
 \textbf{Test Case Derivation:} Verifies the requirements for historical logging and structured access to past game data ($\hyperref[FR.S.5.5]{FR.S.5.5}$).
 
@@ -421,7 +427,7 @@ This area verifies that the system correctly manages, displays, and archives gam
 
 \end{enumerate}
 
-\subsubsection{Computer Vision and Game State Capture}
+\subsubsection{Computer Vision and Game State Capture(DEFERRED)} 
 
 This area focuses on verifying the accuracy and reliability of the Computer Vision (\CV{}) Model ($\FR{}$.S.1.x) and the Game State Manager's ($\FR{}$.S.7.x) ability to convert visual input into a consistent digital representation ($\GameState{}$). The tests ensure the system can accurately detect board elements ($\hyperref[FR.S.1.1]{FR.S.1.1}$), translate them into structured data ($\hyperref[FR.S.1.2]{FR.S.1.2}$), and maintain synchronization ($\hyperref[FR.S.7.1]{FR.S.7.1}$).
 
@@ -429,7 +435,7 @@ This area focuses on verifying the accuracy and reliability of the Computer Visi
 
 \begin{enumerate}
 
-\item{T.FR.CV.3.1\\}
+\item{\hypertarget{T.FR.CV.3.1}{T.FR.CV.3.1}\\}
 \textbf{Control:} Manual
 
 \textbf{Initial State:} A standard, legal $\Catan{}$ board is set up for the initial placement phase. Resource tiles, number tokens, and the Robber are placed according to the rules. No settlements or roads have been placed.
@@ -442,21 +448,21 @@ This area focuses on verifying the accuracy and reliability of the Computer Visi
 
 \textbf{How test will be performed:} A set of 5 different, legally generated board setups will be used. For each setup, the system is fed the image, and the output $\GameState{}$ dictionary is inspected to ensure a 100\% match with the actual setup.
 
-\item{T.FR.CV.3.2\\}
+\item{\hypertarget{T.FR.CV.3.2}{T.FR.CV.3.2}\\}
 \textbf{Control:} Manual
 
 \textbf{Initial State:} A game is mid-play. Player A has 2 settlements, 1 city, 8 roads. The camera is slightly misaligned, causing a minor occlusion of one edge.
 
 \textbf{Input:} A captured image of the board with the occlusion.
 
-\textbf{Output:} The system successfully detects the presence of Player A's 2 settlements, 1 city, and 8 roads, correctly applying logical constraints to infer the state despite the occlusion. The system provides a diagnostic confidence metric ($\hyperref[FR.S.1.5]{FR.S.1.5}$) for the occluded area.
+\textbf{Output:} The system successfully detects the presence of Player A's 2 settlements, 1 city, and 8 roads, correctly applying logical constraints to infer the state despite the occlusion. The system provides a diagnostic confidence metric ($\hyperref[FR.S.1.5]{FR.S.1.5}$) for the occluded area, and must be $\leq 0.6$.
 
 \textbf{Test Case Derivation:} Verifies $\hyperref[FR.S.1.3]{FR.S.1.3}$ (Error Detection and Correction) and $\hyperref[FR.S.1.5]{FR.S.1.5}$ (Diagnostic Feedback) under sub-optimal real-world conditions.
 
 \textbf{How test will be performed:} Artificially introduce a small, known occlusion (e.g., a hand partially covering an intersection) in a mid-game state. Check that the digital state is correctly reconstructed and that the confidence metric correctly flags the occluded element as low-confidence/corrected.
 
 
-\item{T.FR.CV.3.3\\}
+\item{\hypertarget{T.FR.CV.3.3}{T.FR.CV.3.3}\\}
 \textbf{Control:} Manual
 
 \textbf{Initial State:} A standard, legal $\Catan{}$ board is set up.
@@ -480,30 +486,26 @@ c) The $\GameState{}$ Manager must use the \textit{corrected} state, not the ori
 The table below documents the explicit traceability between the defined system test cases ($\mathit{T.ID}$) and the specific requirements ($\mathit{Req.ID}$) they verify. This ensures that every functional and critical non-functional requirement is covered with appropriate redundancy, building confidence in the product if all tests pass.
 
 \begin{table}[h!]
-    \centering
-    \caption{Functional Requirement Test Case Traceability Matrix}
-    \label{tab:fr-system-test-traceability}
-    \begin{tabularx}{\textwidth}{|c|X|}
-    \hline
-    \textbf{Test Case ID} & \textbf{Requirements Verified (Subset)} \\
-    \hline
-    T.FR.AI.1.1 & $\hyperref[FR.S.3.1]{FR.S.3.1}$, $\hyperref[FR.S.3.2]{FR.S.3.2}$, $\hyperref[FR.S.2.1]{FR.S.2.1}$, $\hyperref[FR.S.2.5]{FR.S.2.5}$, $\hyperref[FR.Sa.3]{FR.Sa.3}$ \\
-    \hline
-    T.FR.AI.1.2 & $\hyperref[FR.S.3.1]{FR.S.3.1}$, $\hyperref[FR.S.3.4]{FR.S.3.4}$ \\
-    \hline
-    T.FR.AI.1.3 & $\hyperref[FR.S.2.1]{FR.S.2.1}$ \\
-    \hline
-    T.FR.UI.2.1 & $\hyperref[FR.S.4.1]{FR.S.4.1}$, $\hyperref[FR.S.4.2]{FR.S.4.2}$, $\hyperref[FR.S.5.1]{FR.S.5.1}$, $\hyperref[FR.S.5.2]{FR.S.5.2}$, $\hyperref[FR.S.6.1]{FR.S.6.1}$, $\hyperref[FR.S.7.4]{FR.S.7.4}$, $\hyperref[FR.S.7.2]{FR.S.7.2}$ \\
-    \hline
-    T.FR.UI.2.2 & $\hyperref[FR.S.5.5]{FR.S.5.5}$, $\hyperref[FR.S.7.3]{FR.S.7.3}$ \\
-    \hline
-    T.FR.CV.3.1 & $\hyperref[FR.S.1.2]{FR.S.1.2}$, $\hyperref[FR.S.7.1]{FR.S.7.1}$, $\hyperref[FR.S.7.2]{FR.S.7.2}$ \\
-    \hline
-    T.FR.CV.3.2 & $\hyperref[FR.S.1.3]{FR.S.1.3}$, $\hyperref[FR.S.1.5]{FR.S.1.5}$ \\
-    \hline
-    T.FR.CV.3.3 & $\hyperref[FR.Sa.1]{FR.Sa.1}$, $\hyperref[FR.S.7.4]{FR.S.7.4}$ \\
-    \hline
-    \end{tabularx}
+  \centering
+  \caption{Functional Requirement Test Case Traceability Matrix}
+  \label{tab:fr-system-test-traceability}
+  \begin{tabularx}{\textwidth}{|c|X|}
+  \hline
+  \textbf{Test Case ID} & \textbf{Requirements Verified (Subset)} \\
+  \hline
+  \hyperlink{T.FR.AI.1.1}{T.FR.AI.1.1} & $\hyperref[FR.S.3.1]{FR.S.3.1}$, $\hyperref[FR.S.3.2]{FR.S.3.2}$, $\hyperref[FR.S.2.1]{FR.S.2.1}$, $\hyperref[FR.S.2.5]{FR.S.2.5}$, $\hyperref[FR.Sa.3]{FR.Sa.3}$ \\
+  \hline
+  \hyperlink{T.FR.AI.1.2}{T.FR.AI.1.2} & $\hyperref[FR.S.3.1]{FR.S.3.1}$, $\hyperref[FR.S.3.4]{FR.S.3.4}$ \\
+  \hline
+  \hyperlink{T.FR.AI.1.3}{T.FR.AI.1.3} & $\hyperref[FR.S.2.1]{FR.S.2.1}$ \\
+  \hline
+  \hyperlink{T.FR.UI.2.1}{T.FR.UI.2.1} & $\hyperref[FR.S.4.1]{FR.S.4.1}$, $\hyperref[FR.S.4.2]{FR.S.4.2}$, $\hyperref[FR.S.5.1]{FR.S.5.1}$, $\hyperref[FR.S.5.2]{FR.S.5.2}$, $\hyperref[FR.S.6.1]{FR.S.6.1}$, $\hyperref[FR.S.7.4]{FR.S.7.4}$, $\hyperref[FR.S.7.2]{FR.S.7.2}$ \\
+  \hline
+  \hyperlink{T.FR.UI.2.2}{T.FR.UI.2.2} & $\hyperref[FR.S.5.5]{FR.S.5.5}$, $\hyperref[FR.S.7.3]{FR.S.7.3}$ \\
+  \hline
+  \hyperlink{T.FR.CV.3.1}{T.FR.CV.3.1} & $\hyperref[FR.S.1.2]{FR.S.1.2}$, $\hyperref[FR.S.7.1]{FR.S.7.1}$, $\hyperref[FR.S.7.2]{FR.S.7.2}$ \\
+  \hline
+  \end{tabularx}
 \end{table}
 
 \section{Tests for Nonfunctional Requirements}
@@ -516,23 +518,53 @@ Accuracy-related nonfunctional qualities are validated implicitly through the fu
 
 \subsection{Performance and Scalability}
 
-This area ensures the RLCatan system maintains acceptable responsiveness and throughput when supporting multiple concurrent games.
+This area ensures acceptable responsiveness and throughput under varying load.
 
-\textbf{Test Case: Scalability and Response Time Evaluation}
+\textbf{Test Case: Baseline Performance}
 
 \begin{enumerate}
-\item T.NFR.P.1 \\
+\item{\hypertarget{T.NFR.P.1}{T.NFR.P.1}\\}
 \textbf{Control:} Automatic
 
-\textbf{Initial State:} The RLCatan server is running the complete software stack ($\AI{}$, $\CV{}$, Database, UI).
+\textbf{Initial State:} RLCatan server running full stack with no concurrent load.
 
-\textbf{Input/Condition:} Simulate 1, 3, and 5 concurrent games using the $\RL{}$ environment and mock UI clients.
+\textbf{Input/Condition:} Single 4-player game with standard actions (build, trade, roll dice, 100+ repetitions).
 
-\textbf{Output/Result:} Average response time per game, CPU load, and memory usage are measured and summarized in a graph.
+\textbf{Performance Thresholds:}
+\begin{itemize}
+    \item AI Move Suggestion: $\leq 500$ms avg, $\leq 750$ms peak
+    \item Board State Update: $\leq 200$ms avg, $\leq 300$ms peak
+    \item UI Render: $\leq 50$ms/frame
+\end{itemize}
 
-\textbf{Test Case Derivation:} Verifies NFR.S.1 (Scalability) by demonstrating that response time increases sub-linearly with load.
+\textbf{How tested:} Automated with server-side logging and Chrome DevTools Performance API.
 
-\textbf{How test will be performed:} Automated load-testing scripts measure latency between GameState updates and $\AI{}$ recommendations. Results are summarized in a table of performance metrics versus number of sessions.
+\textbf{Trace:} NFR.S.1
+\end{enumerate}
+
+\textbf{Test Case: Scalability Under Load}
+
+\begin{enumerate}
+\item{\hypertarget{T.NFR.P.2}{T.NFR.P.2}\\}
+\textbf{Control:} Automatic
+
+\textbf{Initial State:} RLCatan server running full stack.
+
+\textbf{Input/Condition:} Simulate 1, 3, and 5 concurrent games.
+Measure response time scaling.
+
+\textbf{Scalability Thresholds (Sub-Linear Growth):}
+\begin{itemize}
+    \item Response time at 3 games $\leq 1.5 \times$ single game
+    \item Response time at 5 games $\leq 2.0 \times$ single game
+    \item CPU utilization $\leq 80\%$ at 5 games
+    \item No memory leaks or OOM errors over 1+ hour
+\end{itemize}
+
+\textbf{How tested:} Automated load-testing scripts with system monitoring.
+Pass if all thresholds met.
+
+\textbf{Trace:} NFR.S.1
 \end{enumerate}
 
 \subsection{Usability}
@@ -542,7 +574,7 @@ This area focuses on confirming that the interface is intuitive and accessible t
 \textbf{Test Case: Usability Survey and User Feedback}
 
 \begin{enumerate}
-\item T.NFR.U.1 \\
+\item{\hypertarget{T.NFR.U.1}{T.NFR.U.1}\\}
 \textbf{Control:} Manual
 
 \textbf{Initial State:} Final prototype deployed in a browser.
@@ -559,7 +591,7 @@ This area focuses on confirming that the interface is intuitive and accessible t
 \textbf{Test Case: Accessibility and Visual Clarity}
 
 \begin{enumerate}
-\item T.NFR.U.2 \\
+\item{\hypertarget{T.NFR.U.2}{T.NFR.U.2}\\}
 \textbf{Control:} Manual
 
 \textbf{Initial State:} RLCatan UI loaded in browser.
@@ -580,7 +612,7 @@ This area ensures the modular design and structure of the codebase support effic
 \textbf{Test Case: Code Quality and Modular Design Inspection}
 
 \begin{enumerate}
-\item T.NFR.M.1 \\
+\item{\hypertarget{T.NFR.M.1}{T.NFR.M.1}\\}
 \textbf{Control:} Static
 
 \textbf{Initial State:} Complete source code committed to GitHub.
@@ -601,7 +633,7 @@ This area validates that RLCatan installs and operates correctly across all supp
 \textbf{Test Case: Cross-Platform Installation Validation}
 
 \begin{enumerate}
-\item T.NFR.I.1 \\
+\item{\hypertarget{T.NFR.I.1}{T.NFR.I.1}\\}
 \textbf{Control:} Manual
 
 \textbf{Initial State:} Packaged release available.
@@ -622,7 +654,7 @@ This area ensures that the Game State Database maintains consistent, valid, and 
 \textbf{Test Case: Transaction Integrity and Recovery}
 
 \begin{enumerate}
-\item T.NFR.D.1 \\
+\item{\hypertarget{T.NFR.D.1}{T.NFR.D.1}\\}
 \textbf{Control:} Automatic
 
 \textbf{Initial State:} Active game session connected to the database.
@@ -639,7 +671,7 @@ This area ensures that the Game State Database maintains consistent, valid, and 
 \textbf{Test Case: Data Validation on Updates}
 
 \begin{enumerate}
-\item T.NFR.D.2 \\
+\item{\hypertarget{T.NFR.D.2}{T.NFR.D.2}\\}
 \textbf{Control:} Automatic
 
 \textbf{Initial State:} Active game session connected to the database.
@@ -656,7 +688,7 @@ This area ensures that the Game State Database maintains consistent, valid, and 
 \textbf{Test Case: Concurrent Update Handling}
 
 \begin{enumerate}
-\item T.NFR.D.3 \\
+\item{\hypertarget{T.NFR.D.3}{T.NFR.D.3}\\}
 \textbf{Control:} Automatic
 
 \textbf{Initial State:} Two or more simultaneous game sessions active.
@@ -678,14 +710,14 @@ This area verifies that the system automatically recovers from failures within o
 \textbf{Test Case: System Failure and Auto-Recovery}
 
 \begin{enumerate}
-\item T.NFR.AV.1 \\
+\item{\hypertarget{T.NFR.AV.1}{T.NFR.AV.1}\\}
 \textbf{Control:} Manual
 
 \textbf{Initial State:} System running with active game session.
 
 \textbf{Input/Condition:} Force a server crash or database disconnect mid-turn.
 
-\textbf{Output/Result:} System restarts and restores previous game state within 60~seconds.
+\textbf{Output/Result:} System restarts and restores previous game state within 60~seconds. If recovery fails within 60 seconds, the system must load the last valid checkpoint and log a recovery failure event.
 
 \textbf{Test Case Derivation:} Verifies NFR.S.6 (Availability) by measuring recovery time following induced failure.
 
@@ -703,28 +735,31 @@ These tests report relative error between predicted and expected outcomes. No se
 
 \subsection{Traceability Between Test Cases and Requirements }
 
+This subsection is limited to non-functional requirement traceability; the functional requirement traceability matrix is presented earlier in the Functional Requirements tests section.
+
 \begin{table}[H]
   \centering
   \caption{Non-Functional Requirement Test Case Traceability Matrix}
   \label{tab:nfr-system-test-traceability}
-  \begin{tabular}{|l|l|}
+  \begin{tabularx}{\textwidth}{|l|X|}
     \hline
     \textbf{Test Case ID} & \textbf{Requirement(s) Verified} \\ \hline
-    T.NFR.P.1   & NFR.S.1 -- Scalability \\ \hline
-    T.NFR.U.1   & NFR.S.2 -- Usability \\ \hline
-    T.NFR.U.2   & NFR.S.2 -- Accessibility \\ \hline
-    T.NFR.M.1   & NFR.S.3 -- Maintainability \\ \hline
-    T.NFR.I.1   & NFR.S.4 -- Installability \\ \hline
-    T.NFR.D.1   & NFR.S.5 -- Data Integrity \\ \hline
-    T.NFR.D.2   & NFR.S.5 -- Data Integrity \\ \hline
-    T.NFR.D.3   & NFR.S.5 -- Data Integrity \\ \hline
-    T.NFR.AV.1  & NFR.S.6 -- Availability \\ \hline
-  \end{tabular}
+    \hyperlink{T.NFR.P.1}{T.NFR.P.1}   & NFR.S.1 -- Scalability \\ \hline
+    \hyperlink{T.NFR.U.1}{T.NFR.U.1}   & NFR.S.2 -- Usability \\ \hline
+    \hyperlink{T.NFR.U.2}{T.NFR.U.2}   & NFR.S.2 -- Accessibility \\ \hline
+    \hyperlink{T.NFR.M.1}{T.NFR.M.1}   & NFR.S.3 -- Maintainability \\ \hline
+    \hyperlink{T.NFR.I.1}{T.NFR.I.1}   & NFR.S.4 -- Installability \\ \hline
+    \hyperlink{T.NFR.D.1}{T.NFR.D.1}   & NFR.S.5 -- Data Integrity \\ \hline
+    \hyperlink{T.NFR.D.2}{T.NFR.D.2}   & NFR.S.5 -- Data Integrity \\ \hline
+    \hyperlink{T.NFR.D.3}{T.NFR.D.3}   & NFR.S.5 -- Data Integrity \\ \hline
+    \hyperlink{T.NFR.AV.1}{T.NFR.AV.1}  & NFR.S.6 -- Availability \\ \hline
+  \end{tabularx}
 \end{table}
 
 
 \section{Unit Test Description}
 This section is to be completed after the MIS (detailed design document) has been completed.
+
 
 \begin{comment}
 \wss{This section should not be filled in until after the MIS (detailed design
@@ -977,7 +1012,7 @@ graduate attribute of Lifelong Learning.
     This felt far less stressful and complicated than the SRS since we now have a solid grasp on what project we are creating, and what the limitations and goals are for our project.
     As we continue to add more documentation, I feel this process will become even more frictionless as the project becomes even more well developed and thought out.
     \item This document felt rather painless compared to the previous SRS.
-    All of the techniques used to build this document, such as battling with LaTeX, were already encountered in the design of the previous SRS.
+    All of the techniques used to battle with LaTeX to build this document, were already encountered in the design of the previous SRS.
     This document felt more like an extension of the SRS, which meant that many of the issues that I faced here, I already encountered before.
     As we create more of these documents, our mastery increases, and with that comes the experience of dealing with pain points, so I think going forward, I expect to see even less friction when making the next document.
     \item I will acquire and lead these human-centric methods by developing and piloting custom checklists for the project's interfaces.

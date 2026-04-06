@@ -4,12 +4,19 @@ import "./PlayerStateBox.scss";
 import { type Color, type PlayerState } from "../utils/api.types";
 import ResourceCards from "./ResourceCards";
 
-export default function PlayerStateBox({ playerState, playerKey, color }: {
-  playerState: PlayerState; playerKey: string; color: Color }) {
+export default function PlayerStateBox({ playerState, playerKey, color, botName }: {
+  playerState: PlayerState; playerKey: string; color: Color; botName?: string }) {
   const actualVps = playerState[`${playerKey}_ACTUAL_VICTORY_POINTS`];
   return (
     <div className={cn("player-state-box foreground", color)}>
-      <ResourceCards playerState={playerState} playerKey={playerKey} />
+      <div className="player-header">
+        {botName && (
+          <div className="bot-name">
+            <small>{botName}</small>
+          </div>
+        )}
+        <ResourceCards playerState={playerState} playerKey={playerKey} />
+      </div>
       <div className="scores">
         <div
           className={cn("num-knights center-text", {

@@ -27,7 +27,7 @@ import ResourceCards from "../components/ResourceCards";
 import ResourceSelector from "../components/ResourceSelector";
 import { store } from "../store";
 import ACTIONS from "../actions";
-import type { GameAction, ResourceCard } from "../utils/api.types"; // Add GameState to the import, adjust path if needed
+import type { Color, GameAction, ResourceCard } from "../utils/api.types";
 import { getHumanColor, playerKey } from "../utils/stateUtils";
 import { postAction } from "../utils/apiClient";
 import { humanizeTradeAction } from "../utils/promptUtils";
@@ -36,7 +36,70 @@ import "./ActionsToolbar.scss";
 import { useSnackbar } from "notistack";
 import { dispatchSnackbar } from "../components/Snackbar";
 
-function PlayButtons() {
+import diceIcon from "../assets/dice.svg";
+import robberIcon from "../assets/robber.svg";
+
+const DICE_PIP_LAYOUTS: Record<number, string[]> = {
+  1: ["center"],
+  2: ["top-left", "bottom-right"],
+  3: ["top-left", "center", "bottom-right"],
+  4: ["top-left", "top-right", "bottom-left", "bottom-right"],
+  5: ["top-left", "top-right", "center", "bottom-left", "bottom-right"],
+  6: [
+    "top-left",
+    "top-right",
+    "middle-left",
+    "middle-right",
+    "bottom-left",
+    "bottom-right",
+  ],
+};
+
+function DiceFace({ value }: { value: number }) {
+  return (
+    <div className="dice-roll-face">
+      {DICE_PIP_LAYOUTS[value]?.map((position) => (
+        <span
+          key={`${value}-${position}`}
+          className={`dice-roll-pip ${position}`}
+        />
+      ))}
+    </div>
+  );
+}
+
+function DiceRollPreview({
+  values,
+  rollerColor,
+}: {
+  values: [number, number];
+  rollerColor: Color;
+}) {
+  const total = values[0] + values[1];
+
+  return (
+    <div
+      className={`dice-roll-preview roller-${rollerColor.toLowerCase()}`}
+      aria-hidden="true"
+    >
+      <div className="dice-roll-total">{total}</div>
+      <div className="dice-roll-values">
+        {values.map((value, index) => (
+          <DiceFace key={`${value}-${index}`} value={value} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+type DicePreviewState = {
+  values: [number, number];
+  rollerColor: Color;
+  rollId: number;
+  anchor: "turn-action" | "toolbar";
+};
+
+function PlayButtons({ dicePreview }: { dicePreview: DicePreviewState | null }) {
   const { gameId } = useParams();
   if (!gameId) {
     console.error("Game ID is not found in URL parameters.");
@@ -50,7 +113,8 @@ function PlayButtons() {
     memoize((action?: GameAction) => async () => {
       const gameState = await postAction(gameId, action);
       dispatch({ type: ACTIONS.SET_GAME_STATE, data: gameState });
-      dispatchSnackbar(enqueueSnackbar, closeSnackbar, gameState);
+      // Commented out dispatchSnackbar
+      // dispatchSnackbar(enqueueSnackbar, closeSnackbar, gameState);
     }),
     [enqueueSnackbar, closeSnackbar]
   );
@@ -86,11 +150,18 @@ function PlayButtons() {
       .filter((action) => action[1] === "PLAY_YEAR_OF_PLENTY")
       .map((action) => action[2]);
   }, [gameState.current_playable_actions]);
+  const getDiscardOptions = useCallback(() => {
+    return gameState.current_playable_actions
+      .filter((action) => action[1] === "DISCARD" && action[2] !== null)
+      .map((action) => action[2] as ResourceCard);
+  }, [gameState.current_playable_actions]);
   const handleResourceSelection = useCallback(
     async (selectedResources: ResourceCard | ResourceCard[]) => {
       setResourceSelectorOpen(false);
       let action: GameAction;
-      if (isPlayingMonopoly) {
+      if (isDiscard) {
+        action = [humanColor, "DISCARD", selectedResources as ResourceCard];
+      } else if (isPlayingMonopoly) {
         action = [
           humanColor,
           "PLAY_MONOPOLY",
@@ -116,6 +187,7 @@ function PlayButtons() {
       dispatch,
       enqueueSnackbar,
       closeSnackbar,
+      isDiscard,
       isPlayingMonopoly,
       isPlayingYearOfPlenty,
     ]
@@ -230,10 +302,11 @@ function PlayButtons() {
     dispatch({ type: ACTIONS.SET_IS_MOVING_ROBBER });
   }, [dispatch]);
   const rollAction = carryOutAction([humanColor, "ROLL", null]);
-  const proceedAction = carryOutAction();
   const endTurnAction = carryOutAction([humanColor, "END_TURN", null]);
+
   return (
     <>
+      {/* USE Button */}
       <OptionsButton
         disabled={playableDevCardTypes.size === 0 || isPlayingDevCard}
         menuListId="use-menu-list"
@@ -242,6 +315,8 @@ function PlayButtons() {
       >
         Use
       </OptionsButton>
+
+      {/* BUY Button */}
       <OptionsButton
         disabled={buildActionTypes.size === 0 || isPlayingDevCard}
         menuListId="build-menu-list"
@@ -250,6 +325,8 @@ function PlayButtons() {
       >
         Buy
       </OptionsButton>
+
+      {/* TRADE Button */}
       <OptionsButton
         disabled={tradeItems.length === 0 || isPlayingDevCard}
         menuListId="trade-menu-list"
@@ -258,33 +335,55 @@ function PlayButtons() {
       >
         Trade
       </OptionsButton>
-      <Button
-        disabled={gameState.is_initial_build_phase || isRoadBuilding}
-        variant="contained"
-        color="primary"
-        startIcon={<NavigateNextIcon />}
-        onClick={
-          isDiscard
-            ? proceedAction
+
+      {/* END Button */}
+      <div className="turn-action-wrapper">
+        {dicePreview?.anchor === "turn-action" && (
+          <DiceRollPreview
+            key={dicePreview.rollId}
+            values={dicePreview.values}
+            rollerColor={dicePreview.rollerColor}
+          />
+        )}
+        <Button
+          className="turn-action-btn"
+          disabled={gameState.is_initial_build_phase || isRoadBuilding}
+          variant="contained"
+          color="secondary"
+          startIcon={
+            isRoll ? (
+              <img src={diceIcon} style={{ width: 24, height: 24 }} alt="roll" />
+            ) : isMoveRobber ? (
+              <img
+                src={robberIcon}
+                style={{ width: 24, height: 24 }}
+                alt="robber"
+              />
+            ) : (
+              <NavigateNextIcon />
+            )
+          }
+          onClick={
+            isDiscard || isPlayingYearOfPlenty || isPlayingMonopoly
+              ? handleOpenResourceSelector
+              : isMoveRobber
+              ? setIsMovingRobber
+              : isRoll
+              ? rollAction
+              : endTurnAction
+          }
+        >
+          {isDiscard
+            ? "DISCARD"
             : isMoveRobber
-            ? setIsMovingRobber
+            ? "ROB"
             : isPlayingYearOfPlenty || isPlayingMonopoly
-            ? handleOpenResourceSelector
+            ? "SELECT"
             : isRoll
-            ? rollAction
-            : endTurnAction
-        }
-      >
-        {isDiscard
-          ? "DISCARD"
-          : isMoveRobber
-          ? "ROB"
-          : isPlayingYearOfPlenty || isPlayingMonopoly
-          ? "SELECT"
-          : isRoll
-          ? "ROLL"
-          : "END"}
-      </Button>
+            ? "ROLL"
+            : "END"}
+        </Button>
+      </div>
       <ResourceSelector
         open={resourceSelectorOpen}
         onClose={() => {
@@ -292,9 +391,15 @@ function PlayButtons() {
           dispatch({ type: ACTIONS.CANCEL_MONOPOLY });
           dispatch({ type: ACTIONS.CANCEL_YEAR_OF_PLENTY });
         }}
-        options={getValidYearOfPlentyOptions()}
+        options={isDiscard ? getDiscardOptions() : getValidYearOfPlentyOptions()}
         onSelect={handleResourceSelection}
-        mode={isPlayingMonopoly ? "monopoly" : "yearOfPlenty"}
+        mode={
+          isDiscard
+            ? "discard"
+            : isPlayingMonopoly
+            ? "monopoly"
+            : "yearOfPlenty"
+        }
       />
     </>
   );
@@ -309,6 +414,8 @@ export default function ActionsToolbar({
 }) {
   const { state, dispatch } = useContext(store);
   const { gameState } = state;
+  const [dicePreview, setDicePreview] = useState<DicePreviewState | null>(null);
+  const latestAnimatedRollRef = useRef<number>(-1);
   if (gameState === null) {
     console.error("No gameState found...");
     return null;
@@ -320,58 +427,81 @@ export default function ActionsToolbar({
     });
   }, [dispatch]);
 
-  const openRightDrawer = useCallback(() => {
-    dispatch({
-      type: ACTIONS.SET_RIGHT_DRAWER_OPENED,
-      data: true,
-    });
-  }, [dispatch]);
+  // NOTE: right-drawer is opened via the fixed blue tab in GameScreen; toolbar should not provide another open control.
 
   const botsTurn = gameState.bot_colors.includes(gameState.current_color);
   const humanColor = getHumanColor(gameState);
+  const showPrompt = botsTurn || Boolean(gameState.winning_color);
+  const preserveMobileToolbarSpace = showPrompt && !replayMode;
+
+  useEffect(() => {
+    if (!gameState.actions.length) {
+      return;
+    }
+
+    const latestActionIndex = gameState.actions.length - 1;
+    if (latestAnimatedRollRef.current === latestActionIndex) {
+      return;
+    }
+
+    const latestAction = gameState.actions[latestActionIndex];
+    if (latestAction[1] !== "ROLL" || latestAction[2] === null) {
+      return;
+    }
+
+    latestAnimatedRollRef.current = latestActionIndex;
+    setDicePreview({
+      values: latestAction[2],
+      rollerColor: latestAction[0],
+      rollId: latestActionIndex,
+      anchor: !showPrompt && !replayMode ? "turn-action" : "toolbar",
+    });
+  }, [gameState.actions, replayMode, showPrompt]);
+
   return (
     <>
       <div className="state-summary">
-        <Hidden breakpoint={{ size: "md", direction: "up" }}>
-          <Button className="open-drawer-btn" onClick={openLeftDrawer}>
-            <ChevronLeftIcon />
-          </Button>
-        </Hidden>
+        <div className="hide-on-mobile">
+          <Hidden breakpoint={{ size: "md", direction: "up" }}>
+            <Button className="open-drawer-btn" onClick={openLeftDrawer}>
+              <ChevronLeftIcon />
+            </Button>
+          </Hidden>
+        </div>
         {humanColor && (
           <ResourceCards
             playerState={gameState.player_state}
             playerKey={playerKey(gameState, humanColor)}
+            size="large"
           />
         )}
-        <Hidden breakpoint={{ size: "lg", direction: "up" }}>
-          <Button
-            className="open-drawer-btn"
-            onClick={openRightDrawer}
-            style={{ marginLeft: "auto" }}
-          >
-            <ChevronRightIcon />
-          </Button>
-        </Hidden>
+        {/* No right-drawer open control in toolbar (desktop only blue tab in GameScreen handles it). */}
       </div>
-      <div className="actions-toolbar">
-        {!(botsTurn || gameState.winning_color) && !replayMode && (
-          <PlayButtons />
+      <div
+        className="actions-toolbar"
+      >
+        {dicePreview?.anchor === "toolbar" && (
+          <DiceRollPreview
+            key={dicePreview.rollId}
+            values={dicePreview.values}
+            rollerColor={dicePreview.rollerColor}
+          />
         )}
-        {(botsTurn || gameState.winning_color) && (
-          <Prompt gameState={gameState} isBotThinking={isBotThinking} />
-        )}
-        {/* <Button
-          disabled={disabled}
-          className="confirm-btn"
-          variant="contained"
-          color="primary"
-          onClick={onTick}
+        <div
+          className={`actions-toolbar-content${
+            preserveMobileToolbarSpace ? " mobile-transparent" : ""
+          }`}
         >
-          Ok
-        </Button> */}
-
-        {/* <Button onClick={zoomIn}>Zoom In</Button>
-      <Button onClick={zoomOut}>Zoom Out</Button> */}
+          {!showPrompt && !replayMode && (
+            <div className="play-buttons-group">
+              <PlayButtons dicePreview={dicePreview} />
+            </div>
+          )}
+          {showPrompt && (
+            <Prompt gameState={gameState} isBotThinking={isBotThinking} />
+          )}
+          {/* Toolbar intentionally does not duplicate right-drawer content. */}
+        </div>
       </div>
     </>
   );
@@ -399,7 +529,7 @@ function OptionsButton({
   disabled,
 }: OptionsButtonProps) {
   const [open, setOpen] = useState(false);
-  const anchorRef = useRef<HTMLAnchorElement>(null);
+  const anchorRef = useRef<HTMLButtonElement>(null);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -438,7 +568,7 @@ function OptionsButton({
       <Button
         disabled={disabled}
         ref={anchorRef}
-        href="#"
+        type="button"
         aria-controls={open ? menuListId : undefined}
         aria-haspopup="true"
         variant="contained"
@@ -454,7 +584,6 @@ function OptionsButton({
         anchorEl={anchorRef.current}
         role={undefined}
         transition
-        disablePortal
       >
         {({ TransitionProps, placement }) => (
           <Grow

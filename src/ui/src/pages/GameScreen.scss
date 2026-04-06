@@ -1,11 +1,167 @@
 @use "../variables.scss";
 
+$game-surface-gradient:
+  radial-gradient(circle at top, rgb(41 107 198 / 16%), transparent 34%),
+  linear-gradient(180deg, #06090d 0%, #10161d 52%, #0c1218 100%);
+
 .MuiToolbar-root {
   background: variables.$black;
 }
 
 h6.MuiTypography-h6 {
   font-family: "Bungee Inline", sans-serif;
+}
+
+.game-analysis-panel {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+
+  .right-drawer-card-body {
+    padding: 0;
+  }
+}
+
+.winner-modal-paper {
+  background: linear-gradient(180deg, rgb(14 18 24 / 98%), rgb(9 13 18 / 98%)) !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px !important;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.45) !important;
+}
+
+.winner-modal-content {
+  padding: 24px 24px 18px !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.winner-modal-icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  color: #ffd54f;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 213, 79, 0.3), rgba(255, 213, 79, 0.08));
+}
+
+.winner-modal-title {
+  font-size: 0.82rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.winner-modal-name {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-size: 1.55rem;
+  font-weight: 700;
+}
+
+.winner-modal-color {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.08);
+
+  &.red {
+    color: variables.$red;
+  }
+
+  &.blue {
+    color: variables.$blue;
+  }
+
+  &.orange {
+    color: variables.$orange;
+  }
+
+  &.white {
+    color: variables.$white;
+  }
+}
+
+.winner-modal-stats {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.winner-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 78px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  strong {
+    font-size: 1.35rem;
+    line-height: 1;
+  }
+
+  span {
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.66);
+  }
+}
+
+.winner-modal-actions {
+  padding: 0 24px 20px !important;
+  justify-content: center !important;
+  gap: 8px;
+}
+
+@media (max-width: variables.$md-breakpoint) {
+  .winner-modal-content {
+    padding: 20px 16px 14px !important;
+  }
+
+  .winner-modal-name {
+    font-size: 1.28rem;
+  }
+
+  .winner-modal-stats {
+    gap: 8px;
+  }
+
+  .winner-stat {
+    min-height: 66px;
+
+    strong {
+      font-size: 1.1rem;
+    }
+
+    span {
+      font-size: 0.62rem;
+    }
+  }
+
+  .winner-modal-actions {
+    padding: 0 16px 16px !important;
+  }
 }
 
 @media (min-width: 600px) {
@@ -48,7 +204,7 @@ main {
     text-align: center;
   }
 
-  background: variables.$black;
+  background: $game-surface-gradient;
   color: white;
   height: 100%;
   display: flex;
@@ -113,5 +269,305 @@ main {
     .board-container {
       margin-left: 140px;
     }
+  }
+}
+
+/* Mobile Layout Adaptation */
+
+.desktop-layout {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.mobile-layout {
+  display: none;
+}
+
+@media (max-width: variables.$md-breakpoint) {
+  // Reset main padding for mobile layout
+  main {
+      padding-left: 0 !important;
+      .board-container {
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+      }
+  }
+
+  .desktop-layout {
+    display: none !important;
+  }
+
+  .mobile-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+
+    .mobile-top-half {
+      flex: 1;
+      height: 65%;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      
+      .logo {
+         position: relative; // Static flow
+         height: 35px; // Slightly smaller height
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         margin: 0;
+         padding: 0;
+         z-index: 100;
+         text-shadow: 0 0 4px black;
+         font-size: 1.4rem;
+         line-height: 1;
+      }
+      
+      // Target the wrapper div we added in GameScreen.tsx to ensure flex flow
+      .zoomable-wrapper {
+        flex: 1;
+        position: relative;
+        overflow: hidden;
+        margin-top: 0; // Removed extra spacing
+      }
+      
+      // Ensure inner board container fills the wrapper
+      .board-container {
+         position: absolute; // Fill parent wrapper
+         width: 100%;
+         height: 100% !important; 
+         top: 0 !important;
+         left: 0 !important;
+         z-index: 1;
+         align-items: flex-start !important;
+      }
+    }
+
+    // HUD: Resource Cards Overlay (Always top)
+    .state-summary {
+       position: absolute;
+       top: 40px; // Starts below logo
+       width: 100%;
+       z-index: 200; // High z-index to sit on top of everything
+       pointer-events: none;
+       display: flex;
+       justify-content: center;
+
+       .resource-cards.large {
+         display: none;
+       }
+       
+       .open-drawer-btn {
+         display: none;
+       }
+       
+       > * {
+          pointer-events: auto;
+       }
+    }
+
+    .mobile-bottom-half {
+      flex: 1;
+      height: 35%;
+      display: flex;
+      flex-direction: column;
+      background: $game-surface-gradient;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+
+      // Controls (Buttons / Prompts) inside bottom half
+      .actions-toolbar {
+         position: relative;
+         width: 100%;
+         z-index: 10;
+         pointer-events: auto;
+         // Override absolute defaults if needed
+         bottom: auto;
+         left: auto;
+      }
+
+      .mobile-drawers-row {
+        flex: 1;
+        display: flex;
+        flex-direction: row;
+        overflow: hidden;
+        min-height: 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+
+        /* Left column: 50% width, stacked layout */
+        .mobile-left-drawer-content {
+          flex: 1 1 50%;
+          display: flex;
+          flex-direction: column;
+          min-height: 0;
+          overflow: hidden;
+          border-right: 1px solid rgba(255, 255, 255, 0.12);
+
+          .mobile-left-top {
+            flex: 0 0 auto;
+            padding: 2px 6px 0 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+
+            &.collapsed {
+              .mobile-player-panel {
+                max-height: 0;
+                opacity: 0;
+                margin-top: 0;
+              }
+            }
+          }
+
+          .mobile-player-toggle {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+            padding: 5px 8px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.06);
+            color: white;
+            font: inherit;
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            line-height: 1;
+          }
+
+          .mobile-player-toggle-icon {
+            transition: transform 0.2s ease;
+
+            &.open {
+              transform: rotate(180deg);
+            }
+          }
+
+          .mobile-player-panel {
+            overflow: hidden;
+            max-height: 420px;
+            opacity: 1;
+            transition: max-height 0.22s ease, opacity 0.18s ease, margin-top 0.18s ease;
+          }
+
+          .mobile-left-bottom {
+            flex: 1 1 auto;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            padding: 6px;
+            box-sizing: border-box;
+
+            .log {
+              flex: 1 1 auto;
+              min-height: 0;
+            }
+          }
+        }
+
+        /* Right column: 50% width, fill and scroll for explanation content */
+        .mobile-right-drawer-content {
+          flex: 1 1 50%;
+          overflow-y: auto;
+          background: $game-surface-gradient;
+          padding: 2px 4px;
+          -webkit-overflow-scrolling: touch;
+        }
+      }
+
+      .mobile-action-log {
+        flex: 1; 
+        min-height: 100px;
+        background-color: rgba(0,0,0,0.2);
+        padding: 5px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+
+        .log {
+            flex: 1;
+            height: 100%;
+            overflow-y: auto;
+        }
+      }
+
+      .watch-replay-button {
+        font-size: 0.65rem;
+      }
+    }
+  }
+}
+
+/* Mobile explanation overlay (appears in the mobile-bottom-half area) */
+.mobile-explanation-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; // covers the mobile-bottom-half container
+  background: $game-surface-gradient;
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  border-top: 2px solid variables.$blue;
+  animation: slideUp 0.28s ease-out;
+  padding: 8px;
+  box-sizing: border-box;
+
+  .overlay-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 8px;
+    background: rgba(0,0,0,0.12);
+    border-radius: 6px;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+
+  .overlay-content {
+    padding: 8px;
+    overflow-y: auto;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: white;
+    flex: 1;
+  }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+// Optionally style clickable log entries across left-drawer and mobile log
+.left-drawer .log.explain-mode-active,
+.log.explain-mode-active {
+  .action.clickable {
+    cursor: pointer;
+  }
+}
+
+.game-screen-main {
+  background: $game-surface-gradient;
+
+  .right-drawer .MuiDrawer-paper {
+    background: $game-surface-gradient;
+  }
+}
+
+/* Hide on mobile for drawers */
+@media (max-width: variables.$md-breakpoint) {
+  .hide-on-mobile {
+    display: none !important;
   }
 }

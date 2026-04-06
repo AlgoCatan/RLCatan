@@ -1,1386 +1,1900 @@
-% THIS DOCUMENT IS TAILORED TO REQUIREMENTS FOR SCIENTIFIC COMPUTING.  IT SHOULDN'T
-% BE USED FOR NON-SCIENTIFIC COMPUTING PROJECTS
-\documentclass[12pt]{article}
-
-\usepackage{amsmath, mathtools}
-\usepackage{amsfonts}
-\usepackage{amssymb}
-\usepackage{graphicx}
-\usepackage{colortbl}
-\usepackage{xr}
-\usepackage{hyperref}
-\usepackage{longtable}
-\usepackage{xfrac}
+\documentclass{article}
 \usepackage{tabularx}
-\usepackage{float}
-\usepackage{siunitx}
 \usepackage{booktabs}
-\usepackage{caption}
+\usepackage{amsfonts}
+\usepackage{amsopn}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{amstext}
+\usepackage{zed-csp}
+\usepackage{placeins}
 \usepackage{pdflscape}
-\usepackage{afterpage}
+\usepackage{caption}
+\usepackage{hyperref}
+% ===== External links (used only inside Glossary) =====
+\newcommand{\CatanExt}{\href{https://en.wikipedia.org/wiki/Catan}{Catan}}
+\newcommand{\AIExt}{\href{https://en.wikipedia.org/wiki/Artificial_intelligence}{AI}}
+\newcommand{\RLExt}{\href{https://www.ibm.com/think/topics/reinforcement-learning}{RL}}
+\newcommand{\DigitalTwinExt}{\href{https://en.wikipedia.org/wiki/Digital_twin}{Digital Twin}}
+\newcommand{\CVExt}{\href{https://www.ibm.com/think/topics/computer-vision}{CV}}
+\newcommand{\LLMExt}{\href{https://www.cloudflare.com/learning/ai/what-is-large-language-model/}{LLM}}
+\newcommand{\GameStateExt}{\href{https://milvus.io/ai-quick-reference/what-is-a-state-in-rl}{Game State}}
+\newcommand{\EloExt}{\href{https://en.wikipedia.org/wiki/Elo_rating_system}{Elo}}
+\newcommand{\CurriculumLearningExt}{\href{https://en.wikipedia.org/wiki/Curriculum_learning}{Curriculum Learning}}
+\newcommand{\ExperientialLearningExt}{\href{https://en.wikipedia.org/wiki/Experiential_learning}{Experiential Learning}}
 
-\usepackage[round]{natbib}
 
-%\usepackage{refcheck}
+\title{Software Requirements Specification for RLCatan\\\progname}
 
-\hypersetup{
-    bookmarks=true,         % show bookmarks bar?
-      colorlinks=true,       % false: boxed links; true: colored links
-    linkcolor=red,          % color of internal links (change box color with linkbordercolor)
-    citecolor=green,        % color of links to bibliography
-    filecolor=magenta,      % color of file links
-    urlcolor=cyan           % color of external links
-}
+\author{\authname}
+
+\date{}
 
 \input{../Comments}
 \input{../Common}
 
-% For easy change of table widths
-\newcommand{\colZwidth}{1.0\textwidth}
-\newcommand{\colAwidth}{0.13\textwidth}
-\newcommand{\colBwidth}{0.82\textwidth}
-\newcommand{\colCwidth}{0.1\textwidth}
-\newcommand{\colDwidth}{0.05\textwidth}
-\newcommand{\colEwidth}{0.8\textwidth}
-\newcommand{\colFwidth}{0.17\textwidth}
-\newcommand{\colGwidth}{0.5\textwidth}
-\newcommand{\colHwidth}{0.28\textwidth}
-
-% Used so that cross-references have a meaningful prefix
-\newcounter{defnum} %Definition Number
-\newcommand{\dthedefnum}{GD\thedefnum}
-\newcommand{\dref}[1]{GD\ref{#1}}
-\newcounter{datadefnum} %Datadefinition Number
-\newcommand{\ddthedatadefnum}{DD\thedatadefnum}
-\newcommand{\ddref}[1]{DD\ref{#1}}
-\newcounter{theorynum} %Theory Number
-\newcommand{\tthetheorynum}{TM\thetheorynum}
-\newcommand{\tref}[1]{TM\ref{#1}}
-\newcounter{tablenum} %Table Number
-\newcommand{\tbthetablenum}{TB\thetablenum}
-\newcommand{\tbref}[1]{TB\ref{#1}}
-\newcounter{assumpnum} %Assumption Number
-\newcommand{\atheassumpnum}{A\theassumpnum}
-\newcommand{\aref}[1]{A\ref{#1}}
-\newcounter{goalnum} %Goal Number
-\newcommand{\gthegoalnum}{GS\thegoalnum}
-\newcommand{\gsref}[1]{GS\ref{#1}}
-\newcounter{instnum} %Instance Number
-\newcommand{\itheinstnum}{IM\theinstnum}
-\newcommand{\iref}[1]{IM\ref{#1}}
-\newcounter{reqnum} %Requirement Number
-\newcommand{\rthereqnum}{R\thereqnum}
-\newcommand{\rref}[1]{R\ref{#1}}
-\newcounter{nfrnum} %NFR Number
-\newcommand{\rthenfrnum}{NFR\thenfrnum}
-\newcommand{\nfrref}[1]{NFR\ref{#1}}
-\newcounter{lcnum} %Likely change number
-\newcommand{\lthelcnum}{LC\thelcnum}
-\newcommand{\lcref}[1]{LC\ref{#1}}
-
-\usepackage{fullpage}
-
-\newcommand{\deftheory}[9][Not Applicable]
-{
-\newpage
-\noindent \rule{\textwidth}{0.5mm}
-
-\paragraph{RefName: } \textbf{#2} \phantomsection 
-\label{#2}
-
-\paragraph{Label:} #3
-
-\noindent \rule{\textwidth}{0.5mm}
-
-\paragraph{Equation:}
-
-#4
-
-\paragraph{Description:}
-
-#5
-
-\paragraph{Notes:}
-
-#6
-
-\paragraph{Source:}
-
-#7
-
-\paragraph{Ref.\ By:}
-
-#8
-
-\paragraph{Preconditions for \hyperref[#2]{#2}:}
-\label{#2_precond}
-
-#9
-
-\paragraph{Derivation for \hyperref[#2]{#2}:}
-\label{#2_deriv}
-
-#1
-
-\noindent \rule{\textwidth}{0.5mm}
-
-}
-
 \begin{document}
 
-\title{Software Requirements Specification for \progname: subtitle describing software} 
-\author{\authname}
-\date{\today}
-	
 \maketitle
-
-~\newpage
-
-\pagenumbering{roman}
 
 \tableofcontents
 
-~\newpage
+\listoftables
 
-\section*{Revision History}
+\listoffigures
 
-\begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
-\toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
+\newpage
+
+\begin{table}[hp]
+\caption{Revision History} \label{TblRevisionHistory}
+\begin{tabularx}{\textwidth}{llX}
+\toprule
+\textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+Oct 6th 2025& All & Draft of SRS\\
+Oct 10th 2025 & All & Completion of SRS (Revision 0)\\
+Feb 10th 2026 & All & Revision 1: Updated to reflect implemented features, Elo self-play league, curriculum learning, and multi-level opponent selection\\
+Mar 28th 2026 & All & Updated to better fit project to the Final Demo content. \\
+Apr 5th 2026 & All & Major revision to reflect final project state and content. \\
 \bottomrule
 \end{tabularx}
+\end{table}
 
-~\\
-\plt{This template is intended for use by CAS 741.  For CAS 741 the template
-should be used exactly as given, except the Reflection Appendix can be deleted.
-For the capstone course it is a source of ideas, but shouldn't be followed
-exactly.  The exception is the reflection appendix.  All capstone SRS documents
-should have a reflection appendix.}
-
-~\newpage
-
-\section{Reference Material}
-
-This section records information for easy reference.
-
-\subsection{Table of Units}
-
-Throughout this document SI (Syst\`{e}me International d'Unit\'{e}s) is employed
-as the unit system.  In addition to the basic units, several derived units are
-used as described below.  For each unit, the symbol is given followed by a
-description of the unit and the SI name.
-~\newline
-
-\renewcommand{\arraystretch}{1.2}
-%\begin{table}[ht]
-  \noindent \begin{tabular}{l l l} 
-    \toprule		
-    \textbf{symbol} & \textbf{unit} & \textbf{SI}\\
-    \midrule 
-    \si{\metre} & length & metre\\
-    \si{\kilogram} & mass	& kilogram\\
-    \si{\second} & time & second\\
-    \si{\celsius} & temperature & centigrade\\
-    \si{\joule} & energy & joule\\
-    \si{\watt} & power & watt (W = \si{\joule\per\second})\\
-    \bottomrule
-  \end{tabular}
-  %	\caption{Provide a caption}
-%\end{table}
-
-\plt{Only include the units that your SRS actually uses.}
-
-\plt{Derived units, like newtons, pascal, etc, should show their derivation
-    (the units they are derived from) if their constituent units are in the
-    table of units (that is, if the units they are derived from are used in the
-    document).  For instance, the derivation of pascals as
-    $\si{\pascal}=\si{\newton\per\square\meter}$ is shown if newtons and m are
-    both in the table.  The derivations of newtons would not be shown if kg and
-    s are not both in the table.}
-
-\plt{The symbol for units named after people use capital letters, but the name
-  of the unit itself uses lower case.  For instance, pascals use the symbol Pa,
-  watts use the symbol W, teslas use the symbol T, newtons use the symbol N,
-  etc.  The one exception to this is degree Celsius.  Details on writing metric
-  units can be found on the 
-  \href{https://www.nist.gov/pml/weights-and-measures/writing-metric-units}
-  {NIST} web-page.}
-
-\subsection{Table of Symbols}
-
-The table that follows summarizes the symbols used in this document along with
-their units.  The choice of symbols was made to be consistent with the heat
-transfer literature and with existing documentation for solar water heating
-systems.  The symbols are listed in alphabetical order.
-
-\renewcommand{\arraystretch}{1.2}
-%\noindent \begin{tabularx}{1.0\textwidth}{l l X}
-\noindent \begin{longtable*}{l l p{12cm}} \toprule
-\textbf{symbol} & \textbf{unit} & \textbf{description}\\
-\midrule 
-$A_C$ & \si[per-mode=symbol] {\square\metre} & coil surface area
-\\
-$A_\text{in}$ & \si[per-mode=symbol] {\square\metre} & surface area over 
-which heat is transferred in
-\\ 
-\bottomrule
-\end{longtable*}
-\plt{Use your problems actual symbols.  The si package is a good idea to use for
-  units.}
-
-\subsection{Abbreviations and Acronyms}
-
-\renewcommand{\arraystretch}{1.2}
-\begin{tabular}{l l} 
-  \toprule		
-  \textbf{symbol} & \textbf{description}\\
-  \midrule 
-  A & Assumption\\
-  DD & Data Definition\\
-  GD & General Definition\\
-  GS & Goal Statement\\
-  IM & Instance Model\\
-  LC & Likely Change\\
-  PS & Physical System Description\\
-  R & Requirement\\
-  SRS & Software Requirements Specification\\
-  \progname{} & \plt{put an expanded version of your program name here (as appropriate)}\\
-  TM & Theoretical Model\\
-  \bottomrule
-\end{tabular}\\
-
-\plt{Add any other abbreviations or acronyms that you add}
-
-\subsection{Mathematical Notation}
-
-\plt{This section is optional, but should be included for projects that make use
-  of notation to convey mathematical information.  For instance, if typographic
-  conventions (like bold face font) are used to distinguish matrices, this
-  should be stated here.  If symbols are used to show mathematical operations,
-  these should be summarized here.  In some cases the easiest way to summarize
-  the notation is to point to a text or other source that explains the
-  notation.}
-
-\plt{This section was added to the template because some students use very
-  domain specific notation.  This notation will not be readily understandable to
-  people outside of your domain.  It should be explained.}
+\section*{Changes from Original SRS Meyer Template}
+\addcontentsline{toc}{section}{Changes from Orgiinal SRS Meyer Template}
+\begin{table}[H]
+\caption{Changes from Template} \label{ChangesFromTemplate}
+\begin{tabularx}{\textwidth}{|p{4cm}|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Change} & \textbf{Reason} \\
+\hline
+Moved Glossary (E.1) to beginning of document & Level 4 says: Document is written so that: 1. Terms and acronyms are always defined before first use and there is a list providing full expansion of all acronyms with links to where they are defined in the text. 2. Information is defined in only one place (i.e. no redundant information). \\
+\hline
+Added Table of requirements in each Section & Meyer template lacked a clear way to present requirements. Adding tables for functional and non-functional requirements in each section improves clarity and organization. \\
+\hline
+Added Section (E.7) & The original template lacked a section for discussing legal/regulatory factors. A new section under environment made sense for this. \\
+\hline
+Added Section (G.8) & The original templated lacked a section for distinct user profiles and specific characteristics. A new section under goals was made for this.\\
+\hline
+Added References & The original template did not include a references section. Adding this section improves credibility and allows readers to verify sources. It allows follows the Level 4 on the rubric \\
+\hline
+Added Section (S.8) & This provides a place to put lengthy formalizations of aspects of the project. \\
+\hline
+Added Requirement Dependencies & This shows traceability between requirements in a visual manner. \\
+\hline
+Added a safety requirements section & This allows us to port over the hazard analysis requirements. \\
+\hline
+\end{tabularx}
+\end{table}
 
 \newpage
 
-\pagenumbering{arabic}
+\medskip
 
-\plt{This SRS template is based on \citet{SmithAndLai2005, SmithEtAl2007,
-  SmithAndKoothoor2016}.  It will get you started.  You should not modify the
-  section headings, without first discussing the change with the course
-  instructor.  Modification means you are not following the template, which
-  loses some of the advantage of a template, especially standardization.
-  Although the bits shown below do not include type information, you may need to
-  add this information for your problem.  If you are unsure, please can ask the
-  instructor.}
+% ===== Internal glossary link targets =====
+\hypertarget{glossary-catan}{}
+\hypertarget{glossary-ai}{}
+\hypertarget{glossary-rl}{}
+\hypertarget{glossary-dt}{}
+\hypertarget{glossary-cv}{}
+\hypertarget{glossary-llm}{}
+\hypertarget{glossary-gamestate}{}
+\hypertarget{glossary-elo}{}
+\hypertarget{glossary-curriculum}{}
+\hypertarget{glossary-experiential}{}
 
-\plt{Feel free to change the appearance of the report by modifying the LaTeX
-  commands.}
+% ===== Internal references (used throughout document) =====
+\newcommand{\Catan}{\hyperlink{glossary-catan}{Catan}}
+\newcommand{\AI}{\hyperlink{glossary-ai}{AI}}
+\newcommand{\RL}{\hyperlink{glossary-rl}{RL}}
+\newcommand{\DigitalTwin}{\hyperlink{glossary-dt}{Digital Twin}}
+\newcommand{\CV}{\hyperlink{glossary-cv}{CV}}
+\newcommand{\LLM}{\hyperlink{glossary-llm}{LLM}}
+\newcommand{\GameState}{\hyperlink{glossary-gamestate}{Game State}}
+\newcommand{\Elo}{\hyperlink{glossary-elo}{Elo}}
+\newcommand{\CurriculumLearning}{\hyperlink{glossary-curriculum}{Curriculum Learning}}
+\newcommand{\ExperientialLearning}{\hyperlink{glossary-experiential}{Experiential Learning}}
 
-\plt{This template document assumes that a single program is being documented.
-  If you are documenting a family of models, you should start with a commonality
-  analysis.  A separate template is provided for this.  For program
-  families you should look at \cite{Smith2006, SmithMcCutchanAndCarette2017}.
-  Single family member programs are often programs based on a single physical
-  model.  General purpose tools are usually documented as a family.  Families of
-  physical models also come up.}
-
-\plt{The SRS is not generally written, or read, sequentially.  The SRS is a
-  reference document.  It is generally read in an ad hoc order, as the need
-  arises.  For writing an SRS, and for reading one for the first time, the
-  suggested order of sections is:
+\section*{Glossary}
+\addcontentsline{toc}{section}{Glossary}
+\raggedright This glossary defines key terms and acronyms used throughout this document to ensure clarity and understanding. Each term is hyperlinked to its first occurrence in the text for easy reference.
+The following glossary headers are hyperlinked to their online definitions for further reading.
 \begin{itemize}
-\item Goal Statement
-\item Instance Models
-\item Requirements
-\item Introduction
-\item Specific System Description
-\end{itemize}
-}
-
-\plt{Guiding principles for the SRS document:
-\begin{itemize}
-\item Do not repeat the same information at the same abstraction level.  If
-  information is repeated, the repetition should be at a different abstraction
-  level.  For instance, there will be overlap between the scope section and the
-  assumptions, but the scope section will not go into as much detail as the
-  assumptions section.
-\end{itemize}
-}
-
-\plt{The template description comments should be disabled before submitting this
-  document for grading.}
-
-\plt{You can borrow any wording from the text given in the template.  It is part
-  of the template, and not considered an instance of academic integrity.  Of
-  course, you need to cite the source of the template.}
-
-\plt{When the documentation is done, it should be possible to trace back to the
-  source of every piece of information.  Some information will come from
-  external sources, like terminology.  Other information will be derived, like
-  General Definitions.}
-
-\plt{An SRS document should have the following qualities: unambiguous,
-  consistent, complete, validatable, abstract and traceable.}
-
-\plt{The overall goal of the SRS is that someone that meets the Characteristics
-  of the Intended Reader (Section~\ref{sec_IntendedReader}) can learn,
-  understand and verify the captured domain knowledge.  They should not have to
-  trust the authors of the SRS on any statements.  They should be able to
-  independently verify/derive every statement made.}
-
-\section{Introduction}
-
-\plt{The introduction section is written to introduce the problem.  It starts
-  general and focuses on the problem domain. The general advice is to start with
-a paragraph or two that describes the problem, followed by a ``roadmap''
-paragraph.  A roadmap orients the reader by telling them what sub-sections to
-expect in the Introduction section.}
-
-\subsection{Purpose of Document}
-
-\plt{This section summarizes the purpose of the SRS document.  It does not focus
-  on the problem itself.  The problem is described in the ``Problem
-  Description'' section (Section~\ref{Sec_pd}).  The purpose is for the document
-  in the context of the project itself, not in the context of this course.
-  Although the ``purpose'' of the document is to get a grade, you should not
-  mention this.  Instead, ``fake it'' as if this is a real project.  The purpose
-  section will be similar between projects.  The purpose of the document is the
-  purpose of the SRS, including communication, planning for the design stage,
-  etc.}
-
-\subsection{Scope of Requirements} 
-
-\plt{Modelling the real world requires simplification.  The full complexity of
-  the actual physics, chemistry, biology is too much for existing models, and
-  for existing computational solution techniques.  Rather than say what is in
-  the scope, it is usually easier to say what is not.  You can think of it as
-  the scope is initially everything, and then it is constrained to create the
-  actual scope.  For instance, the problem can be restricted to 2 dimensions, or
-  it can ignore the effect of temperature (or pressure) on the material
-  properties, etc.}  
-
-\plt{The scope section is related to the assumptions section
-  (Section~\ref{sec_assumpt}).  However, the scope and the assumptions are not
-  at the same level of abstraction.  The scope is at a high level.  The focus is
-  on the ``big picture'' assumptions.  The assumptions section lists, and
-  describes, all of the assumptions.}
-
-\plt{The scope section is relevant for later determining typical values of inputs. The scope should make it clear what inputs are reasonable to expect. This is a distinction between scope and context (context is a later section).  Scope affects the inputs while context affects how the software will be used.}
-
-\subsection{Characteristics of Intended Reader} \label{sec_IntendedReader}
-
-\plt{This section summarizes the skills and knowledge of the readers of the
-  SRS.  It does NOT have the same purpose as the ``User Characteristics''
-  section (Section~\ref{SecUserCharacteristics}).  The intended readers are the
-  people that will read, review and maintain the SRS.  They are the people that
-  will conceivably design the software that is intended to meet the
-  requirements.  The user, on the other hand, is the person that uses the
-  software that is built.  They may never read this SRS document.  Of course,
-  the same person could be a ``user'' and an ``intended reader.''}
-
-\plt{The intended reader characteristics should be written as unambiguously and
-  as specifically as possible.  Rather than say, the user should have an
-  understanding of physics, say what kind of physics and at what level.  For
-  instance, is high school physics adequate, or should the reader have had a
-  graduate course on advanced quantum mechanics?}
-
-\subsection{Organization of Document}
-
-\plt{This section provides a roadmap of the SRS document.  It will help the
-  reader orient themselves.  It will provide direction that will help them
-  select which sections they want to read, and in what order.  This section will
-  be similar between project.}
-
-\plt{Include a reference to the template (\citet{SmithAndLai2005, SmithEtAl2007,
-  SmithAndKoothoor2016}) you are using in the documentation in the Organization of
-  the Document section.}
-  
-
-\section{General System Description}
-
-This section provides general information about the system.  It identifies the
-interfaces between the system and its environment, describes the user
-characteristics and lists the system constraints.  \plt{This text can likely be
-  borrowed verbatim.}
-
-\plt{The purpose of this section is to provide general information about the
-  system so the specific requirements in the next section will be easier to
-  understand. The general system description section is designed to be
-  changeable independent of changes to the functional requirements documented in
-  the specific system description. The general system description provides a
-  context for a family of related models.  The general description can stay the
-  same, while specific details are changed between family members.}
-
-\subsection{System Context}
-
-\plt{Your system context will include a figure that shows the abstract view of
-  the software.  Often in a scientific context, the program can be viewed
-  abstractly following the design pattern of Inputs $\rightarrow$ Calculations
-  $\rightarrow$ Outputs.  The system context will therefore often follow this
-  pattern.  The user provides inputs, the system does the calculations, and then
-  provides the outputs to the user.  The figure should not show all of the
-  inputs, just an abstract view of the main categories of inputs (like material
-  properties, geometry, etc.).  Likewise, the outputs should be presented from
-  an abstract point of view.  In some cases the diagram will show other external
-  entities, besides the user.  For instance, when the software product is a
-  library, the user will be another software program, not an actual end user.
-  If there are system constraints that the software must work with external
-  libraries, these libraries can also be shown on the System Context diagram.
-  They should only be named with a specific library name if this is required by
-  the system constraint.}
-
-\begin{figure}[h!]
-\begin{center}
- \includegraphics[width=0.6\textwidth]{SystemContextFigure}
-\caption{System Context}
-\label{Fig_SystemContext} 
-\end{center}
-\end{figure}
-
-\plt{For each of the entities in the system context diagram its responsibilities
-  should be listed.  Whenever possible the system should check for data quality,
-  but for some cases the user will need to assume that responsibility.  The list
-  of responsibilities should be about the inputs and outputs only, and they
-  should be abstract.  Details should not be presented here.  However, the
-  information should not be so abstract as to just say ``inputs'' and
-  ``outputs''.  A summarizing phrase can be used to characterize the inputs.
-  For instance, saying ``material properties'' provides some information, but it
-  stays away from the detail of listing every required properties.}
-
-\begin{itemize}
-\item User Responsibilities:
-\begin{itemize}
-\item 
-\end{itemize}
-\item \progname{} Responsibilities:
-\begin{itemize}
-\item Detect data type mismatch, such as a string of characters instead of a
-  floating point number
-\item 
-\end{itemize}
+    \item \hypertarget{glossary-catan}{\CatanExt{}} – A strategy board game called \textit{Settlers of Catan} where players collect resources, build roads/settlements, and trade to earn points.[1]
+    \item \hypertarget{glossary-ai}{\AIExt{}} – Field of computer science and engineering that focuses on creating systems capable of performing tasks that usually require human intelligence.[2]
+    \item \hypertarget{glossary-rl}{\RLExt{}} – A type of machine learning where an agent, known as Reinforcement Learning, learns by interacting with an environment and receiving rewards or penalties for its actions.[3]
+    \item \hypertarget{glossary-dt}{\DigitalTwinExt{}} – A digital system that mirrors a physical one. In this project, it refers to a digital representation of the physical \emph{Catan} board, updated in real time.[4]
+    \item \hypertarget{glossary-cv}{\CVExt{}} – An area of AI that trains computers to interpret and understand visual information, such as the physical \emph{Catan} board.[5]
+    \item \hypertarget{glossary-llm}{\LLMExt{}} – A machine learning model trained on large amounts of text data to generate and understand language.[6]
+    \item \hypertarget{glossary-gamestate}{\GameStateExt{}} – The current configuration of the game, including player resources, board layout, and dice rolls.[7]
+    \item \hypertarget{glossary-elo}{\EloExt{}} – A numerical rating system for competitive players (human or AI) that reflects their skill level and enables skill-matched matchmaking. Named after Arpad Elo, the system updates ratings based on game results against opponents of different ratings.
+    \item \hypertarget{glossary-curriculum}{\CurriculumLearningExt} – A machine learning training strategy where the model learns progressively through ordered phases of increasing complexity. In this project, curriculum phases simplify game rules initially (e.g., lower victory points) and gradually increase to full complexity.
+    \item \hypertarget{glossary-experiential}{\ExperientialLearningExt} – An educational philosophy and learning process where knowledge is created through the transformation of experience, following Kolb's cycle: concrete experience, reflective observation, abstract conceptualization, and active experimentation. In software engineering, this means learning by actually building and deploying systems rather than only studying theory.[15]
 \end{itemize}
 
-\plt{Identify in what context the software will typically be used.  Is it for
-exploration? education? engineering work? scientific work?. Identify whether it
-will be used for mission-critical or safety-critical applications.} \plt{This
-additional context information is needed to determine how much effort should be
-devoted to the rationale section.  If the application is safety-critical, the
-bar is higher.  This is currently less structured, but analogous to, the idea to
-the Automotive Safety Integrity Levels (ASILs) that McSCert uses in their
-automotive hazard analyses.}
 
-\subsection{User Characteristics} \label{SecUserCharacteristics}
 
-\plt{This section summarizes the knowledge/skills expected of the user.
-  Measuring usability, which is often a required non-function requirement,
-  requires knowledge of a typical user.  As mentioned above, the user is a
-  different role from the ``intended reader,'' as given in
-  Section~\ref{sec_IntendedReader}.  As in Section~\ref{sec_IntendedReader}, the
-  user characteristics should be specific an unambiguous.  For instance, ``The
-  end user of \progname{} should have an understanding of undergraduate Level 1
-  Calculus and Physics.''}
+\phantomsection
+\section*{(G) Goals}\label{sec:srs-goals}
+\addcontentsline{toc}{section}{Goals}
+\renewcommand{\thesubsection}{G.\arabic{subsection}}
+\renewcommand{\theHsubsection}{G.\arabic{subsection}}
+\setcounter{subsection}{0}
 
-\subsection{System Constraints}
+\subsection{Context and Overall Objective}\label{subsec:context-and-overall-objective}
+The project aims to create an \AI{} agent, \textbf{RLCatan}, that learns to play \emph{\Catan{}} competitively
+using reinforcement learning, and an arena to play against it and existing bots.
+The system supports players of all skill levels by providing bot opponents of various difficulties,
+via a web interface for gameplay and analysis.
+It also serves as a reference implementation for building end-to-end ML systems and an \textbf{experiential learning}
+exemplar[15] through hands-on development.
+The project addresses large state space complexity, stochasticity, and partial observability via curriculum learning
+and self-play.
+The digital twin is implemented as a web UI (vision-based sensing remains future work).
 
-\plt{System constraints differ from other type of requirements because they
-  limit the developers' options in the system design and they identify how the
-  eventual system must fit into the world. This is the only place in the SRS
-  where design decisions can be specified.  That is, the quality requirement for
-  abstraction is relaxed here.  However, system constraints should only be
-  included if they are truly required.}
+\subsection{Current Situation}\label{subsec:current-situation}
+Despite its popularity, the inherent complexity of \emph{\Catan{}} presents a significant technical challenge
+for \AI{} development.
+This complexity limits players' ability to practice against opponents appropriate to their skill level.
+Existing \emph{\Catan{}} AI implementations typically offer only a single difficulty level, preventing novice
+players from learning fundamentals and denying competitive players access to truly challenging opponents.
+Additionally, the technical challenges of training effective \AI{} agents for large state-space games
+like \emph{\Catan{}} remain under-documented in software engineering contexts, limiting educational value
+for future researchers and companies exploring similar \AI{} systems.
+The AlgoCatan project will address these limitations by creating a comprehensive system designed to tackle
+these specific technical and usability hurdles.
 
-\section{Specific System Description}
-
-This section first presents the problem description, which gives a high-level
-view of the problem to be solved.  This is followed by the solution characteristics
-specification, which presents the assumptions, theories, definitions and finally
-the instance models.  \plt{Add any project specific details that are relevant
-  for the section overview.}
-
-\subsection{Problem Description} \label{Sec_pd}
-
-\progname{} is intended to solve ... \plt{What problem does your program solve?
-The description here should be in the problem space, not the solution space.}
-
-\subsubsection{Terminology and  Definitions}
-
-\plt{This section is expressed in words, not with equations.  It provide the
-  meaning of the different words and phrases used in the domain of the problem.
-The terminology is used to introduce concepts from the world outside of the
-mathematical model  The terminology provides a real world connection to give the
-mathematical model meaning.}
-
-This subsection provides a list of terms that are used in the subsequent
-sections and their meaning, with the purpose of reducing ambiguity and making it
-easier to correctly understand the requirements:
-
+\subsection{Expected Benefits}\label{subsec:expected-benefits}
 \begin{itemize}
-
-\item 
-
+    \item {Skill-Appropriate Gameplay} – Varying bot opponents let novices learn fundamentals and advanced players face stronger competition.
+    \item {Strategic Insight} – Replay and post-game analysis highlight key decisions and alternatives, and \LLM{} explanations provide natural language insights into strategic choices.
+    \item {\AI{} Research Contribution} – Curriculum learning and self-play in a large state-space game provide reusable ML insights.
+    \item {Software Engineering Reference} – Demonstrates integration of UI, backend, simulator, and trained models in a production-style architecture.
+    \item {Experiential Learning Exemplar} – The team learns by building, testing, and iterating a full ML system; details are elaborated in Section~\ref{subsec:se-ml-learning}.
 \end{itemize}
 
-\subsubsection{Physical System Description} \label{sec_phySystDescrip}
-
-\plt{The purpose of this section is to clearly and unambiguously state the
-  physical system that is to be modelled. Effective problem solving requires a
-  logical and organized approach. The statements on the physical system to be
-  studied should cover enough information to solve the problem. The physical
-  description involves element identification, where elements are defined as
-  independent and separable items of the physical system. Some example elements
-  include acceleration due to gravity, the mass of an object, and the size and
-  shape of an object. Each element should be identified and labelled, with their
-  interesting properties specified clearly. The physical description can also
-  include interactions of the elements, such as the following: i) the
-  interactions between the elements and their physical environment; ii) the
-  interactions between elements; and, iii) the initial or boundary conditions.}
-
-\plt{The elements of the physical system do not have to correspond to an actual
-physical entity.  They can be conceptual.  This is particularly important when
-the documentation is for a numerical method. }
-
-The physical system of \progname{}, as shown in Figure~?,
-includes the following elements:
-
+\subsection{Functionality Overview}\label{subsec:functionality-overview}
 \begin{itemize}
-
-\item[PS1:] 
-
-\item[PS2:] ...
-
+    \item {\AI{} Agent Training} – A reinforcement learning agent trained through curriculum learning phases and self-play against opponents from an Elo league.
+    \item {Elo Self-Play League System} – A competitive league infrastructure that maintains Elo ratings for all trained model snapshots and baseline opponents (random, value function, etc.), enabling dynamic opponent selection based on player skill level.
+    \item {Curriculum Learning Framework} – Progressive training phases that start with simplified game rules (e.g., lower victory points, disabled complex actions) and gradually advance to full complexity, improving learning efficiency and convergence.
+    \item {Game Simulation Environment} – A Python-based simulator (Catanatron) that supports training, benchmarking, and evaluation of \AI{} agents with configurable rule variations.
+    \item {Web-based Game Interface} – A React/TypeScript interface for viewing live games and interacting with the \AI{} agent in real-time, with intuitive opponent selection by difficulty level.
+    \item {Game Replay and Analysis} – Functionality to replay past games and display strategic analysis (e.g., win probability at each game state via MCTS-based evaluation).
+    \item {\LLM{} Based Strategic Explanations} – Natural language explanations of strategic decisions requestable by the user, generated by a large language model.
+    \item {Dynamic Opponent Selection} – Players can select opponents matched to their current skill level, enabling skill-appropriate gameplay.
+    \item {Model Versioning and Management} – Comprehensive tracking of model snapshots, training history, and Elo ratings for model introspection and version rollback.
+    \item {\DigitalTwin{} Representation} – A digital display of the current board and game state, updated in real-time as gameplay progresses (web-based, not vision-based).
 \end{itemize}
 
-\plt{A figure here makes sense for most SRS documents}
-
-% \begin{figure}[h!]
-% \begin{center}
-% %\rotatebox{-90}
-% {
-%  \includegraphics[width=0.5\textwidth]{<FigureName>}
-% }
-% \caption{\label{<Label>} <Caption>}
-% \end{center}
-% \end{figure}
-
-\subsubsection{Goal Statements}
-
-\plt{The goal statements refine the ``Problem Description''
-  (Section~\ref{Sec_pd}).  A goal is a functional objective the system under
-  consideration should achieve. Goals provide criteria for sufficient
-  completeness of a requirements specification and for requirements
-  pertinence. Goals will be refined in Section “Instanced Models”
-  (Section~\ref{sec_instance}). Large and complex goals should be decomposed
-  into smaller sub-goals.  The goals are written abstractly, with a minimal
-  amount of technical language.  They should be understandable by non-domain
-  experts.}
-
-\noindent Given the \plt{inputs}, the goal statements are:
-
+\subsection{High-Level Usage Scenarios}\label{subsec:high-level-usage-scenarios}
 \begin{itemize}
-
-\item[GS\refstepcounter{goalnum}\thegoalnum \label{G_meaningfulLabel}:] \plt{One
-    sentence description of the goal.  There may be more than one.  Each Goal
-    should have a meaningful label.}
-
-\end{itemize}
-
-\subsection{Solution Characteristics Specification}
-
-\plt{This section specifies the information in the solution domain of the system
-  to be developed. This section is intended to express what is required in
-  such a way that analysts and stakeholders get a clear picture, and the
-  latter will accept it. The purpose of this section is to reduce the problem
-  into one expressed in mathematical terms. Mathematical expertise is used to
-  extract the essentials from the underlying physical description of the
-  problem, and to collect and substantiate all physical data pertinent to the
-  problem.}
-
-\plt{This section presents the solution characteristics by successively refining
-  models.  It starts with the abstract/general Theoretical Models (TMs) and
-  refines them to the concrete/specific Instance Models (IMs).  If necessary
-  there are intermediate refinements to General Definitions (GDs).  All of these
-  refinements can potentially use Assumptions (A) and Data Definitions (DD).
-  TMs are refined to create new models, that are called GMs or IMs. DDs are not
-  refined; they are just used. GDs and IMs are derived, or refined, from other
-  models. DDs are not derived; they are just given. TMs are also just given, but
-  they are refined, not used.  If a potential DD includes a derivation, then
-  that means it is refining other models, which would make it a GD or an IM.}
-
-\plt{The above makes a distinction between ``refined'' and ``used.'' A model is
-  refined to another model if it is changed by the refinement. When we change a
-  general 3D equation to a 2D equation, we are making a refinement, by applying
-  the assumption that the third dimension does not matter. If we use a
-  definition, like the definition of density, we aren't refining, or changing
-  that definition, we are just using it.}
-
-\plt{The same information can be a TM in one problem and a DD in another.  It is
-  about how the information is used.  In one problem the definition of
-  acceleration can be a TM, in another it would be a DD.}
-
-\plt{There is repetition between the information given in the different chunks
-  (TM, GDs etc) with other information in the document.  For instance, the
-  meaning of the symbols, the units etc are repeated.  This is so that the
-  chunks can stand on their own when being read by a reviewer/user.  It also
-  facilitates reuse of the models in a different context.}
-
-\noindent \plt{The relationships between the parts of the document are show in
-  the following figure.  In this diagram ``may ref'' has the same role as
-  ``uses'' above.  The figure adds ``Likely Changes,'' which are able to
-  reference (use) Assumptions.}
-
+    \item {Scenario 1: Playing Against Skill-Matched \AI{}} – Users select an opponent from the list of bots. Users then play a match through the web interface with real-time board visualization.
+    \item {Scenario 2: Multi-Level Player Progression} – A novice player starts against a weaker bot, practices, and gradually challenges higher-rated opponents as their skill improves.
+    \item {Scenario 3: Replaying Past Games and Analysis} – Users access historical games, step through each turn, and view strategic analysis (e.g., win probability calculations) at each state to learn from both wins and losses.
+    \item {Scenario 4: LLM-Based Strategic Explanations} – During or after a game, users can request natural language explanations of strategic decisions made by the \AI{} agent, generated by an integrated large language model.
+    \item {Scenario 5: Bot Selection and Benchmarking} – Developers or advanced users select specific trained models from the league, configure them against each other or baselines, and evaluate performance through statistical analysis and match results.
+    \item {Scenario 6: Curriculum-Based Training} – Developers run training loops configured with curriculum phases, monitoring phase transitions and reward metrics as the \AI{} agent progresses from simplified to full-complexity game rules.
+    \item {Scenario 7: Model Versioning and Rollback} – Developers view historical model versions with their associated Elo ratings, select previous versions for deployment if needed, or analyze performance trends across training iterations.
+    \end{itemize}
 \begin{figure}[H]
-  \includegraphics[scale=0.9]{RelationsBetweenTM_GD_IM_DD_A.pdf}
+    \makebox[\textwidth][c]{\includegraphics[width=1.4\textwidth]{activity_diagram.png}}
+    \caption{\textit{Activity diagram showing high-level usage scenario}}
+    \label{fig:activity-diagram}
 \end{figure}
 
-The instance models that govern \progname{} are presented in
-Subsection~\ref{sec_instance}.  The information to understand the meaning of the
-instance models and their derivation is also presented, so that the instance
-models can be verified.
 
-\subsubsection{Types}
-
-\plt{This section is optional. Defining types can make the document easier to
-understand.}
-
-\subsubsection{Scope Decisions}
-
-\plt{This section is optional.}
-\subsubsection{Modelling Decisions}
-
-\plt{This section is optional.}
-
-\subsubsection{Assumptions} \label{sec_assumpt}
-
-\plt{The assumptions are a refinement of the scope.  The scope is general, where
-  the assumptions are specific.  All assumptions should be listed, even those
-  that domain experts know so well that they are rarely (if ever) written down.}
-\plt{The document should not take for granted that the reader knows which
-  assumptions have been made. In the case of unusual assumptions, it is
-  recommended that the documentation either include, or point to, an explanation
-  and justification for the assumption.} 
-\plt{If it helps with the organization and understandability, the assumptions
-can be presented as sub sections.  The following sub-sections are options:
-background theory assumptions, helper theory assumptions, generic theory
-assumptions, problem specific assumptions, and rationale assumptions}
-
-This section simplifies the original problem and helps in developing the
-theoretical model by filling in the missing information for the physical system.
-The numbers given in the square brackets refer to the theoretical model [TM],
-general definition [GD], data definition [DD], instance model [IM], or likely
-change [LC], in which the respective assumption is used.
-
+\subsection{Limitations and Exclusions}\label{subsec:limitations-and-exclusions}
 \begin{itemize}
-
-\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_meaningfulLabel}:]
-  \plt{Short description of each assumption.  Each assumption
-    should have a meaningful label.  Use cross-references to identify the
-    appropriate traceability to TM, GD, DD etc., using commands like dref, ddref
-    etc.  Each assumption should be atomic - that is, there should not be an
-    explicit (or implicit) ``and'' in the text of an assumption.}
-
+    \item {Computer Vision (Out of Scope)} – The system does not process physical board images. All game states are provided programmatically through the game simulator, not detected via camera.
+    \item {Real-time Physical Board Tracking} – The system does not use sensors or cameras to observe a physical game setup.
+    \item {Physical interaction with the board} – The system will not move pieces or manipulate the board.
+    \item {Hidden information tracking} – The \AI{} will not access information that is hidden from players (respects game rules).
+    \item {Support for expansions} – The scope is limited to standard Settlers of \emph{\Catan{}} rules; expansions are excluded.
+    \item {Smart Glasses Integration} – Augmented reality features are not implemented.
+    \item {Human Persona Modeling} – Trading behavior prediction based on player personas is not implemented.
 \end{itemize}
 
-\subsubsection{Theoretical Models}\label{sec_theoretical}
-
-\plt{Theoretical models are sets of abstract mathematical equations or axioms
-  for solving the problem described in Section ``Physical System Description''
-  (Section~\ref{sec_phySystDescrip}). Examples of theoretical models are
-  physical laws, constitutive equations, relevant conversion factors, etc.}
-
-\plt{Optionally the theory section could be divided into subsections to provide
-more structure and improve understandability and reusability.  Potential
-subsections include the following: Context theories, background theories, helper
-theories, generic theories, problem specific theories, final theories and
-rationale theories.}
-
-This section focuses on the general equations and laws that \progname{} is based
-on.  \plt{Modify the examples below for your problem, and add additional models
-  as appropriate.}
-
-~\newline
-
-\noindent
-\deftheory
-% #2 refname of theory
-{TM:COE}
-% #3 label
-{Conservation of thermal energy}
-% #4 equation
-{
-  $-{\bf \nabla \cdot q} + g$ = $\rho C \frac{\partial T}{\partial t}$
-}
-% #5 description
-{
-  The above equation gives the conservation of energy for transient heat transfer in a material
-  of specific heat capacity $C$ (\si{\joule\per\kilogram\per\celsius}) and density $\rho$ 
-  (\si{\kilogram\per\cubic\metre}), where $\bf q$ is the thermal flux vector (\si{\watt\per\square\metre}),
-  $g$ is the volumetric heat generation
-  (\si{\watt\per\cubic\metre}), $T$ is the temperature
-  (\si{\celsius}),  $t$ is time (\si{\second}), and $\nabla$ is
-  the gradient operator.  For this equation to apply, other forms
-  of energy, such as mechanical energy, are assumed to be negligible in the
-  system (\aref{A_OnlyThermalEnergy}).  In general, the material properties ($\rho$ and $C$) depend on temperature.
-}
-% #6 Notes
-{
-None.
-}
-% #7 Source
-{
-  \url{http://www.efunda.com/formulae/heat_transfer/conduction/overview_cond.cfm}
-}
-% #8 Referenced by
-{
-  \dref{ROCT}
-}
-% #9 Preconditions
-{
-None
-}
-% #1 derivation - not applicable by default
-{}
-
-\plt{``Ref.\ By'' is used repeatedly with the different types of information.
-  This stands for Referenced By.  It means that the models, definitions and
-  assumptions listed reference the current model, definition or assumption.
-  This information is given for traceability.  Ref. By provides a pointer in the
-  opposite direction to what we commonly do.  You still need to have a reference
-  in the other direction pointing to the current model, definition or
-  assumption.  As an example, if TM1 is referenced by GD2, that means that GD2 will
-  explicitly include a reference to TM1.}
-
-~\newline
-
-\subsubsection{General Definitions}\label{sec_gendef}
-
-\plt{General Definitions (GDs) are a refinement of one or more TMs, and/or of
-  other GDs.  The GDs are less abstract than the TMs.  Generally the reduction
-  in abstraction is possible through invoking (using/referencing) Assumptions.
-  For instance, the TM could be Newton's Law of Cooling stated abstracting.  The
-  GD could take the general law and apply it to get a 1D equation.}
-
-This section collects the laws and equations that will be used in building the
-instance models.
-
-\plt{Some projects may not have any content for this section, but the section
-  heading should be kept.}  \plt{Modify the examples below for your problem, and
-  add additional definitions as appropriate.}
-
-~\newline
-
-\noindent
-\begin{minipage}{\textwidth}
-\renewcommand*{\arraystretch}{1.5}
-\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
-\hline
-\rowcolor[gray]{0.9}
-Number& GD\refstepcounter{defnum}\thedefnum \label{NL}\\
-\hline
-Label &\bf Newton's law of cooling \\
-\hline
-% Units&$MLt^{-3}T^0$\\
-% \hline
-SI Units&\si{\watt\per\square\metre}\\
-\hline
-Equation&$ q(t) = h \Delta T(t)$  \\
-\hline
-Description &
-Newton's law of cooling describes convective cooling from a surface.  The law is
-stated as: the rate of heat loss from a body is proportional to the difference
-in temperatures between the body and its surroundings.
-\\
-& $q(t)$ is the thermal flux (\si{\watt\per\square\metre}).\\
-& $h$ is the heat transfer coefficient, assumed independent of $T$ (\aref{A_hcoeff})
-	(\si{\watt\per\square\metre\per\celsius}).\\
-&$\Delta T(t)$= $T(t) - T_{\text{env}}(t)$ is the time-dependent thermal gradient
-between the environment and the object (\si{\celsius}).
-\\
-\hline
-  Source & Citation here \\
-  \hline
-  Ref.\ By & \ddref{FluxCoil}, \ddref{FluxPCM}\\
-  \hline
-\end{tabular}
-\end{minipage}\\
-
-\subsubsection*{Detailed derivation of simplified rate of change of temperature}
-
-\plt{This may be necessary when the necessary information does not fit in the
-  description field.}
-\plt{Derivations are important for justifying a given GD.  You want it to be
-  clear where the equation came from.}
-
-\subsubsection{Data Definitions}\label{sec_datadef}
-
-\plt{The Data Definitions are definitions of symbols and equations that are
-  given for the problem.  They are not derived; they are simply used by other
-  models.  For instance, if a problem depends on density, there may be a data
-  definition for the equation defining density.  The DDs are given information
-  that you can use in your other modules.}
-
-\plt{All Data Definitions should be used (referenced) by at least one other
-  model.}
-
-This section collects and defines all the data needed to build the instance
-models. The dimension of each quantity is also given.  \plt{Modify the examples
-  below for your problem, and add additional definitions as appropriate.}
-
-~\newline
-
-\noindent
-\begin{minipage}{\textwidth}
-\renewcommand*{\arraystretch}{1.5}
-\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
-\hline
-\rowcolor[gray]{0.9}
-Number& DD\refstepcounter{datadefnum}\thedatadefnum \label{FluxCoil}\\
-\hline
-Label& \bf Heat flux out of coil\\
-\hline
-Symbol &$q_C$\\
-\hline
-% Units& $Mt^{-3}$\\
-% \hline
-  SI Units & \si{\watt\per\square\metre}\\
-  \hline
-  Equation&$q_C(t) = h_C (T_C - T_W(t))$, over area $A_C$\\
-  \hline
-  Description & 
-                $T_C$ is the temperature of the coil (\si{\celsius}).  $T_W$ is the temperature of the water (\si{\celsius}).  
-                The heat flux out of the coil, $q_C$ (\si{\watt\per\square\metre}), is found by
-                assuming that Newton's Law 
-                of Cooling applies (\aref{A_Newt_coil}).  This law (\dref{NL}) is used on the surface of
-                the coil, which has area $A_C$ (\si{\square\metre}) and heat 
-                transfer coefficient $h_C$
-                (\si{\watt\per\square\metre\per\celsius}).  This equation
-                assumes that the temperature of the coil is constant over time (\aref{A_tcoil}) and that it does not vary along the length
-                of the coil (\aref{A_tlcoil}).
-  \\
-  \hline
-  Sources& Citation here \\
-  \hline
-  Ref.\ By & \iref{ewat}\\
-  \hline
-\end{tabular}
-\end{minipage}\\
-
-\subsubsection{Data Types}\label{sec_datatypes}
-
-\plt{This section is optional.  In many scientific computing programs it isn't
-  necessary, since the inputs and outpus are straightforward types, like reals,
-  integers, and sequences of reals and integers.  However, for some problems it
-  is very helpful to capture the type information.}
-
-\plt{The data types are not derived; they are simply stated and used by other
-  models.}
-
-\plt{All data types must be used by at least one of the models.}
-
-\plt{For the mathematical notation for expressing types, the recommendation is
-  to use the notation of~\citet{HoffmanAndStrooper1995}.}
-
-This section collects and defines all the data types needed to document the
-models. \plt{Modify the examples below for your problem, and add additional
-  definitions as appropriate.}
-
-~\newline
-
-\noindent
-\begin{minipage}{\textwidth}
-\renewcommand*{\arraystretch}{1.5}
-\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
-  \hline
-  \rowcolor[gray]{0.9}
-  Type Name & Name for Type\\
-  \hline
-  Type Def & mathematical definition of the type\\
-  \hline
-  Description & description here
-  \\
-  \hline
-  Sources & Citation here, if the type is borrowed from another source\\
-  \hline
-\end{tabular}
-\end{minipage}\\
-
-\subsubsection{Instance Models} \label{sec_instance}    
-
-\plt{The motivation for this section is to reduce the problem defined in
-  ``Physical System Description'' (Section~\ref{sec_phySystDescrip}) to one
-  expressed in mathematical terms. The IMs are built by refining the TMs and/or
-  GDs.  This section should remain abstract.  The SRS should specify the
-  requirements without considering the implementation.}
-
-This section transforms the problem defined in Section~\ref{Sec_pd} into 
-one which is expressed in mathematical terms. It uses concrete symbols defined 
-in Section~\ref{sec_datadef} to replace the abstract symbols in the models 
-identified in Sections~\ref{sec_theoretical} and~\ref{sec_gendef}.
-
-The goals \plt{reference your goals} are solved by \plt{reference your instance
-  models}.  \plt{other details, with cross-references where appropriate.}
-\plt{Modify the examples below for your problem, and add additional models as
-  appropriate.}
-
-~\newline
-
-%Instance Model 1
-
-\noindent
-\begin{minipage}{\textwidth}
-\renewcommand*{\arraystretch}{1.5}
-\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
-  \hline
-  \rowcolor[gray]{0.9}
-  Number& IM\refstepcounter{instnum}\theinstnum \label{ewat}\\
-  \hline
-  Label& \bf Energy balance on water to find $T_W$\\
-  \hline
-  Input&$m_W$, $C_W$, $h_C$, $A_C$, $h_P$, $A_P$, $t_\text{final}$, $T_C$, 
-  $T_\text{init}$, $T_P(t)$ from \iref{epcm}\\
-  & The input is constrained so that $T_\text{init} \leq T_C$ (\aref{A_charge})\\
-  \hline
-  Output&$T_W(t)$, $0\leq t \leq t_\text{final}$, such that\\
-  &$\frac{dT_W}{dt} = \frac{1}{\tau_W}[(T_C - T_W(t)) + {\eta}(T_P(t) - T_W(t))]$,\\
-  &$T_W(0) = T_P(0) = T_\text{init}$ (\aref{A_InitTemp}) and $T_P(t)$ from \iref{epcm} \\
-  \hline
-  Description&$T_W$ is the water temperature (\si{\celsius}).\\
-  &$T_P$ is the PCM temperature (\si{\celsius}).\\
-  &$T_C$ is the coil temperature (\si{\celsius}).\\
-  &$\tau_W = \frac{m_W C_W}{h_C A_C}$ is a constant (\si{\second}).\\
-  &$\eta = \frac{h_P A_P}{h_C A_C}$ is a constant (dimensionless).\\
-  & The above equation applies as long as the water is in liquid form,
-  $0<T_W<100^o\text{C}$, where $0^o\text{C}$ and $100^o\text{C}$ are the melting
-  and boiling points of water, respectively (\aref{A_OpRange}, \aref{A_Pressure}).
-  \\
-  \hline
-  Sources& Citation here \\
-  \hline
-  Ref.\ By & \iref{epcm}\\
-  \hline
-\end{tabular}
-\end{minipage}\\
-
-%~\newline
-
-\subsubsection*{Derivation of ...}
-
-\plt{The derivation shows how the IM is derived from the TMs/GDs.  In cases
-  where the derivation cannot be described under the Description field, it will
-  be necessary to include this subsection.}
-
-\subsubsection{Input Data Constraints} \label{sec_DataConstraints}    
-
-Table~\ref{TblInputVar} shows the data constraints on the input output
-variables.  The column for physical constraints gives the physical limitations
-on the range of values that can be taken by the variable.  The column for
-software constraints restricts the range of inputs to reasonable values.  The
-software constraints will be helpful in the design stage for picking suitable
-algorithms.  The constraints are conservative, to give the user of the model the
-flexibility to experiment with unusual situations.  The column of typical values
-is intended to provide a feel for a common scenario.  The uncertainty column
-provides an estimate of the confidence with which the physical quantities can be
-measured.  This information would be part of the input if one were performing an
-uncertainty quantification exercise.
-
-The specification parameters in Table~\ref{TblInputVar} are listed in
-Table~\ref{TblSpecParams}.
-
-\begin{table}[!h]
-  \caption{Input Variables} \label{TblInputVar}
-  \renewcommand{\arraystretch}{1.2}
-\noindent \begin{longtable*}{l l l l c} 
-  \toprule
-  \textbf{Var} & \textbf{Physical Constraints} & \textbf{Software Constraints} &
-                             \textbf{Typical Value} & \textbf{Uncertainty}\\
-  \midrule 
-  $L$ & $L > 0$ & $L_{\text{min}} \leq L \leq L_{\text{max}}$ & 1.5 \si[per-mode=symbol] {\metre} & 10\%
-  \\
-  \bottomrule
-\end{longtable*}
-\end{table}
-
-\noindent 
-\begin{description}
-\item[(*)] \plt{you might need to add some notes or clarifications}
-\end{description}
-
-\begin{table}[!h]
-\caption{Specification Parameter Values} \label{TblSpecParams}
-\renewcommand{\arraystretch}{1.2}
-\noindent \begin{longtable*}{l l} 
-  \toprule
-  \textbf{Var} & \textbf{Value} \\
-  \midrule 
-  $L_\text{min}$ & 0.1 \si{\metre}\\
-  \bottomrule
-\end{longtable*}
-\end{table}
-
-\subsubsection{Properties of a Correct Solution} \label{sec_CorrectSolution}
-
-\noindent
-A correct solution must exhibit \plt{fill in the details}.  \plt{These
-  properties are in addition to the stated requirements.  There is no need to
-  repeat the requirements here.  These additional properties may not exist for
-  every problem.  Examples include conservation laws (like conservation of
-  energy or mass) and known constraints on outputs, which are usually summarized
-  in tabular form.  A sample table is shown in Table~\ref{TblOutputVar}}
-
-\begin{table}[!h]
-\caption{Output Variables} \label{TblOutputVar}
-\renewcommand{\arraystretch}{1.2}
-\noindent \begin{longtable*}{l l} 
-  \toprule
-  \textbf{Var} & \textbf{Physical Constraints} \\
-  \midrule 
-  $T_W$ & $T_\text{init} \leq T_W \leq T_C$ (by~\aref{A_charge})
-  \\
-  \bottomrule
-\end{longtable*}
-\end{table}
-
-\plt{This section is not for test cases or techniques for verification and
-  validation.  Those topics will be addressed in the Verification and Validation
-  plan.}
-
-\section{Requirements}
-
-\plt{The requirements refine the goal statement.  They will make heavy use of
-  references to the instance models.}
-
-This section provides the functional requirements, the business tasks that the
-software is expected to complete, and the nonfunctional requirements, the
-qualities that the software is expected to exhibit.
-
-\subsection{Functional Requirements}
-
-\noindent \begin{itemize}
-
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs}:] \plt{Requirements
-    for the inputs that are supplied by the user.  This information has to be
-    explicit.}
-
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_OutputInputs}:] \plt{It isn't
-    always required, but often echoing the inputs as part of the output is a
-    good idea.}
-
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Calculate}:] \plt{Calculation
-    related requirements.}
-
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_VerifyOutput}:]
-  \plt{Verification related requirements.}
-
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Output}:] \plt{Output related
-    requirements.}
-
-\end{itemize}
-
-\plt{Every IM should map to at least one requirement, but not every requirement
-  has to map to a corresponding IM.}
-
-\subsection{Nonfunctional Requirements}
-
-\plt{List your nonfunctional requirements.  You may consider using a fit
-  criterion to make them verifiable.}
-\plt{The goal is for the nonfunctional requirements to be unambiguous, abstract
-  and verifiable.  This isn't easy to show succinctly, so a good strategy may be
-to give a ``high level'' view of the requirement, but allow for the details to
-be covered in the Verification and Validation document.}
-\plt{An absolute requirement on a quality of the system is rarely needed.  For
-  instance, an accuracy of 0.0101 \% is likely fine, even if the requirement is
-  for 0.01 \% accuracy.  Therefore, the emphasis will often be more on
-  describing now well the quality is achieved, through experimentation, and
-  possibly theory, rather than meeting some bar that was defined a priori.}
-\plt{You do not need an entry for correctness in your NFRs.  The purpose of the
-  SRS is to record the requirements that need to be satisfied for correctness.
-  Any statement of correctness would just be redundant. Rather than discuss
-  correctness, you can characterize how far away from the correct (true)
-  solution you are allowed to be.  This is discussed under accuracy.}
-
-\noindent \begin{itemize}
-
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Accuracy}:]
-  \textbf{Accuracy} \plt{Characterize the accuracy by giving the context/use for
-    the software.  Maybe something like, ``The accuracy of the computed
-    solutions should meet the level needed for $<$engineering or scientific
-    application$>$.  The level of accuracy achieved by \progname{} shall be
-    described following the procedure given in Section~X of the Verification and
-    Validation Plan.''  A link to the VnV plan would be a nice extra.}
-
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability}:] \textbf{Usability}
-  \plt{Characterize the usability by giving the context/use for the software.
-    You should likely reference the user characteristics section.  The level of
-    usability achieved by the software shall be described following the
-    procedure given in Section~X of the Verification and Validation Plan.  A
-    link to the VnV plan would be a nice extra.}
-
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Maintainability}:]
-  \textbf{Maintainability} \plt{The effort required to make any of the likely
-    changes listed for \progname{} should be less than FRACTION of the original
-    development time.  FRACTION is then a symbolic constant that can be defined
-    at the end of the report.}
-
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Portability}:]
-  \textbf{Portability} \plt{This NFR is easier to write than the others.  The
-    systems that \progname{} should run on should be listed here.  When possible
-    the specific versions of the potential operating environments should be
-    given.  To make the NFR verifiable a statement could be made that the tests
-    from a given section of the VnV plan can be successfully run on all of the
-    possible operating environments.}
-
-\item Other NFRs that might be discussed include verifiability,
-  understandability and reusability.
-
-\end{itemize}
-
-\subsection{Rationale}
-
-\plt{Provide a rationale for the decisions made in the documentation.  Rationale
-should be provided for scope decisions, modelling decisions, assumptions and
-typical values.}
-
-\section{Likely Changes}    
-
-\noindent \begin{itemize}
-
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] \plt{Give
-    the likely changes, with a reference to the related assumption (aref), as appropriate.}
-
-\end{itemize}
-
-\section{Unlikely Changes}    
-
-\noindent \begin{itemize}
-
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] \plt{Give
-    the unlikely changes.  The design can assume that the changes listed will
-    not occur.}
-
-\end{itemize}
-
-\section{Traceability Matrices and Graphs}
-
-The purpose of the traceability matrices is to provide easy references on what
-has to be additionally modified if a certain component is changed.  Every time a
-component is changed, the items in the column of that component that are marked
-with an ``X'' may have to be modified as well.  Table~\ref{Table:trace} shows the
-dependencies of theoretical models, general definitions, data definitions, and
-instance models with each other. Table~\ref{Table:R_trace} shows the
-dependencies of instance models, requirements, and data constraints on each
-other. Table~\ref{Table:A_trace} shows the dependencies of theoretical models,
-general definitions, data definitions, instance models, and likely changes on
-the assumptions.
-
-\plt{You will have to modify these tables for your problem.}
-
-\plt{The traceability matrix is not generally symmetric.  If GD1 uses A1, that
-  means that GD1's derivation or presentation requires invocation of A1.  A1
-  does not use GD1.  A1 is ``used by'' GD1.}
-
-\plt{The traceability matrix is challenging to maintain manually.  Please do
-  your best.  In the future tools (like Drasil) will make this much easier.}
-
-\afterpage{
-\begin{landscape}
-\begin{table}[h!]
-\centering
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-\hline
-	& \aref{A_OnlyThermalEnergy}& \aref{A_hcoeff}& \aref{A_mixed}& \aref{A_tpcm}& \aref{A_const_density}& \aref{A_const_C}& \aref{A_Newt_coil}& \aref{A_tcoil}& \aref{A_tlcoil}& \aref{A_Newt_pcm}& \aref{A_charge}& \aref{A_InitTemp}& \aref{A_OpRangePCM}& \aref{A_OpRange}& \aref{A_htank}& \aref{A_int_heat}& \aref{A_vpcm}& \aref{A_PCM_state}& \aref{A_Pressure} \\
-\hline
-\tref{T_COE}        & X& & & & & & & & & & & & & & & & & & \\ \hline
-\tref{T_SHE}        & & & & & & & & & & & & & & & & & & & \\ \hline
-\tref{T_LHE}        & & & & & & & & & & & & & & & & & & & \\ \hline
-\dref{NL}           & & X& & & & & & & & & & & & & & & & & \\ \hline
-\dref{ROCT}         & & & X& X& X& X& & & & & & & & & & & & & \\ \hline
-\ddref{FluxCoil}    & & & & & & & X& X& X& & & & & & & & & & \\ \hline
-\ddref{FluxPCM}     & & & X& X& & & & & & X& & & & & & & & & \\ \hline
-\ddref{D_HOF}       & & & & & & & & & & & & & & & & & & & \\ \hline
-\ddref{D_MF}        & & & & & & & & & & & & & & & & & & & \\ \hline
-\iref{ewat}         & & & & & & & & & & & X& X& & X& X& X& & & X \\ \hline
-\iref{epcm}         & & & & & & & & & & & & X& X& & & X& X& X& \\ \hline
-\iref{I_HWAT}       & & & & & & & & & & & & & & X& & & & & X \\ \hline
-\iref{I_HPCM}       & & & & & & & & & & & & & X& & & & & X & \\ \hline
-\lcref{LC_tpcm}     & & & & X& & & & & & & & & & & & & & & \\ \hline
-\lcref{LC_tcoil}    & & & & & & & & X& & & & & & & & & & & \\ \hline
-\lcref{LC_tlcoil}   & & & & & & & & & X& & & & & & & & & & \\ \hline
-\lcref{LC_charge}   & & & & & & & & & & & X& & & & & & & & \\ \hline
-\lcref{LC_InitTemp} & & & & & & & & & & & & X& & & & & & & \\ \hline
-\lcref{LC_htank}    & & & & & & & & & & & & & & & X& & & & \\
-\hline
-\end{tabular}
-\caption{Traceability Matrix Showing the Connections Between Assumptions and Other Items}
-\label{Table:A_trace}
-\end{table}
-\end{landscape}
-}
-
-\begin{table}[h!]
-\centering
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-\hline        
-	& \tref{T_COE}& \tref{T_SHE}& \tref{T_LHE}& \dref{NL}& \dref{ROCT} & \ddref{FluxCoil}& \ddref{FluxPCM} & \ddref{D_HOF}& \ddref{D_MF}& \iref{ewat}& \iref{epcm}& \iref{I_HWAT}& \iref{I_HPCM} \\
-\hline
-\tref{T_COE}     & & & & & & & & & & & & & \\ \hline
-\tref{T_SHE}     & & & X& & & & & & & & & & \\ \hline
-\tref{T_LHE}     & & & & & & & & & & & & & \\ \hline
-\dref{NL}        & & & & & & & & & & & & & \\ \hline
-\dref{ROCT}      & X& & & & & & & & & & & & \\ \hline
-\ddref{FluxCoil} & & & & X& & & & & & & & & \\ \hline
-\ddref{FluxPCM}  & & & & X& & & & & & & & & \\ \hline
-\ddref{D_HOF}    & & & & & & & & & & & & & \\ \hline
-\ddref{D_MF}     & & & & & & & & X& & & & & \\ \hline
-\iref{ewat}      & & & & & X& X& X& & & & X& & \\ \hline
-\iref{epcm}      & & & & & X& & X& & X& X& & & X \\ \hline
-\iref{I_HWAT}    & & X& & & & & & & & & & & \\ \hline
-\iref{I_HPCM}    & & X& X& & & & X& X& X& & X& & \\
-\hline
-\end{tabular}
-\caption{Traceability Matrix Showing the Connections Between Items of Different Sections}
-\label{Table:trace}
-\end{table}
-
-\begin{table}[h!]
-\centering
-\begin{tabular}{|c|c|c|c|c|c|c|c|}
-\hline
-	& \iref{ewat}& \iref{epcm}& \iref{I_HWAT}& \iref{I_HPCM}& \ref{sec_DataConstraints}& \rref{R_RawInputs}& \rref{R_MassInputs} \\
-\hline
-\iref{ewat}            & & X& & & & X& X \\ \hline
-\iref{epcm}            & X& & & X& & X& X \\ \hline
-\iref{I_HWAT}          & & & & & & X& X \\ \hline
-\iref{I_HPCM}          & & X& & & & X& X \\ \hline
-\rref{R_RawInputs}     & & & & & & & \\ \hline
-\rref{R_MassInputs}    & & & & & & X& \\ \hline
-\rref{R_CheckInputs}   & & & & & X& & \\ \hline
-\rref{R_OutputInputs}  & X& X& & & & X& X \\ \hline
-\rref{R_TempWater}     & X& & & & & & \\ \hline 
-\rref{R_TempPCM}       & & X& & & & & \\ \hline
-\rref{R_EnergyWater}   & & & X& & & & \\ \hline
-\rref{R_EnergyPCM}     & & & & X& & & \\ \hline
-\rref{R_VerifyOutput}  & & & X& X& & & \\ \hline
-\rref{R_timeMeltBegin} & & X& & & & & \\ \hline
-\rref{R_timeMeltEnd}   & & X& & & & & \\ 
-\hline
-\end{tabular}
-\caption{Traceability Matrix Showing the Connections Between Requirements and Instance Models}
-\label{Table:R_trace}
-\end{table}
-
-The purpose of the traceability graphs is also to provide easy references on
-what has to be additionally modified if a certain component is changed.  The
-arrows in the graphs represent dependencies. The component at the tail of an
-arrow is depended on by the component at the head of that arrow. Therefore, if a
-component is changed, the components that it points to should also be
-changed. Figure~\ref{Fig_ATrace} shows the dependencies of theoretical models,
-general definitions, data definitions, instance models, likely changes, and
-assumptions on each other. Figure~\ref{Fig_RTrace} shows the dependencies of
-instance models, requirements, and data constraints on each other.
-
-% \begin{figure}[h!]
-% 	\begin{center}
-% 		%\rotatebox{-90}
-% 		{
-% 			\includegraphics[width=\textwidth]{ATrace.png}
-% 		}
-% 		\caption{\label{Fig_ATrace} Traceability Matrix Showing the Connections Between Items of Different Sections}
-% 	\end{center}
-% \end{figure}
-
-
-% \begin{figure}[h!]
-% 	\begin{center}
-% 		%\rotatebox{-90}
-% 		{
-% 			\includegraphics[width=0.7\textwidth]{RTrace.png}
-% 		}
-% 		\caption{\label{Fig_RTrace} Traceability Matrix Showing the Connections Between Requirements, Instance Models, and Data Constraints}
-% 	\end{center}
-% \end{figure}
-
-\section{Development Plan}
-
-\plt{This section is optional.  It is used to explain the plan for developing
-  the software.  In particular, this section gives a list of the order in which
-  the requirements will be implemented.  In the context of a course  this is
-  where you can indicate which requirements will be implemented as part of the
-  course, and which will be ``faked'' as future work.  This section can be
-  organized as a prioritized list of requirements, or it could should the
-  requirements that will be implemented for ``phase 1'', ``phase 2'', etc.}
-
-\section{Values of Auxiliary Constants}
-
-\plt{Show the values of the symbolic parameters introduced in the report.}
-
-\plt{The definition of the requirements will likely call for SYMBOLIC\_CONSTANTS.
-Their values are defined in this section for easy maintenance.}
-
-\plt{The value of FRACTION, for the Maintainability NFR would be given here.}
-
-\newpage
-
-\bibliographystyle {plainnat}
-\bibliography {../../refs/References}
-
-\newpage
-
-\noindent \plt{The following is not part of the template, just some things to consider
-  when filing in the template.}
-
-\noindent \plt{Grammar, flow and \LaTeX advice:
+\subsection{Stakeholders and Requirements Sources}\label{subsec:stakeholders-and-requirements-sources}
+\textbf{Stakeholders:}
 \begin{itemize}
-\item For Mac users \texttt{*.DS\_Store} should be in \texttt{.gitignore}
-\item \LaTeX{} and formatting rules
-\begin{itemize}
-\item Variables are italic, everything else not, includes subscripts (link to
-  document)
-\begin{itemize}
-\item \href{https://physics.nist.gov/cuu/pdf/typefaces.pdf}{Conventions}
-\item Watch out for implied multiplication
+    \item Society – General public interested in board game strategy.
+    \item Players of \emph{\Catan{}} – End-users of all skill levels seeking appropriate opponents and skill improvement.
+    \item New players seeking to learn the game fundamentals and strategies.
+    \item Other Catan bot developers interested in benchmarking their bots against existing models.
+    \item Software Engineering Researchers and Practitioners – Professionals and students seeking reference implementations for integrating ML systems with production software architectures.
+    \item Machine Learning Community – Researchers exploring curriculum learning and Elo-based training strategies for large state-space games.
+    \item Software Engineering Educators – Academic institutions seeking real-world examples of experiential learning in advanced software engineering, demonstrating the value of learning-by-doing for complex ML systems.
+    \item Project Supervisor – Dr. Istvan David.
+    \item Department of Computing and Software (CAS) – Hosting organization.
 \end{itemize}
-\item Use BibTeX
-\item Use cross-referencing
-\end{itemize}
-\item Grammar and writing rules
-\begin{itemize}
-\item Acronyms expanded on first usage (not just in table of acronyms)
-\item ``In order to'' should be ``to''
-\end{itemize}
-\end{itemize}}
 
-\noindent \plt{Advice on using the template:
+\noindent\textbf{Requirements Sources:}
 \begin{itemize}
-\item Difference between physical and software constraints
-\item Properties of a correct solution means \emph{additional} properties, not
-  a restating of the requirements (may be ``not applicable'' for your problem).
-  If you have a table of output constraints, then these are properties of a
-  correct solution.
-\item Assumptions have to be invoked somewhere
-\item ``Referenced by'' implies that there is an explicit reference
-\item Think of traceability matrix, list of assumption invocations and list of
-  reference by fields as automatically generatable
-\item If you say the format of the output (plot, table etc), then your
-  requirement could be more abstract
+    \item Project documentation – Initial description provided by Dr. Istvan David.
+    \item Competitive \emph{\Catan{}} players – Consulted for strategic insights, gameplay knowledge, and multi-level difficulty requirements.
+    \item Open-source libraries – Catanatron[10], OpenCV[11], and YOLOv9[12] were consulted to inform the technical requirements.
+    \item Academic research – Reinforcement learning, curriculum learning[14], Elo rating systems[13], and computer vision papers guide \AI{} design.
+    \item Industry standards – PEP 8[9] and Google style guides[8] define coding standards.
+    \item User feedback – Iterative testing and feedback from users during development inform usability and functionality requirements.
 \end{itemize}
-}
+
+
+\subsection{User Profiles}\label{subsec:User Profiles}
+To ensure the system addresses the needs of its target audience, we have identified three distinct user profiles
+within the "Players of \emph{\Catan{}}" stakeholder group, aligned with the Elo system as a skill estimate.
+
+\hspace{1cm}
+
+\noindent\textbf{1. The Novice Player (Low Elo: 800-1100)}
+\begin{itemize}
+    \item \textbf{Game Knowledge:} Limited understanding of strategic depth; often focuses on basic rules and immediate resource needs.
+    \item \textbf{Goals:} To learn the fundamentals, understand optimal building placements, and avoid common mistakes. Seeks skill progression with appropriate difficulty scaling.
+    \item \textbf{Digital Literacy:} Varies, but expects a simple, intuitive, and highly guided interface.
+    \item \textbf{\LLM{} Explanations:} Struggles with complex strategic terminology, preferring simpler, actionable explanations. The \LLM{} should provide clear, beginner-friendly insights into why certain moves are recommended.
+    \item \textbf{Rationale:} The system's in-game advice functionality and skill-based opponent selection are primarily tailored for this user. The curriculum learning phases trained on simplified rules also benefit novice players who face fewer complex game states early on.
+\end{itemize}
+
+\noindent\textbf{2. The Intermediate Player (Medium Elo: 1100-1400)}
+\begin{itemize}
+    \item \textbf{Game Knowledge:} Has a solid grasp of the rules and common strategies but struggles with adapting to complex game states or high-level opponent plays.
+    \item \textbf{Goals:} To improve their win rate, discover new strategies, and understand the trade-offs of different moves. Wants to challenge themselves with appropriately difficult opponents.
+    \item \textbf{Digital Literacy:} Generally comfortable with technology and can navigate more detailed features.
+    \item \textbf{\LLM{} Explanations:} Appreciates more detailed strategic insights, including trade-offs and long-term implications of moves. The \LLM{} should provide intermediate-level explanations that go beyond basic tactics.
+    \item \item \textbf{Rationale:} This user benefits most from the system's post-game analysis. The ability to replay games and see win probability changes at each state helps them understand where they went wrong and how to improve.
+\end{itemize}
+
+\noindent\textbf{3. The Competitive Player (High Elo: 1400+)}
+\begin{itemize}
+    \item \textbf{Game Knowledge:} Extensive knowledge of the game, including advanced strategies, common openings, and opponent metagame.
+    \item \textbf{Goals:} To find the absolute optimal play in any given situation, test new theories, and practice against the most challenging opponents. May aspire to master the trained model or contribute to model development.
+    \item \textbf{Digital Literacy:} High; they are willing to engage with complex data visualizations, advanced settings, and model versioning interfaces.
+    \item \textbf{\LLM{} Explanations:} Seeks in-depth, technical explanations that include probabilistic reasoning, opponent modeling, and meta-strategic considerations. The \LLM{} should provide expert-level insights that can inform high-level play.
+    \item \textbf{Rationale:} The \AI{} model's ability to serve as a competitive opponent through the Elo league is crucial for this user profile. They can use the system to play thousands of simulated games against top-rated models to refine their strategies.
+\end{itemize}
+
+\subsection{Software Engineering and ML Learning Value}\label{subsec:se-ml-learning}
+AlgoCatan is a reference implementation for end-to-end ML system design and an \textbf{experiential learning} exemplar[15].
+The team completes Kolb’s cycle (experience, reflection, conceptualization, experimentation) by providing move
+explanations and replay features, promoting active learning from experience.
+
+\hspace{1cm}
+
+\noindent\textbf{Key learning outcomes:}
+\begin{itemize}
+    \item \textbf{Integration Architecture:} Grey-box integration with Catanatron, interface adaptation, and dependency management.
+    \item \textbf{Full-Stack ML System Design:} Frontend, backend, training pipeline, model serving, and database working as one system.
+    \item \textbf{Advanced Training Methods:} Curriculum learning, Elo-based self-play, and model versioning in practice.
+    \item \textbf{Production ML Concerns:} Monitoring, rollback, and reproducible training runs.
+\end{itemize}
+
+This provides a practical template for future teams and demonstrates why learning-by-doing is essential for complex ML systems.
+
 
 \newpage{}
+
+
+\phantomsection
+\section*{(E) Environment}\label{sec:srs-environment}
+\addcontentsline{toc}{section}{Environment}
+\renewcommand{\thesubsection}{E.\arabic{subsection}}
+\renewcommand{\theHsubsection}{E.\arabic{subsection}}
+\setcounter{subsection}{0}
+
+\subsection{Glossary}\label{subsec:glossary}
+\raggedright Moved glossary to beginning of document (see Changes from original SRS Meyer Template section).
+
+\subsection{Environment Components}\label{subsec:components2}
+\raggedright The following is a list of elements in the environment that may affect or be affected by the system and the project.
+It includes other systems to which the system must be interfaced:
+\begin{itemize}
+    \item {Game Simulator (Catanatron)} – The Python library that provides complete \emph{\Catan{}} game simulation, rule enforcement, and state management, serving as the foundational integration point for the project.
+    \item {Players} – Human users of varying skill levels interacting with the web interface and AI agents competing against each other or the player.
+    \item {Web Browser} – Client environment where the React UI runs, displaying the game state and accepting user input.
+    \item {Web Server} – Backend that processes game logic, manages Elo ratings, and serves API endpoints to the frontend.
+    \item {Database Server} – Database instance storing game history, player profiles, match statistics, Elo ratings, and curriculum progress.
+    \item {Training Infrastructure} – Campus GPUs or local machines for running \RL{} training loops with curriculum phases and league-based opponent selection.
+    \item {\LLM{} service/API} – an LLM integration that generates natural language explanations of bot actions.
+    \item {Optional/Future components:}
+    \begin{itemize}
+        \item {Computer Vision System} – (Deferred) Would process camera input to track physical board state in future versions.
+        \item {Smart glasses} – (Deferred) Would provide augmented reality visualization in future versions.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Constraints}\label{subsec:constraints}
+\begin{itemize}
+    \item {Game rules of \emph{\Catan{}}} – The \RL{} agent must strictly follow the official rules of the game.
+    \item {Web Server Performance} – The system must process game states and API requests fast enough to provide responsive gameplay.
+    \item {Simulator Accuracy} – The game simulator must correctly implement all game mechanics to ensure the \AI{} learns valid strategies.
+    \item {Model Loading} – The \RL{} agent model must be efficiently loaded and kept in memory during gameplay.
+    \item {Computational resources} – Training and running the \RL{} agent is bounded by available GPU/CPU capacity.
+    \item {Database Performance} – Game state lookups and historical queries must be efficient for real-time and replay functionality.
+    \item {Timeframe} – The project must be completed within the allocated time frame.
+    \item {Device Compatibility} – The web interface must function across major devices and operating systems.
+\end{itemize}
+
+\subsection{Assumptions}\label{subsec:assumptions}
+\begin{itemize}
+    \item {Game rules compliance} – The system assumes human players and \AI{} agents will adhere to official game rules and employ valid gameplay.
+    \item {Network Reliability} – The system assumes the network connection will be reliable enough for web-based gameplay and API communication.
+    \item {Device Reliability} – The system assumes the user's device and browser will function properly without crashes or interruptions.
+    \item {Simulator Accuracy} – The system assumes the Catanatron simulator accurately represents game state transitions and rule enforcement.
+    \item {Model Stability} – The system assumes trained \RL{} models will remain stable and valid between training sessions and versions.
+\end{itemize}
+
+\subsection{Effects}\label{subsec:effects}
+\begin{itemize}
+    \item {Player opponent} – The \AI{} provides an opponent for players to practice against, improving their learning and enjoyment.
+    \item {Learning and adaptation} – The \RL{} agent improves over time, indirectly affecting the level of challenge for players.
+    \item {Replay and explanations} – The system's analysis and explanation features affect player understanding and strategic insight.
+    \item {Device usage} – The system uses computational resources on player devices or servers for inference and visualization.
+    \item {Game pacing} – Fast bot moves mean games will typically be shorter than human-only matches, allowing more practice in less time.
+\end{itemize}
+
+\subsection{Invariants}\label{subsec:invariants}
+Values present in the following invariants are derived from the official rules of \emph{\Catan{}}:
+\begin{itemize}
+    \item The total number of roads per player, including those on the board and in hand, remains exactly 15.
+    \item The total number of settlements per player, including those on the board and in hand, remains exactly 5.
+    \item The total number of cities per player, including those on the board and in hand, remains exactly 4.
+    \item The total number of resource cards of each type remains exactly 19.
+    \item The total number of development cards of each type in the game remains exactly 25.
+    \item The player turn order remains consistent throughout the game.
+\end{itemize}
+
+
+\subsection{Standards and Legal/Regulatory Factors}
+We will follow the following styling standards:
+\begin{itemize}
+    \item \textbf{PEP 8 (Python Enhancement Proposal 8)} – Defines conventions for Python code style to ensure readability and maintainability[9].
+    \item \textbf{Google Style Guide} – Coding conventions for consistent formatting, for use with JavaScript/React[8].
+\end{itemize}
+
+Additionally, we shall abide by the following legal and regulatory factors:
+\begin{itemize}
+    \item \textbf{Intellectual Property:}
+    \emph{Catan} is a registered trademark owned by Catan GmbH. The system will not reproduce or distribute copyrighted materials, game rules, or artwork without permission.
+
+    \item \textbf{Open-Source Software Licenses:}
+    All third-party libraries (e.g., OpenCV[11], YOLOv9[12], PyTorch) will be used under their respective open-source licenses (Apache 2.0, MIT, or BSD). We shall ensure compliance with redistribution and modification terms.
+
+    \item \textbf{Data Privacy:}
+    No personally identifiable information shall be collected.
+
+    \item \textbf{Ethical \AI{} Considerations:}
+    The system follows responsible \AI{} principles, including transparency, fairness, and non-deceptive behavior. It will not make decisions that affect users beyond the game environment.
+\end{itemize}
+
+\subsection*{Environmental Requirements}
+\addcontentsline{toc}{subsection}{Environmental Requirements}
+
+\begin{table}[h!]
+    \centering
+    \caption{Environment Requirements }
+    \label{tab:nfr}
+    \begin{tabular}{|c|p{8.5cm}|>{\centering\arraybackslash}p{3.5cm}|}
+    \hline
+    \textbf{Label} & \textbf{Requirement} \\
+    \hline
+    NFR.E.1 & The system shall be installable and fully operational on Windows 10+. \label{NFR.E.1} \\
+    \hline
+    NFR.E.2 & The system shall have a complete installation time of no more than 15 minutes. \label{NFR.E.2} \\
+    \hline
+    NFR.E.3 & The system shall compile successfully on available GPU/CPU resources. \label{NFR.E.3} \\
+    \hline
+    NFR.E.4 & The system shall provide \AI{} moves within 1 second. \label{NFR.E.4} \\
+    \hline
+    NFR.E.5 & The system's Python code shall pass all PEP8 [9] style checks. \label{NFR.E.5} \\
+    \hline
+    NFR.E.6 & The system's JavaScript/React code shall pass all Google Style Guide [8] checks. \label{NFR.E.6} \\
+    \hline
+    NFR.E.7 & The system shall enforce the invariant that the total number of roads per player remains exactly 15. \label{NFR.E.7} \\
+    \hline
+    NFR.E.8 & The system shall enforce the invariant that the total number of settlements per player remains exactly 5. \label{NFR.E.8} \\
+    \hline
+    NFR.E.9 & The system shall enforce the invariant that the total number of cities per player remains exactly 4. \label{NFR.E.9} \\
+    \hline
+    NFR.E.10 & The system shall enforce the invariant that the total number of resource cards per type remains exactly 19. \label{NFR.E.10} \\
+    \hline
+    NFR.E.11 & The system shall enforce the invariant that the total number of development cards remains exactly 25. \label{NFR.E.11} \\
+    \hline
+    NFR.E.12 & The system shall enforce consistent player turn order throughout the game. \label{NFR.E.12} \\
+    \hline
+    NFR.E.13 & The system shall not reproduce or distribute copyrighted materials. \label{NFR.E.13} \\
+    \hline
+    NFR.E.14 & The system shall not use any trademarked assets of \emph{Catan{}}. \label{NFR.E.14} \\
+    \hline
+    NFR.E.15 & The system shall not collect personally identifiable information. \label{NFR.E.15} \\
+    \hline
+    \end{tabular}
+\end{table}
+
+    
+    
+\newpage{}
+
+
+
+
+\phantomsection
+\section*{System}\label{sec:srs-system}
+\addcontentsline{toc}{section}{System}
+\renewcommand{\thesubsection}{S.\arabic{subsection}}
+\renewcommand{\theHsubsection}{S.\arabic{subsection}}
+\setcounter{subsection}{0}
+
+\subsection{Components}\label{subsec:components}
+The system is separated into a list of major components:
+
+The figure below is a high-level component diagram illustrating the main components of the system and their interactions. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Component_Diagram_final.png}
+    \caption{Component Diagram.}
+    \label{fig:hs_before}
+\end{figure}
+
+
+\begin{itemize}
+    \item Computer Vision Model (Out of Scope): A future component that would process camera input to track physical board state, using techniques like object detection and image segmentation.
+
+    \item Training Pipeline: Orchestration system for curriculum-based training with Elo league integration, managing phase transitions, opponent selection for self-play, and logging/tracking training metrics.
+
+    \item \AI{} Model: The trained model capable of making strategic decisions in \emph{\Catan{}} games through learned policy and value functions.
+
+    \item \Elo{} League System: A competitive rating infrastructure that maintains Elo ratings for trained model snapshots, baseline opponents (random, value function), and provides dynamic opponent selection. Handles rating updates based on match outcomes and manages league member storage and pruning.
+
+    \item Curriculum Learning Manager: A system for managing progressive training phases with configurable rule variations (e.g., lower victory points, disabled actions), advancement thresholds based on metrics, and phase tracking across training runs.
+
+    \item User Interface: Web interface providing interactive board visualization, game controls, replay functionality, and strategic analysis displays.
+
+    \item Game State Database: Database for persisting game states, match results, and historical data for replay and analysis.
+
+    \item Backend API Server: An API that handles communication between the UI, game state manager, and game state database.
+
+    \item Game State Manager: The component responsible for maintaining and synchronizing the current game state throughout gameplay, accessible to both the \AI{} agent and the user interface.
+
+    \item Explanation Pipeline: Integration with a large language model (\LLM{}) to generate natural language explanations of strategic decisions made by the \AI{} agent, accessible through the user interface.
+\end{itemize}
+
+
+\subsection{Functionality}\label{subsec:functionality}
+
+
+\textbf{Functional Requirements}
+
+\subsubsection{Computer Vision Model}
+
+\textbf{Implementation Status: NOT IMPLEMENTED (Out of Scope)}
+
+The original vision for a computer vision system to observe physical board states has been descoped from the current implementation. The following requirements are listed for historical reference and future development:
+
+\textbf{Functional Requirements}
+
+\begin{itemize}
+  \item \label{FR.S.1.1}\textbf{FR.S.1.1 (DEFERRED)} The system shall process live or captured camera input to detect board elements, player actions, and resource placements with at least 99.99\% accuracy.
+  \item \label{FR.S.1.2}\textbf{FR.S.1.2 (DEFERRED)} The system shall translate visual features into structured \GameState{} data for the Game State Manager.
+  \item \label{FR.S.1.3}\textbf{FR.S.1.3 (DEFERRED)} The system shall detect and report inconsistencies or occlusions in visual view.
+  \item \label{FR.S.1.4}\textbf{FR.S.1.4 (DEFERRED)} The system shall dynamically calibrate lighting, camera angle, and board orientation.
+  \item \label{FR.S.1.5}\textbf{FR.S.1.5 (DEFERRED)} The system shall provide visual diagnostics and confidence metrics for detected states.
+\end{itemize}
+
+\subsubsection{Training Pipeline}
+
+\begin{itemize}
+  \item \label{FR.S.2.1}\textbf{FR.S.2.1} The system shall enforce that training bots follow the game rules, move logic, and state transitions consistent with the official \emph{\Catan{}} rule-set.
+  \item \label{FR.S.2.2}\textbf{FR.S.2.2} The system shall enable the \AI{} model to perform self-play against opponents selected from the Elo league for training purposes.
+  \item \label{FR.S.2.3}\textbf{FR.S.2.3} The system shall provide feedback in the form of rewards, penalties, or success metrics for learning.
+  \item \label{FR.S.2.4}\textbf{FR.S.2.4} The system shall support batch and real-time evaluation modes for model benchmarking.
+  \item \label{FR.S.2.5}\textbf{FR.S.2.5} The system shall adapt dynamically to changing game conditions through curriculum-guided reinforcement learning.
+\end{itemize}
+
+
+\subsubsection{AI Model}
+
+\textbf{Functional Requirements}
+
+\begin{itemize}
+  \item \label{FR.S.3.1}\textbf{FR.S.3.1} The system shall analyze the digital \GameState{} and return a valid action consistent with the rules of \emph{\Catan{}}.
+  \item \label{FR.S.3.2}\textbf{FR.S.3.2} The system shall evaluate potential moves based on resource availability, player position, and opponent behavior.
+  \item \label{FR.S.3.3}\textbf{FR.S.3.3} The system's models shall interface seamlessly with the Game State, allowing the interchanging of model versions.
+  \item \label{FR.S.3.4}\textbf{FR.S.3.4} The system shall win matches against a bot making random moves \textgreater50\% of the time to demonstrate learning.
+  \item \label{FR.S.3.5}\textbf{FR.S.3.5} The system shall integrate with the Training Pipeline, enabling continuous improvement.
+\end{itemize}
+
+\subsubsection{Elo League System}
+
+\textbf{Functional Requirements}
+
+\begin{itemize}
+  \item \label{FR.S.3.6}\textbf{FR.S.3.6} The system shall maintain \Elo{} ratings for all trained model snapshots and baseline opponents.
+  \item \label{FR.S.3.7}\textbf{FR.S.3.7} The system shall update \Elo{} ratings based on match outcomes between league members using the standard \Elo{} formula.
+  \item \label{FR.S.3.8}\textbf{FR.S.3.8} The system shall expose stored league members to the UI, enabling users to select from multiple bot options.
+  \item \label{FR.S.3.9}\textbf{FR.S.3.9} The system shall reduce training bias by enforcing fixed probabilities of selecting opponents from known stable benchmarks during training.
+  \item \label{FR.S.3.10}\textbf{FR.S.3.10} The system shall manage league member storage and implement pruning strategies to maintain league size to no more than 125 model snapshots.
+\end{itemize}
+
+\subsubsection{Curriculum Learning Manager}
+
+\textbf{Functional Requirements}
+
+\begin{itemize}
+  \item \label{FR.S.3.12}\textbf{FR.S.3.12} The system shall define and manage curriculum phases with configurable rule variations (e.g., victory point targets, disabled action types).
+  \item \label{FR.S.3.13}\textbf{FR.S.3.13} The system shall automatically advance to the next curriculum phase based on metric thresholds and minimum episode requirements.
+  \item \label{FR.S.3.14}\textbf{FR.S.3.14} The system shall support optional cycling back to earlier phases or continuous training through the same phase.
+  \item \label{FR.S.3.15}\textbf{FR.S.3.15} The system shall log curriculum phase transitions and training metrics for analysis and debugging.
+  \item \label{FR.S.3.16}\textbf{FR.S.3.16} The system shall integrate curriculum phases with Elo league opponent selection during training.
+\end{itemize}
+
+\subsubsection{User Interface}
+
+\textbf{Functional Requirements}
+
+\begin{itemize}
+  \item \label{FR.S.4.1}\textbf{FR.S.4.1} The system shall provide an interactive, real-time visualization of the \emph{\Catan{}} board and current \GameState{}.
+  \item \label{FR.S.4.2}\textbf{FR.S.4.2} The system shall display player moves, dice rolls, and resource changes immediately after occurrence.
+  \item \label{FR.S.4.3}\textbf{FR.S.4.3} The system shall enable player interactions such as building, trading, and any other actions possible in the game of \emph{\Catan{}}.
+  \item \label{FR.S.4.4}\textbf{FR.S.4.4} The system shall present \LLM{}-generated move explanations clearly, with intuitive action selection.
+  \item \label{FR.S.4.5}\textbf{FR.S.4.5} The system shall support desktop and mobile layouts for accessibility and responsiveness.
+  \item \label{FR.S.4.6}\textbf{FR.S.4.6} The system shall log user interactions and decisions for post-game replay.
+  \item \label{FR.S.4.7}\textbf{FR.S.4.7} The system shall be able to load a list of bots from the Elo league.
+  \item \label{FR.S.4.8}\textbf{FR.S.4.8} The system shall allow users to select specific opponents from the league.
+\end{itemize}
+
+
+\subsubsection{Game State Database}
+
+\textbf{Functional Requirements}
+
+\begin{itemize}
+  \item \label{FR.S.5.1}\textbf{FR.S.5.1} The system shall store complete and consistent records of all ongoing and past \emph{\Catan{}} games.
+  \item \label{FR.S.5.2}\textbf{FR.S.5.2} The system shall maintain scores, resource inventories, and game metadata.
+  \item \label{FR.S.5.3}\textbf{FR.S.5.3} The system shall support efficient read and write operations for real-time synchronization.
+  \item \label{FR.S.5.4}\textbf{FR.S.5.4} The system shall ensure data persistence across sessions and support recovery after interruptions.
+  \item \label{FR.S.5.5}\textbf{FR.S.5.5} The system shall provide structured access to historical game data for training or replay features.
+\end{itemize}
+
+
+\subsubsection{Backend API Server}
+
+\textbf{Functional Requirements}
+
+\begin{itemize}
+  \item \label{FR.S.6.1}\textbf{FR.S.6.1} The system shall enable reliable data exchange between the User Interface, Game State Manager, and Database.
+  \item \label{FR.S.6.2}\textbf{FR.S.6.2} The system shall support both synchronous and asynchronous message-passing mechanisms.
+  \item \label{FR.S.6.3}\textbf{FR.S.6.3} The system shall ensure low-latency updates (\textless100ms for UI updates, \textless1s for \AI{} decisions) to maintain real-time synchronization of states.
+\end{itemize}
+
+\subsubsection{Game State Manager}
+
+\textbf{Functional Requirements}
+
+\begin{itemize}
+  \item \label{FR.S.7.1}\textbf{FR.S.7.1} The system shall ensure game state updates consistently follow the rules of \emph{\Catan{}}.
+  \item \label{FR.S.7.2}\textbf{FR.S.7.2} The system shall track player assets such as settlements, cities, roads, and resources accurately.
+  \item \label{FR.S.7.3}\textbf{FR.S.7.3} The system shall record turn and dice data to enable game history tracking and replay functionality.
+  \item \label{FR.S.7.4}\textbf{FR.S.7.4} The system shall automatically update the board state to reflect player actions and maintain consistency.
+  \item \label{FR.S.7.5}\textbf{FR.S.7.5} The system shall provide a method for structured access to current board and player information.
+\end{itemize}
+
+\subsubsection{Explanation Pipeline}
+
+\textbf{Functional Requirements}
+
+\begin{itemize}
+  \item \label{FR.S.8.1}\textbf{FR.S.8.1} The system shall integrate with a large language model (\LLM{}) to generate natural language explanations of the \AI{} agent's strategic decisions.
+  \item \label{FR.S.8.2}\textbf{FR.S.8.2} The system shall provide an API endpoint for the frontend to request explanations for specific moves or game states.
+  \item \label{FR.S.8.3}\textbf{FR.S.8.3} The system shall ensure explanations are contextually relevant, accurate, and understandable to players of varying skill levels.
+\end{itemize}
+
+\subsubsection{Non-Functional Requirements}
+
+\begin{itemize}
+  \item \label{NFR.S.1}\textbf{NFR.S.1} \textbf{Scalability:} The system shall support multiple concurrent games without performance degradation.
+  \item \label{NFR.S.2}\textbf{NFR.S.2} \textbf{Usability:} The system shall provide an intuitive interface accessible to users (assessed through usability surveys/interviews).
+  \item \label{NFR.S.3}\textbf{NFR.S.3} \textbf{Maintainability:} The system's codebase shall follow modular design for easy updates and debugging.
+  \item \label{NFR.S.4}\textbf{NFR.S.4} \textbf{Installability:} The system shall ensure compatibility across major operating systems and browsers.
+  \item \label{NFR.S.5}\textbf{NFR.S.5} \textbf{Data Integrity:} The system shall prevent data corruption through validation and transactional consistency.
+  \item \label{NFR.S.6}\textbf{NFR.S.6} \textbf{Availability:} The system shall have an uptime of at least 99\%.
+\end{itemize}
+
+
+\subsection{Interfaces}\label{subsec:interfaces}
+
+
+The system requires several software interfaces. These include:
+\begin{itemize}
+    \item A REST API between the React frontend and Flask backend for gameplay, replay, and explanation requests.
+    \item A Python library interface to the Catanatron simulator for rule enforcement and game-state transitions.
+    \item An \RL{} environment interface compatible with Stable Baselines3 / OpenAI Gym-style interaction for training the \RL{} agent.
+    \item An external \LLM{} API interface for generating natural-language move explanations.
+\end{itemize}
+
+
+\subsection{Normal Operation}\label{subsec:normal-operation}
+\begin{itemize}
+    \item User initiates a game session through the web interface.
+    \item Backend initializes a game state via Catanatron and loads the selected \AI{} model.
+    \item The \AI{} agent and player alternate turns while the UI reflects state updates in real time.
+    \item Game state and results are persisted for replay and analysis.
+\end{itemize}
+
+\subsection{Undesired Event Handling}\label{subsec:undesired-event-handling}
+\begin{itemize}
+    \item {Model Load Failure} – System returns a clear error message and falls back to a baseline opponent if available.
+    \item {Simulation Error} – Game session terminates gracefully with logs preserved for debugging.
+    \item {UI Disconnect} – Session state is persisted; user can reconnect and resume from the last saved state.
+    \item {Invalid Move Request} – Backend rejects the move and returns valid action options.
+\end{itemize}
+
+
+\subsection{Detailed Usage Scenarios}\label{subsec:detailed-usage-scenarios}
+
+\noindent\textbf{Use Case Name:} Human vs \RL{} Agent Gameplay Session
+
+\noindent\textbf{Primary Actor:} Human Player
+
+\noindent\textbf{Stakeholders and Interests:}
+\begin{itemize}
+    \item Human Player: Wants a challenging, fair, and responsive game experience.
+    \item Developer: Wants to validate that the integrated system behaves correctly during real gameplay.
+    \item Society: Benefits from an accessible and engaging board-game \AI{} system.
+\end{itemize}
+
+\noindent\textbf{Preconditions:}
+\begin{itemize}
+    \item User interface is available and connected to the backend API.
+    \item A valid \emph{Catan} game configuration can be initialized.
+    \item The selected \RL{} agent model is loaded and operational.
+\end{itemize}
+
+\noindent\textbf{Postconditions (Success Guarantees):}
+\begin{itemize}
+    \item A complete game is played to termination or normal user exit.
+    \item All moves, state transitions, and results are recorded for later analysis or replay.
+    \item The user is shown the final outcome of the match.
+\end{itemize}
+
+\noindent\textbf{Postconditions (Failure Guarantees):}
+\begin{itemize}
+    \item If the game cannot continue, the system preserves logs and any recoverable state.
+    \item The user receives a clear error message and the session ends gracefully or falls back to a baseline opponent if available.
+\end{itemize}
+
+\noindent\textbf{Main Success Scenario (Basic Flow):}
+\begin{itemize}
+    \item Human player starts a new game session from the web interface.
+    \item Backend initializes the game state using the simulation environment and loads the selected opponent.
+    \item The current board state is displayed to the user.
+    \item Human player submits legal actions through the interface.
+    \item After each player action, the game state manager updates the state and synchronizes it with the backend and UI.
+    \item On the \RL{} agent's turn, the backend queries the loaded model for a legal action.
+    \item The chosen action is applied through the simulator and the updated state is shown to the player.
+    \item Steps 4--7 repeat until the game ends.
+    \item Final results are displayed and persisted for replay and analysis.
+\end{itemize}
+
+\noindent\textbf{Justification:}
+
+This is the core end-user scenario for the project. It validates the integration of the user interface, backend API, simulator, and trained model in a realistic deployment setting.
+
+\vspace{1em}
+
+\noindent\textbf{Use Case Name:} Multi-Level Player Progression
+
+\noindent\textbf{Primary Actor:} Returning Human Player
+
+\noindent\textbf{Stakeholders and Interests:}
+\begin{itemize}
+    \item Novice and Intermediate Players: Want a difficulty curve that supports learning and improvement.
+    \item Competitive Players: Want progressively stronger opponents as their skill increases.
+    \item Developer: Wants to verify that difficulty progression is meaningful and usable.
+\end{itemize}
+
+\noindent\textbf{Preconditions:}
+\begin{itemize}
+    \item The bot selection panel contains multiple opponents of varying strength.
+    \item The system allows the user to choose any of the available bots.
+\end{itemize}
+
+\noindent\textbf{Postconditions (Success Guarantees):}
+\begin{itemize}
+    \item The player selects an appropriate next opponent.
+\end{itemize}
+
+\noindent\textbf{Main Success Scenario (Basic Flow):}
+\begin{itemize}
+    \item Player opens the opponent selection screen.
+    \item System displays available opponents and their relative strengths.
+    \item Player selects a bot that matches their desired challenge level.
+    \item A new match is launched against the selected bot.
+    \item After the match, results are recorded.
+\end{itemize}
+
+\noindent\textbf{Justification:}
+
+This scenario supports one of the main goals of the project: providing an \AI{} opponent that remains useful across multiple skill levels instead of serving only as a static benchmark.
+
+\vspace{1em}
+
+\noindent\textbf{Use Case Name:} Replay of Past Games with Strategic Analysis
+
+\noindent\textbf{Primary Actor:} Human Player or Analyst
+
+\noindent\textbf{Stakeholders and Interests:}
+\begin{itemize}
+    \item Human Player: Wants to review decisions and learn from previous games.
+    \item Developer: Wants access to historical data for debugging and evaluation.
+    \item Researcher: Wants structured game histories for studying strategy and model behavior.
+\end{itemize}
+
+\noindent\textbf{Preconditions:}
+\begin{itemize}
+    \item At least one completed game has been stored in the database.
+    \item Replay and analysis data are available for retrieval.
+\end{itemize}
+
+\noindent\textbf{Postconditions (Success Guarantees):}
+\begin{itemize}
+    \item The selected game is replayed accurately from stored history.
+    \item The user can inspect important game states and associated strategic analysis.
+\end{itemize}
+
+\noindent\textbf{Postconditions (Failure Guarantees):}
+\begin{itemize}
+    \item If replay data is incomplete or unavailable, the system informs the user and preserves all accessible data.
+\end{itemize}
+
+\noindent\textbf{Main Success Scenario (Basic Flow):}
+\begin{itemize}
+    \item User opens the replay/history view.
+    \item Backend retrieves the stored game states, actions, and metadata.
+    \item UI reconstructs the board and allows the user to step forward or backward through turns, or jump to a specific turn number.
+    \item At each selected state, the analysis module provides supporting information such as estimated win probability or other evaluation metrics.
+    \item User reviews the replay until the desired point or the end of the game.
+\end{itemize}
+
+\noindent\textbf{Justification:}
+
+Replay functionality turns gameplay into a learning tool and supports both player improvement and technical analysis of system behavior.
+
+\vspace{1em}
+
+\noindent\textbf{Use Case Name:} LLM-Based Strategic Explanation Request
+
+\noindent\textbf{Primary Actor:} Human Player
+
+\noindent\textbf{Stakeholders and Interests:}
+\begin{itemize}
+    \item Human Player: Wants understandable explanations of why a move was made.
+    \item Developer: Wants to verify that explanation requests are correctly routed and logged.
+    \item Researcher: Wants to study whether explanations improve interpretability and learning value.
+\end{itemize}
+
+\noindent\textbf{Preconditions:}
+\begin{itemize}
+    \item A game is currently in progress or a past game state is available.
+    \item The explanation pipeline and external \LLM{} interface are operational.
+    \item Sufficient state and move context are available for the selected explanation target.
+\end{itemize}
+
+\noindent\textbf{Postconditions (Success Guarantees):}
+\begin{itemize}
+    \item A natural-language explanation is returned to the user and associated with the selected move or state.
+    \item The explanation request and result are logged for future review.
+\end{itemize}
+
+\noindent\textbf{Postconditions (Failure Guarantees):}
+\begin{itemize}
+    \item If explanation generation fails, the user receives a clear error message and gameplay or replay can continue without interruption.
+\end{itemize}
+
+\noindent\textbf{Main Success Scenario (Basic Flow):}
+\begin{itemize}
+    \item User selects a move or game state and requests an explanation.
+    \item Backend gathers the relevant game-state context, move details, and any analysis metadata.
+    \item Explanation pipeline formats the request for the \LLM{} service.
+    \item External \LLM{} API generates a natural-language explanation.
+    \item Backend validates and returns the explanation to the frontend.
+    \item UI displays the explanation to the user.
+\end{itemize}
+
+\noindent\textbf{Justification:}
+
+This scenario supports the project's goal of making the \AI{} not only strong, but also interpretable and educational for players of different skill levels.
+
+\vspace{1em}
+
+\noindent\textbf{Use Case Name:} Bot Selection and Benchmarking
+
+\noindent\textbf{Primary Actor:} Developer or Advanced User
+
+\noindent\textbf{Stakeholders and Interests:}
+\begin{itemize}
+    \item Developer: Wants to compare trained models against baselines and other snapshots.
+    \item Researcher: Wants reproducible benchmark results across different opponents or configurations.
+    \item Competitive Player: Wants to inspect the relative strength of available bots.
+\end{itemize}
+
+\noindent\textbf{Preconditions:}
+\begin{itemize}
+    \item Multiple baseline and trained models are available in the league or model store.
+    \item Benchmarking configuration options are accessible to the user.
+\end{itemize}
+
+\noindent\textbf{Postconditions (Success Guarantees):}
+\begin{itemize}
+    \item Selected models are evaluated in the requested configuration.
+    \item Match results, statistics, and rating impacts are recorded.
+\end{itemize}
+
+\noindent\textbf{Postconditions (Failure Guarantees):}
+\begin{itemize}
+    \item If a selected model cannot be loaded or executed, the benchmark is aborted with logs and an error message.
+\end{itemize}
+
+\noindent\textbf{Main Success Scenario (Basic Flow):}
+\begin{itemize}
+    \item Developer opens the benchmarking interface (Interface deferred for scope of project. Can still run from CLI directly).
+    \item Developer selects one or more opponents and benchmark settings such as number of games or evaluation mode.
+    \item Backend loads the chosen models and initializes benchmark matches in the CLI interface.
+    \item Matches are executed and results are aggregated.
+    \item System displays statistics such as wins, losses, and updated ratings where applicable.
+\end{itemize}
+
+\noindent\textbf{Justification:}
+
+Benchmarking is necessary to show that training produces meaningful performance gains and to support model comparison, regression detection, and evaluation against baselines.
+
+\vspace{1em}
+
+\noindent\textbf{Use Case Name:} Curriculum-Based Training Run
+
+\noindent\textbf{Primary Actor:} Developer
+
+\noindent\textbf{Stakeholders and Interests:}
+\begin{itemize}
+    \item Developer: Wants a controlled training workflow with measurable phase progression.
+    \item Researcher: Wants to study the impact of curriculum design on learning quality.
+    \item Project Team: Wants reproducible training runs and interpretable training logs.
+\end{itemize}
+
+\noindent\textbf{Preconditions:}
+\begin{itemize}
+    \item A valid curriculum configuration has been defined.
+    \item Training infrastructure and required model dependencies are available.
+    \item The simulator and league integration are operational.
+\end{itemize}
+
+\noindent\textbf{Postconditions (Success Guarantees):}
+\begin{itemize}
+    \item Training completes or advances through one or more curriculum phases.
+    \item Metrics, checkpoints, and phase transitions are recorded.
+\end{itemize}
+
+\noindent\textbf{Postconditions (Failure Guarantees):}
+\begin{itemize}
+    \item If training fails, partial logs and the most recent valid checkpoint are preserved when possible.
+\end{itemize}
+
+\noindent\textbf{Main Success Scenario (Basic Flow):}
+\begin{itemize}
+    \item Developer launches a training run with a selected curriculum configuration.
+    \item Curriculum manager initializes the first phase and its rule variations.
+    \item Training pipeline selects opponents from the league and begins self-play episodes.
+    \item Rewards, episode results, and other training metrics are collected.
+    \item System checks whether advancement criteria for the current phase have been met.
+    \item If criteria are met, the curriculum manager advances to the next phase.
+    \item Updated checkpoints and logs are saved throughout the run.
+    \item Training stops at completion or at a developer-defined stopping point.
+\end{itemize}
+
+\noindent\textbf{Justification:}
+
+This scenario captures the core research and engineering workflow behind the project's \RL{} component and validates curriculum learning as a practical training strategy.
+
+\vspace{1em}
+
+\noindent\textbf{Use Case Name:} Model Versioning and Rollback
+
+\noindent\textbf{Primary Actor:} Developer or Administrator
+
+\noindent\textbf{Stakeholders and Interests:}
+\begin{itemize}
+    \item Developer: Wants safe deployment and the ability to recover from regressions.
+    \item Project Team: Wants clear traceability between checkpoints, ratings, and performance history.
+    \item Advanced User: May want to inspect how different model versions behave.
+\end{itemize}
+
+\noindent\textbf{Preconditions:}
+\begin{itemize}
+    \item Multiple model checkpoints or snapshots have been saved.
+    \item Metadata such as version identifiers, ratings, or training history is available.
+\end{itemize}
+
+\noindent\textbf{Postconditions (Success Guarantees):}
+\begin{itemize}
+    \item A selected previous model version becomes active for evaluation or deployment.
+\end{itemize}
+
+\noindent\textbf{Postconditions (Failure Guarantees):}
+\begin{itemize}
+    \item If a selected version is missing or invalid, the current stable version remains active and the user is notified.
+\end{itemize}
+
+\noindent\textbf{Main Success Scenario (Basic Flow):}
+\begin{itemize}
+    \item Developer selects a previous version for inspection or rollback.
+    \item System validates that the selected model artifact is available and loadable.
+    \item Developer modifies loaded model metadata if necessary (e.g., updating the active version reference).
+    \item Backend updates the active model reference.
+    \item The chosen version is used for subsequent gameplay, evaluation, or deployment tasks.
+\end{itemize}
+
+\noindent\textbf{Justification:}
+
+Model versioning and rollback reduce operational risk and support experimental development by allowing the team to recover quickly from regressions or undesirable training outcomes.
+
+\vspace{1em}
+
+\subsection{Prioritization}\label{subsec:prioritization}
+M → Must have
+• S → Should have
+• C → Could have
+• W → Won't have 
+
+\vspace{1em}
+
+\subsubsection*{Computer Vision Model}
+
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{ID} & \textbf{Requirement Name} & \textbf{Priority} &
+\textbf{Reasoning} & \textbf{Date} \\
+\hline
+\hyperref[FR.S.1.1]{FR.S.1.1} & Visual Input Processing & W &
+\parbox[t]{4cm}{Processes live or recorded camera feeds to identify board elements, player actions, and resources.} &
+2025-10-27 \\
+\hline
+\hyperref[FR.S.1.2]{FR.S.1.2} & Feature-to-State Translation & W &
+\parbox[t]{4cm}{Converts detected visual features into structured \GameState{} data for synchronization with the game manager.} &
+2025-10-27 \\
+\hline
+\hyperref[FR.S.1.3]{FR.S.1.3} & Error Detection and Correction & W &
+\parbox[t]{4cm}{Identifies and compensates for occlusions or misdetections to preserve recognition accuracy.} &
+2025-10-27 \\
+\hline
+\hyperref[FR.S.1.4]{FR.S.1.4} & Dynamic Calibration & W &
+\parbox[t]{4cm}{Adapts to variations in lighting, camera position, and board orientation to maintain performance.} &
+2025-10-27 \\
+\hline
+\hyperref[FR.S.1.5]{FR.S.1.5} & Diagnostic Feedback & W &
+\parbox[t]{4cm}{Provides visual debugging output and confidence metrics to assess detection reliability.} &
+2025-10-27 \\
+\hline
+\end{tabular}
+
+\vspace{1em}
+
+\subsubsection*{Training Pipeline}
+
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{ID} & \textbf{Requirement Name} & \textbf{Priority} &
+\textbf{Reasoning} & \textbf{Date} \\
+\hline
+\hyperref[FR.S.2.1]{FR.S.2.1} & Rule Simulation & M &
+\parbox[t]{4cm}{Simulates game rules, move logic, and state transitions consistent with official \emph{\Catan{}} rules.} &
+2025-11-06 \\
+\hline
+\hyperref[FR.S.2.2]{FR.S.2.2} & AI Training Integration & M &
+\parbox[t]{4cm}{Enables \AI{} model to perform self-play or interact with recorded game states for training.} &
+2025-11-06 \\
+\hline
+\hyperref[FR.S.2.3]{FR.S.2.3} & Feedback Mechanism & S &
+\parbox[t]{4cm}{Provides feedback such as rewards, penalties, or success metrics to guide learning.} &
+2025-11-06 \\
+\hline
+\hyperref[FR.S.2.4]{FR.S.2.4} & Evaluation Modes & S &
+\parbox[t]{4cm}{Supports both batch and real-time evaluation modes for \AI{} benchmarking.} &
+2025-11-06 \\
+\hline
+\hyperref[FR.S.2.5]{FR.S.2.5} & System Integration & M &
+\parbox[t]{4cm}{Interfaces seamlessly with the Game State Manager and \AI{} model for synchronization.} &
+2025-11-06 \\
+\hline
+\end{tabular}
+\vspace{1em}
+
+
+
+\subsubsection*{\AI{} Model}
+
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{ID} & \textbf{Requirement Name} & \textbf{Priority} &
+\textbf{Reasoning} & \textbf{Date} \\
+\hline
+\hyperref[FR.S.3.1]{FR.S.3.1} & Action Return & M &
+\parbox[t]{4cm}{Analyzes the \GameState{} and returns valid moves.} &
+2025-12-06 \\
+\hline
+\hyperref[FR.S.3.2]{FR.S.3.2} & State Considerations & S &
+\parbox[t]{4cm}{Improves predictions using more complex decision data.} &
+2025-12-06 \\
+\hline
+\hyperref[FR.S.3.3]{FR.S.3.3} & Model Versioning & C &
+\parbox[t]{4cm}{Allows models to be switched easily.} &
+2025-12-12 \\
+\hline
+\hyperref[FR.S.3.4]{FR.S.3.4} & Baseline Success & M &
+\parbox[t]{4cm}{Ensures model is actually learning.} &
+2025-12-18 \\
+\hline
+\hyperref[FR.S.3.5]{FR.S.3.5} & Continuous Improvement & M &
+\parbox[t]{4cm}{Allows the model to continue training after stopping.} &
+2026-04-05 \\
+\hline
+\end{tabular}
+
+\vspace{1em}
+
+\subsubsection*{\Elo{} League System}
+
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{ID} & \textbf{Requirement Name} & \textbf{Priority} &
+\textbf{Reasoning} & \textbf{Date} \\
+\hline
+\hyperref[FR.S.3.6]{FR.S.3.6} & Elo Rating Maintenance & M &
+\parbox[t]{4cm}{Maintains accurate Elo ratings enabling skill-based matchmaking.} &
+2026-01-15 \\
+\hline
+\hyperref[FR.S.3.7]{FR.S.3.7} & Rating Updates & M &
+\parbox[t]{4cm}{Updates ratings based on match outcomes using standard Elo formula.} &
+2026-01-15 \\
+\hline
+\hyperref[FR.S.3.8]{FR.S.3.8} & Dynamic Opponent Selection & S &
+\parbox[t]{4cm}{Enables players to select opponents matched to their skill level.} &
+2026-01-22 \\
+\hline
+\hyperref[FR.S.3.9]{FR.S.3.9} & Fixed Baseline Sampling & S &
+\parbox[t]{4cm}{Reduces training bias via opponent selection.} &
+2026-01-22 \\
+\hline
+\hyperref[FR.S.3.10]{FR.S.3.10} & League Pruning & S &
+\parbox[t]{4cm}{Maintains reasonable league size while keeping strong models.} &
+2026-01-29 \\
+\hline
+\end{tabular}
+
+\vspace{1em}
+
+\subsubsection*{Curriculum Learning Manager}
+
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{ID} & \textbf{Requirement Name} & \textbf{Priority} &
+\textbf{Reasoning} & \textbf{Date} \\
+\hline
+\hyperref[FR.S.3.12]{FR.S.3.12} & Phase Management & M &
+\parbox[t]{4cm}{Defines and manages curriculum phases with configurable complexity.} &
+2026-01-08 \\
+\hline
+\hyperref[FR.S.3.13]{FR.S.3.13} & Automatic Advancement & M &
+\parbox[t]{4cm}{Progresses through phases based on performance metrics.} &
+2026-01-15 \\
+\hline
+\hyperref[FR.S.3.14]{FR.S.3.14} & Phase Cycling & S &
+\parbox[t]{4cm}{Supports flexible phase management strategies.} &
+2026-01-22 \\
+\hline
+\hyperref[FR.S.3.15]{FR.S.3.15} & Metric Logging & S &
+\parbox[t]{4cm}{Records phase transitions for analysis and debugging.} &
+2026-01-29 \\
+\hline
+\hyperref[FR.S.3.16]{FR.S.3.16} & League Integration & M &
+\parbox[t]{4cm}{Integrates curriculum phases with Elo league during training.} &
+2026-02-01 \\
+\hline
+\end{tabular}
+
+\vspace{1em}
+
+\subsubsection*{User Interface}
+
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{ID} & \textbf{Requirement Name} & \textbf{Priority} &
+\textbf{Reasoning} & \textbf{Date} \\
+\hline
+\hyperref[FR.S.4.1]{FR.S.4.1} & Interactive Board View & M &
+\parbox[t]{4cm}{Displays real-time board updates and player actions clearly.} &
+2025-11-06 \\
+\hline
+\hyperref[FR.S.4.2]{FR.S.4.2} & Visual Indicators & S &
+\parbox[t]{4cm}{Shows player resources, turns, and actions for clarity.} &
+2025-11-06 \\
+\hline
+\hyperref[FR.S.4.3]{FR.S.4.3} & Action Controls & M &
+\parbox[t]{4cm}{Allows players to build, trade, and manage turns easily.} &
+2025-11-06 \\
+\hline
+\hyperref[FR.S.4.4]{FR.S.4.4} & \AI{} Suggestion Display & C &
+\parbox[t]{4cm}{Provides a clear interface for \LLM{} explanations.} &
+2025-11-06 \\
+\hline
+\hyperref[FR.S.4.5]{FR.S.4.5} & Multi-Platform Support & S &
+\parbox[t]{4cm}{Ensures compatibility with desktop and mobile devices.} &
+2025-11-06 \\
+\hline
+\hyperref[FR.S.4.7]{FR.S.4.7} & Elo Display & M &
+\parbox[t]{4cm}{Shows Elo ratings and league standings for opponent selection.} &
+2026-01-29 \\
+\hline
+\hyperref[FR.S.4.8]{FR.S.4.8} & Opponent Filtering & M &
+\parbox[t]{4cm}{Allows filtering opponents by difficulty or direct selection.} &
+2026-02-01 \\
+\hline
+\end{tabular}
+
+\vspace{1em}
+
+\subsubsection*{\GameState{} Database}
+
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{ID} & \textbf{Requirement Name} & \textbf{Priority} &
+\textbf{Reasoning} & \textbf{Date} \\
+\hline
+\hyperref[FR.S.5.1]{FR.S.5.1} & Persistent Storage & M &
+\parbox[t]{4cm}{Maintains all game and player data across sessions
+and restarts.} &
+2025-10-22 \\
+\hline
+\hyperref[FR.S.5.2]{FR.S.5.2} & Fast Query Access & S &
+\parbox[t]{4cm}{Retrieves current state information efficiently
+during gameplay.} &
+2025-10-22 \\
+\hline
+\hyperref[FR.S.5.3]{FR.S.5.3} & Synchronization & M &
+\parbox[t]{4cm}{Synchronizes database updates efficiently.
+actions.} &
+2025-10-30 \\
+\hline
+\hyperref[FR.S.5.4]{FR.S.5.4} & Data Integrity & M &
+\parbox[t]{4cm}{Prevents corruption and ensures consistency between
+tables.} &
+2025-10-24 \\
+\hline
+\hyperref[FR.S.5.5]{FR.S.5.5} & Historical Logging & C &
+\parbox[t]{4cm}{Stores previous games for analytics and replay
+purposes.} &
+2025-10-27 \\
+\hline
+\end{tabular}
+
+\vspace{1em}
+
+\subsubsection*{Backend API Server}
+
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{ID} & \textbf{Requirement Name} & \textbf{Priority} &
+\textbf{Reasoning} & \textbf{Date} \\
+\hline
+\hyperref[FR.S.6.1]{FR.S.6.1} & Real-Time Data Exchange & M &
+\parbox[t]{4cm}{Ensures components remain synchronized during
+gameplay.} &
+2025-11-09 \\
+\hline
+\hyperref[FR.S.6.2]{FR.S.6.2} & Message Passing & S &
+\parbox[t]{4cm}{Provides support for async and synchronous message-passing.} &
+2025-11-13 \\
+\hline
+\hyperref[FR.S.6.3]{FR.S.6.3} & Low Latency & S &
+\parbox[t]{4cm}{Ensures updates don't take too long.} &
+2025-11-14 \\
+\hline
+\end{tabular}
+
+\vspace{1em}
+
+\subsubsection*{Game State Manager}
+
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{ID} & \textbf{Requirement Name} & \textbf{Priority} &
+\textbf{Reasoning} & \textbf{Date} \\
+\hline
+\hyperref[FR.S.7.1]{FR.S.7.1} & Following Rules & M &
+\parbox[t]{4cm}{Ensures that only legal \emph{\Catan{}} moves are processed.} &
+2025-10-27 \\
+\hline
+\hyperref[FR.S.7.2]{FR.S.7.2} & Player Asset Tracking & M &
+\parbox[t]{4cm}{Tracks settlements, cities, roads, and resources
+accurately.} &
+2025-10-27 \\
+\hline
+\hyperref[FR.S.7.3]{FR.S.7.3} & Turn and Dice Recording & S &
+\parbox[t]{4cm}{Records turn data for game history and replay
+features.} &
+2025-10-27 \\
+\hline
+\hyperref[FR.S.7.4]{FR.S.7.4} & Automatic Updates & M &
+\parbox[t]{4cm}{Reflects player actions immediately to maintain
+consistency.} &
+2025-10-27 \\
+\hline
+\hyperref[FR.S.7.5]{FR.S.7.5} & Query Interface & M &
+\parbox[t]{4cm}{Provides structured access to current board and
+player information.} &
+2025-10-27 \\
+\hline
+\end{tabular}
+
+\vspace{1em}
+
+\subsubsection*{Explanation Pipeline}
+
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{ID} & \textbf{Requirement Name} & \textbf{Priority} &
+\textbf{Reasoning} & \textbf{Date} \\
+\hline
+\hyperref[FR.S.8.1]{FR.S.8.1} & \LLM{} Integration & M &
+\parbox[t]{4cm}{Required for explanations to be generated.} &
+2026-04-05 \\
+\hline
+\hyperref[FR.S.8.2]{FR.S.8.2} & API Endpoint & M &
+\parbox[t]{4cm}{Required to receive and process explanation requests.} &
+2026-04-05 \\
+\hline
+\hyperref[FR.S.8.3]{FR.S.8.3} & Explanation Quality & S &
+\parbox[t]{4cm}{Ensures explanations are actually relevant.} &
+2026-04-05 \\
+\hline
+\end{tabular}
+
+\vspace{1em}
+\subsection{Verification and Acceptance Criteria}\label{subsec:verification-and-acceptance-criteria}
+
+\noindent\textbf{Validation Overview:}
+
+To validate compatibility, simulation interoperability testing will be performed.
+The \RL{} agent will be tested in multiple versions of the environment.
+The validation of the functional requirements outlined for the AlgoCatan agent will be conducted throughout
+the development lifecycle, with a strong focus on acceptance testing and simulation-based evaluation.
+
+Early validation efforts will involve the use of simplified \emph{\Catan{}} game environments and prototypes
+of the \RL{} agent's architecture.
+Key stakeholders, such as \AI{} researchers, game designers, and domain experts,
+will participate in these early-stage reviews.
+
+\vspace{1em}
+
+\noindent\textbf{Unit Testing:}
+
+Unit testing will be employed to verify the correctness of individual components, including:
+\begin{itemize}
+    \item State representation
+    \item Reward computation
+    \item Policy/action selection mechanisms
+\end{itemize}
+
+By isolating and testing these components, the development team can catch logical and algorithmic errors early, ensuring reliable behavior in the broader simulation environment. \newline
+
+\noindent\textbf{Cross-Platform Environment Compatibility:}
+
+The agent will be tested in different \emph{\Catan{}} environments (e.g., Python implementations, or standardized OpenAI Gym-style interfaces) to ensure stable and consistent behavior across frameworks. \newline
+
+\noindent\textbf{Real-Time Decision Making:}
+
+To validate real-time decision-making capabilities:
+\begin{itemize}
+    \item Latency profiling and timing tests will be conducted.
+    \item Verifying that the agent makes decisions within predefined time limits during gameplay, particularly in competitive or interactive scenarios.
+    \item Continuous integration (CI) pipelines will ensure model updates or algorithm changes do not degrade response time.
+\end{itemize}
+
+\noindent\textbf{Strategic Planning and Reward Optimization:}
+
+To ensure the \RL{} agent optimizes for long-term goals (e.g., winning the game rather than maximizing short-term resource gain):
+\begin{itemize}
+    \item Longitudinal performance testing will be conducted.
+    \item Thousands of game simulations will be run to track:
+    \begin{itemize}
+        \item Policy convergence
+        \item Learning curves
+        \item Win rates across different strategies and game configurations
+    \end{itemize}
+\end{itemize}
+
+\noindent\textbf{Data Privacy and Ethical Compliance:}
+
+Although the \RL{} agent may not handle personal data directly:
+\begin{itemize}
+    \item Ethical compliance testing will ensure training data (e.g., human gameplay data) respects privacy guidelines.
+    \item No identifiable user data will be stored or processed without consent.
+    \item Data source validation and usage audits will ensure compliance with academic and industry standards.
+\end{itemize}
+
+\noindent\textbf{State and Action Accuracy:}
+
+To validate the agent’s perception and behavior:
+\begin{itemize}
+    \item Sanity tests and assertion-based checks will be implemented.
+    \item Ensure the agent:
+    \begin{itemize}
+        \item Acts according to official game rules
+        \item Respects legal action constraints
+        \item Maintains valid internal state representations
+    \end{itemize}
+\end{itemize}
+
+\noindent\textbf{Scalability and Training Stability:}
+
+To test the system’s ability to handle increased complexity:
+\begin{itemize}
+    \item Performance testing such as:
+    \begin{itemize}
+        \item Load testing
+        \item Stress testing
+        \item Distributed training simulations
+    \end{itemize}
+    \item Ensure the training pipeline can support large-scale experiments without crashing.
+    \item Validate that the agent remains stable under diverse training scenarios.
+\end{itemize}
+
+\subsection{Formalizations}
+\subsubsection{Formalization of the Learning Objective}
+\label{sec:formalization}
+
+The \RL{} agent is modeled as a Markov Decision Process (MDP), defined by the tuple:
+\[
+(S, A, P, R, \gamma)
+\]
+where:
+\begin{itemize}
+    \item $S$ is the set of all possible game states (e.g., the current board configuration, player hands, road/settlement locations, etc.)
+    \item $A$ is the set of actions available to the agent (e.g., build, trade, play development cards, etc.)
+    \item $P(s' \mid s, a)$ is the transition probability between states
+    \item $R(s, a)$ is the scalar reward obtained after performing action $a$ in state $s$
+    \item $\gamma \in [0, 1]$ is the discount factor applied to future rewards
+\end{itemize}
+
+The agent seeks a policy $\pi(a \mid s)$ that maximizes the expected discounted return:
+\[
+\pi^* = \arg\max_{\pi} \mathbb{E}_{\pi}\left[\sum_{t=0}^{\infty} \gamma^t R(s_t, a_t)\right]
+\]
+
+In the deep reinforcement learning (DRL) formulation used by this project, the policy $\pi(a \mid s)$ or the action-value function $Q(s, a)$ is represented by a deep neural network parameterized by weights $\theta$. The objective is then to learn $\theta$ that minimizes the temporal-difference loss:
+\[
+L(\theta) = \mathbb{E}_{(s, a, r, s')} \left[ \left( r + \gamma \max_{a'} Q_{\theta^-}(s', a') - Q_{\theta}(s, a) \right)^2 \right]
+\]
+where $Q_{\theta^-}$ denotes a target network with fixed parameters for stability during training.
+
+The input $s$ to the neural network encodes the current game state (board configuration, available resources, and player status), and the output $Q_{\theta}(s, a)$ estimates the expected long-term reward for each possible action.
+
+\subsubsection{Z-Notation Formalization of Game Rules}
+\label{sec:math-formalization}
+
+This section provides a partial formalization of the rules and conditions of \textit{Settlers of Catan} using \textbf{Z notation}.
+The purpose is to precisely define the relationships between the game state variables, actions, and constraints used by the reinforcement learning agent. \newline
+
+\textbf{Basic Types and Sets}
+
+We define the primitive types representing fundamental game elements:
+
+\[
+[PLAYER, RESOURCE, TILE, NODE, EDGE]
+\]
+
+Where:
+\begin{itemize}
+    \item \texttt{PLAYER} represents each player in the game.
+    \item \texttt{RESOURCE} $\in \{\text{Brick}, \text{Lumber}, \text{Wool}, \text{Grain}, \text{Ore}\}$.
+    \item \texttt{TILE}, \texttt{NODE}, and \texttt{EDGE} correspond to the spatial elements of the board. \newline
+\end{itemize}
+
+\textbf{Board Schema}
+
+\begin{schema}{Board}
+    tiles: \mathcal{P} TILE \\
+    nodes: \mathcal{P} NODE \\
+    edges: \mathcal{P} EDGE \\
+    tileNodes: TILE \fun \mathcal{P} NODE \\  % Each tile touches some nodes
+    tileEdges: TILE \fun \mathcal{P} EDGE \\  % Each tile touches some edges
+    nodeTiles: NODE \fun \mathcal{P} TILE    % Each node is adjacent to some tiles
+\where
+    \forall t: TILE @
+        \#(tileNodes(t)) = 6 \land
+        \#(tileEdges(t)) = 6
+\end{schema}
+
+This schema describes the board, and the relationships between tiles and their edges/nodes. \newline
+
+\textbf{Game State Schema}
+
+\begin{schema}{GameState}
+    players: \mathcal{P} PLAYER \\
+    resources: PLAYER \fun RESOURCE \pfun \mathbb{N} \\
+    roads: PLAYER \fun \mathcal{P} EDGE \\
+    settlements: PLAYER \fun \mathcal{P} NODE \\
+    turn: PLAYER \\
+    diceRoll: \mathbb{N}
+    \where
+    turn \in players \\
+    diceRoll \in 2 \dots 12
+\end{schema}
+
+
+This schema describes the static and dynamic components of a single game state.
+The \texttt{turn} variable indicates which player's move is currently being processed. \newline
+
+\textbf{Turn Transition Rule}
+
+\begin{schema}{NextTurn}
+    \Delta GameState \\
+    nextPlayer?: PLAYER
+    \where
+    nextPlayer? \in players \\
+    turn' = nextPlayer?
+\end{schema}
+
+
+This transition schema expresses that the game moves from one valid state to another by assigning the next player's turn. \newline
+
+\textbf{Resource Distribution Rule}
+
+\begin{schema}{DistributeResources}
+    \Delta GameState \\
+    rolledNumber?: \mathbb{N}
+    \where
+    rolledNumber? = diceRoll \\
+    \forall p: PLAYER @ resources'(p) = resources(p) + f(p, rolledNumber?)
+\end{schema}
+
+
+Where $f(p, rolledNumber?)$ represents the function mapping dice results to resource gains for player $p$, based on their settlements' positions. \newline
+
+\textbf{Valid Action Schema}
+
+\begin{schema}{ValidAction}
+    GameState \\
+    action?: ACTION \\
+    isValid!: \mathbb{B}
+    \where
+    (action? = \text{BuildRoad} \implies \text{canAffordRoad(turn)}) \\
+    (action? = \text{BuildSettlement} \implies \text{canAffordSettlement(turn)}) \\
+    (action? = \text{Trade} \implies \text{tradeValid(turn)}) \\
+    isValid! = (action? \in \text{LegalActions(turn)})
+\end{schema}
+
+
+This schema defines the logical constraints under which an action is considered legal in the game state.
+Each predicate ensures the acting player has sufficient resources and that the move complies with board and rule constraints.
+
+\newpage{}
+
+
+\phantomsection
+\section*{(P) Project}\label{sec:srs_project}
+\addcontentsline{toc}{section}{Project}
+\renewcommand{\thesubsection}{P.\arabic{subsection}}
+\renewcommand{\theHsubsection}{P.\arabic{subsection}}
+\setcounter{subsection}{0}
+
+\subsection{Roles and Personnel}\label{subsec:roles}
+\begin{itemize}
+    \item {Team Leader (Jake)} – Schedules meetings, coordinates the team, and acts as the primary point of contact with the supervisor and teaching assistant.
+    \item {Notetaker (Rebecca)} – Creates agendas, takes meeting notes, and updates the Kanban board to track project progress.
+    \item {IT/DevOps (Sunny)} – Manages the GitHub repository, oversees deployment processes, and handles technical and integration issues.
+    \item {Researcher (Matthew)} – Locates relevant academic papers and resources, researches unfamiliar topics, and provides insights to guide technical and conceptual understanding.
+    \item {Supervisor – Dr. Istvan David} – Provides guidance, technical expertise, and oversight for the project. Offers advice on project scope, architecture, and milestone management.
+    \item {Teaching Assistant – Tiago de Moraes Machado} – Provides assistance with course-related questions, clarifications, and support for project development. Acts as a point of contact for feedback and additional resources.
+\end{itemize}
+
+\subsection{Imposed Technical Choices}\label{subsec:technicalchoices}
+\begin{itemize}
+    \item {Programming languages} – Python for backend and \AI{} development; TypeScript/JavaScript with React for frontend implementation.
+    \item {\AI{} framework} – Reinforcement learning agent (PPO) trained using Stable Baselines3 and the Catanatron game simulator; compatible with OpenAI Gym.
+    \item {Web Backend} – Flask with Flask-CORS for REST API development and server-side game logic.
+    \item {Frontend Framework} – React with TypeScript and Vite as the build tool for the web interface.
+    \item {Database} – PostgreSQL for persistent game state storage and historical data management.
+    \item {Containerization} – Docker and Docker Compose for deployment and environment consistency.
+    \item {\CV{} Libraries} – (Deferred) OpenCV and YOLOv9 planned for future computer vision integration.
+    \item {Hardware} – GPU recommended for efficient \RL{} model training and inference.
+    \item {Version Control} – GitHub for source code management and collaboration.
+    \item {Continuous Integration} – GitHub Actions for automated testing and build pipelines.
+    \item {LLM API} - Gemini API for integration of natural language processing capabilities.
+    \item {Game Simulator} - The open-source Catanatron library will be used for game state simulation.
+\end{itemize}
+
+\subsection{Schedule and Milestones}\label{subsec:schedule}
+\medskip
+The major milestones for our project are as follows:
+\begin{table}[htbp]
+  \centering
+  \begin{tabular}{|l|l|}
+  \hline
+  \textbf{Milestone} & \textbf{Due Date} \\ \hline
+  Team Formed, Project Selected & Sept. 15 \\ \hline
+  Problem Statement, POC Plan, Development Plan & Sept. 22 \\ \hline
+  Requirements Document \& Hazard Analysis Revision & Oct. 10 \\ \hline
+  V\&V Plan Revision & Oct. 27 \\ \hline
+  Design Document Revision & Nov. 10 \\ \hline
+  Proof of Concept Demonstration & Nov. 17 \\ \hline
+  Design Document Revision & Jan. 19 \\ \hline
+  Revision 0 Demonstration & Feb. 2 \\ \hline
+  V\&V Report \& Extras Revision 0 & March 9 \\ \hline
+  Final Demonstration (Revision 1) & March 23 \\ \hline
+  Final Documentation (Revision 1) & April 6 \\ \hline
+  EXPO Demonstration & April 7 \\ \hline
+  
+  \end{tabular}
+  \caption{Project Milestones and Due Dates}
+  \label{tab:project-milestones}
+  \end{table}
+
+\FloatBarrier
+
+\subsection{Tasks and Deliverables}\label{subsec:tasks}
+\begin{table}[htbp]
+\centering
+\begin{tabular}{|p{3cm}|p{5cm}|p{3cm}|p{2cm}|}
+\hline
+\textbf{Task} & \textbf{Description / Steps} & \textbf{Deliverable} & \textbf{Due Date} \\ \hline
+
+Code Skeleton Implementation & Create placeholder files and functions for \RL{} agent, \CV{} pipeline, environment interaction, and utilities. & V\&V Plan Revision & Oct. 27 \\ \hline
+
+Initial \RL{} Prototype & Implement a basic \RL{} agent capable of interacting with a simulated environment; ensure it can take actions and receive rewards. & Design Document Revision & Nov. 10 \\ \hline
+
+Environment Integration & Connect \RL{} agent to the simulated game environment; ensure correct observation, action, and reward loop. & Proof of Concept Demonstration & Nov. 17 \\ \hline
+
+Agent Training & Run \RL{} training loops; tune hyperparameters; log and track rewards; iteratively improve performance. & Design Document Revision & Jan. 19 \\ \hline
+
+Testing and Debugging & Test the \RL{} agent in multiple scenarios; fix bugs, improve stability and performance. & Revision 0 Demonstration & Feb. 2 \\ \hline
+
+Computer Vision Integration & Add \CV{} module for real-time perception; ensure agent can process visual input and make decisions based on it. & V\&V Report \& Extras Revision 0 & March 9 \\ \hline
+
+Optimization and Feature Enhancements & Refine reward functions, optimize agent performance, improve decision-making; add optional features like prediction or visualization. & Final Demonstration (Revision 1) & March 23 \\ \hline
+
+Final Integration & Connect the agent to the real-time interface; ensure responsiveness and assistive functionality for players. & EXPO Demonstration & TBA \\ \hline
+
+Validation and Verification & Conduct comprehensive end-to-end testing; ensure correctness, reliability, and real-time performance. & Final Documentation (Revision 1) & April 6 \\ \hline
+
+Code Cleanup and Documentation & Refactor code, remove unnecessary files, write documentation including instructions for running, training, and testing the agent. & Final Documentation (Revision 1) & April 6 \\ \hline
+
+\end{tabular}
+\caption{Tasks and Deliverables (As originally planned)}
+\label{tab:tasks-deliverables}
+\end{table}
+
+\FloatBarrier
+
+
+\subsection{Required Technology Elements}\label{subsec:requiredtech}
+\begin{itemize}
+    \item {Primary Programming Language} – Python for backend and \AI{} development; TypeScript/JavaScript for frontend.
+    \item {Game Simulation Library} – Catanatron[10] for complete \emph{\Catan{}} game simulation and rule enforcement.
+    \item {Reinforcement Learning Framework} – Stable Baselines3 with PPO algorithm for training and deploying the \AI{} agent.
+    \item {Web Framework} – Flask with Flask-CORS for REST API development and server-side game logic.
+    \item {Frontend Framework} – React with TypeScript and Vite as the build tool for the web interface.
+    \item {Database} – PostgreSQL for persistent game state storage and historical data management.
+    \item {Containerization} – Docker and Docker Compose for deployment and environment consistency.
+    \item {\CV{} Libraries} – (Deferred) OpenCV and YOLOv9 planned for future computer vision integration.
+    \item {Hardware} – GPU recommended for efficient \RL{} model training and inference.
+    \item {Version Control} – GitHub for source code management and collaboration.
+    \item {Continuous Integration} – GitHub Actions for automated testing and build pipelines.
+    \item {LLM API} - Gemini API for integration of natural language processing capabilities.
+\end{itemize}
+
+\subsection{Risk and Mitigation Analysis}\label{subsec:risk}
+\begin{itemize}
+    \item {Risk: \AI{} Fails to Learn Effectively}
+    \begin{itemize}
+        \item Description: The \AI{} agent may not be able to learn to play \emph{\Catan{}} at a high level due to the game's complexity and stochastic nature.
+        \item Mitigation: Regular Elo testing against benchmark opponents to ensure improvement. Proof of concept will demonstrate valid move generation even if performance is limited.
+    \end{itemize}
+
+    \item {Risk: User Interface is Not User-Friendly}
+    \begin{itemize}
+        \item Description: The user interface may not be intuitive or user-friendly for a wider audience.
+        \item Mitigation: Conduct user testing sessions, gather feedback, and make iterative improvements.
+    \end{itemize}
+
+    \item {Risk: Technical Issues with External Libraries}
+    \begin{itemize}
+        \item Description: Technical issues may arise with external technologies like Catanatron[10], OpenCV[11], or YOLOv9[12].
+        \item Mitigation: Team collaboratively addresses issues as they arise; members are responsible for thorough testing and validation before deployment.
+    \end{itemize}
+
+    \item {Risk: Unrealistic Schedule or Workload}
+    \begin{itemize}
+        \item Description: Tasks may take longer than expected or workload may become unbalanced among team members.
+        \item Mitigation: Use GitHub Kanban board to manage tasks and milestones; notetaker updates board; time estimates and reassignment of tasks as needed.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Requirements Process and Report}\label{subsec:reqprocess}
+\begin{itemize}
+    \item {Initial Elicitation}: Requirements were gathered from the problem statement developed by the team, in consultation with key stakeholders including the project supervisor.
+    \item {Elicitation Plan}:
+    \begin{itemize}
+        \item Meetings: Weekly team meetings to discuss progress, challenges, and refine requirements; additional meetings as needed.
+        \item Communication: Discord server for informal discussions; separate Discord group for formal communication with advisor.
+        \item Documentation: Tasks and issues tracked via GitHub Issues with labels, assignments, and templates for consistency.
+        \item Process Update: Section updated as project progresses to reflect lessons learned, feedback from requirements document reviews, and revisions.
+    \end{itemize}
+\end{itemize}
+
+\section*{Safety and Security Requirements}\label{sec:safety-and-security-requirements}
+
+The following safety and security requirements have been ported from our hazard analysis. \newline
+
+\subsection*{Functional Safety Requirements}
+\begin{itemize}
+    \item FR.Sa.1: The system shall enable users to manually confirm the parsed board state before generating advice.
+    \item FR.Sa.2: The system shall provide a resynchronization mechanism (manual correction or re-scan).
+    \item FR.Sa.3: The system shall validate all AI-suggested moves against the official rules of Catan before display.
+    \item FR.Sa.4: The system shall provide a clear error message if advice cannot be generated.
+    \item FR.Sa.5: The system shall ensure current game state is saved correctly before recommending move(s) to the user.
+    \item FR.Sa.6: The system shall attempt automatic reconnection at least 3 times before failing.
+    \item FR.Sa.7: The system shall visually distinguish the move(s) suggested by AI.
+    \item FR.Sa.8: The system shall notify the user in the event board streaming ceases.
+    \item FR.Sa.9: The system shall warn the user when incomplete game data is read where possible.
+    \item FR.Sa.10: The system shall enable the user to roll back to previous model versions.
+    \item FR.Sa.11: The system shall restrict image capture and processing to the game board region, and shall ignore, discard, or mask non-board content such as player faces or personal items when detected.
+    \item FR.Sa.12: Iterations of the reinforcement learning environment shall be automatically validated to ensure its simulation dynamics remain consistent with real gameplay conditions. \newline
+\end{itemize}
+
+\subsection*{Non-Functional Safety Requirements}
+\begin{itemize}
+    \item NFR.Sa.1: The system shall ensure advice is displayed within 5 seconds of request.
+    \item NFR.Sa.2: The system shall notify the user of connection loss within 5 seconds.
+\end{itemize}
+
+\newpage
+
+
+
+
+\begin{landscape}
+    \section*{Requirement Dependencies}
+    \addcontentsline{toc}{section}{Requirement Dependencies}
+
+    \centering
+
+    \includegraphics[width=1.7\textheight]{requirement_dependency_diagram.png}
+
+    \captionof{figure}{\textit{Requirement traceability matrix showing dependencies between requirements.}}
+    \label{fig:requirements-diagram}
+\end{landscape}
+
+\FloatBarrier
+
+\section*{References}
+\addcontentsline{toc}{section}{References}
+\begin{enumerate}
+    \item "Catan," [Online]. Available: \url{http://en.wikipedia.org/wiki/Catan}. [Accessed 9 October 2025].
+    \item "Artificial Intelligence," [Online]. Available: \url{http://en.wikipedia.org/wiki/Artificial_intelligence}. [Accessed 9 October 2025].
+    \item "Reinforcement Learning," [Online]. Available: \url{https://www.ibm.com/think/topics/reinforcement-learning}. [Accessed 9 October 2025].
+    \item "Digital Twin," [Online]. Available: \url{http://en.wikipedia.org/wiki/Digital_twin}. [Accessed 9 October 2025].
+    \item "Computer Vision," [Online]. Available: \url{https://www.ibm.com/think/topics/computer-vision}. [Accessed 9 October 2025].
+    \item "Large Language Model (LLM)," [Online]. Available: \url{https://www.cloudflare.com/learning/ai/what-is-large-language-model/}. [Accessed 9 October 2025].
+    \item "Game State," [Online]. Available: \url{https://milvus.io/ai-quick-reference/what-is-a-state-in-rl}. [Accessed 9 October 2025].
+    \item "Google TypeScript Style Guide," [Online]. Available: \url{https://google.github.io/styleguide/tsguide.html}. [Accessed 10 October 2025].
+    \item "PEP 8 -- Style Guide for Python Code," [Online]. Available: \url{https://peps.python.org/pep-0008/}. [Accessed 10 October 2025].
+    \item "Catanatron GitHub Repository," [Online]. Available: \url{https://github.com/bcollazo/catanatron}. [Accessed 10 October 2025].
+    \item "OpenCV," [Online]. Available: \url{https://docs.opencv.org/4.x/d1/dfb/intro.html}. [Accessed 10 October 2025].
+    \item "YoloV9," [Online]. Available: \url{https://docs.ultralytics.com/models/yolov9/}. [Accessed 10 October 2025].
+    \item A. E. Elo, "The Rating of Chessplayers, Past and Present," Arco Publishing, 1978.
+    \item Y. Bengio, J. Louradour, R. Collobert, and J. Weston, "Curriculum learning," in Proceedings of the 26th International Conference on Machine Learning (ICML), 2009, pp. 41–48.
+    \item D. A. Kolb, "Experiential Learning: Experience as the Source of Learning and Development," Prentice Hall, 1984. See also: \url{https://en.wikipedia.org/wiki/Experiential_learning}. [Accessed 11 February 2026].
+\end{enumerate}
+\newpage{}
+
 \section*{Appendix --- Reflection}
-
-\wss{Not required for CAS 741}
-
-The information in this section will be used to evaluate the team members on the
-graduate attribute of Lifelong Learning.  
-
-\input{../Reflection.tex}
-
+\addcontentsline{toc}{section}{Appendix}
 \input{../SRS_Reflection.tex}
+
+\subsection*{Jake Read}\label{subsec:jake-read}
+\begin{enumerate}
+    \item I primarily worked on the hazard analysis doc, so for this one I handled a lot of the reviewing.
+    I read through each section and made comments on things that could be improved or added, and I think it went quite smoothly.
+    My team members are all still pulling their weight, and everyone accepts feedback well, which is great.
+    I would say the doc is more coherent now, hopefully that comes across to you as well :)
+
+    \item The main pain point was the good old Meyer template.
+    To be honest, I don't enjoy SRS documents, so I wasn't particularly thrilled to have to write another one after 3RA3.
+    We were recommended to use Meyer over Volere, and I'm happy with the choice, since Volere is pointlessly long, but Meyer has its own challenges.
+    For one, the template is only available in asciidoctor (why?), so I had to rewrite the whole template in LaTeX\@.
+    On top of that, it definitely feels like the SRS rubric is focused more so on Volere, so making sure this one followed it too was a bit of a hassle.
+    Additionally, last time we used this template, it was the final project for an entire course, but naturally there wasn't as much time for this deliverable, so it feels comparitively limited.
+    We compromised my shortening certain sections, while tweaking the template in areas to add more lists of actual requirements.
+
+    \item Quite a lot of our requirements came from chatting with Prof. Istvan David, our supervisor.
+    I asked him a lot of questions regarding his expectations when proposing the project, as well as asking for clarification for more technical details we weren't aware of.
+    His initial project description was also an excellent source for requirements elicitation since it was well-structured and separated rather modularly.
+    Sunny also has connections in the \emph{\Catan{}} competitive community, so we were able to derive some requirements directly from our potential user base.
+
+    \item Most of the courses we've taken throughout uni will help obviously, since that's the fundamental idea behind a capstone project, but there are a few that are particularly relevant.
+    3RA3 covered a lot of the documentation that we also have to do for this class.
+    Having done similar work before definitely helps reduce some of the frustration of seemingly endless written deliverables (marginally), so I'm grateful for that.
+    I'm also currently taking 4AL3 as an elective, which focuses on the application of machine learning.
+    It covers reinforcement learning, which is the focus of our project, so it's a very relevant course.
+    Overall though, I think the most helpful course for this project, (and in my opinion the most useful course in this degree so far), was 2AA4.
+    That course was essentially capstone-lite, with one large main full-term coding project that progressed in stages, from an MVP up to a finished product.
+    It also covered design principles and gave critical experience regarding the organization of group coding projects.
+    It had a huge workload and was very stressful at the time, but in retrospect it was the most fun I've had in any course, and it's a big part of why I'm so excited for this project.
+
+    \item The main skills we're going to need revolve around deep reinforcement learning and deep neural networks.
+    This is the main reason I wanted to take this project in the first place.
+    DRL is a relatively new field, with a lot of active research, so an opportunity to work with it to this scale is rare and develops highly marketable software engineering skills.
+    With \emph{\Catan{}}, a big area of knowledge we'll need is the creation and application of heuristics to guide the DRL model to improved results.
+    I'm rather interested in this, and I'm happy to research it on my own time to try to gain some expertise for the group.
+
+    \item For getting an understanding of DRL and DNN, we have two main ways of gaining the necessary knowledge.
+    One of the options for learning this is researching on our own time, using a list of papers on the subject we're slowly collecting on our Discord.
+    The other option is discussions with Istvan, since he's an expert on the subject and is happy to help with any confusions we have.
+    The approach to learning heuristics to aid the model are similar, research and consulting Istvan, but a bit of trial and error will be involved too.
+    By definition, no one knows exactly why heuristics work, they're a matter of intuition, so by just experimenting with different approaches I should be able to learn quite a lot.
+    I'm planning on learning primarily by chatting with Istvan.
+    I've already been asking him a lot of questions and his answers have been very helpful, so while he's happy to keep helping I'm happy to keep learning from him.
+    If I feel like I'm taking too much of his time, I'll fall back on research and experimentation.
+
+\end{enumerate}
+\subsection*{Sunny Yao}\label{subsec:sunny-yao}
+\begin{enumerate}
+    \item 
+    This deliverable used the Meyer template which we have experience with from
+    our requirements courses. This gave us extensive experience in writing
+    requirements documents, and we were able to leverage this experience to
+    efficiently produce a high-quality document. However, we had to adapt the
+    template to fit the specific needs of our project, effectively shortening
+    section
+
+    \item Some of the pain points included syncing requirements and components
+    across all of the sections. We had to ensure that the components we
+    defined in the environment section were consistent with those in the system
+    section, and that the requirements we defined were feasible given the
+    components we had. This required a lot of back-and-forth and revisions to
+    ensure consistency.
+
+    \item It was useful to get the perspectives of users as well as researching the 
+    top currently existing competitive \emph{\Catan{}} bots. We were able to look at the limitations
+    of these bots and their user interfaces to help us define requirements for our own project.
+    In addition, we were able to get a better understanding of the needs of reinforcement
+    learning systems from our supervisor, who has extensive experience in this area.
+
+    \item We have taken 3RA3, which focused on requirements engineering and software design.
+    This course provided us with a strong foundation in writing requirements documents
+    and designing software systems. In addition the engineering fundamentals courses since
+    1P13 have provided us with a strong foundation in software engineering principles and practices.
+    We have also taken courses in machine learning and artificial intelligence, which will be useful
+    for understanding the reinforcement learning aspects of our project.
+
+    \item The skills we will need to successfully complete this project include reinforcement
+    learning, computer vision, as well as competitive \emph{\Catan{}} strategies. We will also need
+    strong software engineering skills to design and implement the system. In addition, we will
+    need to be able to work effectively as a team, communicating and collaborating to ensure
+    that we are all on the same page and working towards the same goals.
+
+    \item The main way we will gain the necessary reinforcement learning and computer vision
+    knowledge is through research and self-study. We will read papers and articles on these topics,
+    as well as experimenting with different techniques and approaches. Also, many of us are taking
+    the 4AL3 course this term, which focuses on the application of machine learning.
+    This will provide us with a strong foundation in this area. For competitive \emph{\Catan{}} strategies, we will leverage the expertise of
+    competitive players as well as our own experience playing the game. We will also study existing \emph{\Catan{}} bots
+    to understand their strategies and approaches.
+
+\end{enumerate}
+
+\subsection*{Rebecca}\label{subsec:rebecca}
+\begin{enumerate}
+    \item During this deliverable our team divided the work evenly and met weekly to stay 
+    organized. We assigned and tracked tasks through Discord, which 
+    helped keep everyone accountable. After completing our assigned
+     sections, we reviewed the rubric to make sure each requirement
+      was met. On the final day before submission, we held a seven-hour
+      work session to review every part of the document together and
+       ensure full consistency and quality.
+
+    \item One of the main pain points during this deliverable was that the rubric included
+    several elements not explicitly covered by the Meyer template.
+     Because of this, we had to diverge from the original format to 
+     align with the rubric’s expectations. We decided to create
+      a “Changes from Template” table that clearly outlined all modifications and
+       additions we made to the original template, ensuring clarity
+        and consistency across the document.
+
+    \item We spoke extensively with our supervisor, Dr. David,
+     who proposed the project and provided valuable insights into 
+     reinforcement learning (RL) and deep reinforcement learning (DRL).
+      In addition, Sunny has a connection with a competitive 
+      \emph{\Catan{}} player, which allowed us to get direct user input.
+      This helped us understand the specific needs of our target audience and the limitations of existing competitive \AI{} bots, which in turn helped shape our requirements.
+
+    \item I am currently taking 4AL3 (Introduction to Machine Learning),
+     which aligns closely with our project since it covers many of the
+      core topics in DRL. Previous courses such as 3RA3 (Requirements Engineering)
+       were also extremely helpful, as we used the Meyer template
+        originally introduced there. Also, 2AA4 (Software Design I)
+         was valuable because it emphasized iterative project development, starting
+          with an MVP and building up, which mirrors the structure of our capstone project.
+
+    \item Our team needs to develop strong knowledge in deep reinforcement learning (DRL)
+     and neural networks, as these are the core of our system. This is a fast-growing field
+      with many new research directions. From the sounds of it, Jake and I will focus on researching DRL models 
+      and architectures, Sunny will focus on the digital twin,
+      and personas modelling. Finally Matthew will concentrate on integrating computer vision (CV) into the project.
+
+    \item For DRL, Jake and I's main learning methods will include independent
+     research using online resources, papers, and tutorials. Also regular discussions
+      with Dr. David for technical guidance. Dr. David has provided us with lots of relevant papers
+      and resources to get us started which is extremely helpful. 
+\end{enumerate}
+
+\subsection*{Matthew Cheung}\label{subsec:matthew-cheung}
+\begin{enumerate}
+    \item
+    Our team worked well together, dividing the workload evenly and holding weekly meetings to stay organized.
+    We used a Kanban board on GitHub and a Discord server for communication, which helped us track progress and maintain accountability.
+    On the day of submission, we held a seven-hour work session to ensure the document was consistent and high-quality.
+    The group synergy as a team was great as we helped each other when necessary, allowing for a collaborative work process.
+
+    \item The main pain point was adapting the Meyer template to fit the rubric's requirements.
+    The template itself was in an unfamiliar format (asciidoctor), requiring us to rewrite it in LaTeX.
+    Also, we found the rubric seemed better suited for the Volere template, so we had to modify our Meyer document to include more explicit requirement lists.
+    We created a "Changes from Template" table to clearly explain all our modifications, ensuring the document remained coherent and aligned with the rubric.
+    We also had to consistently sync requirements and components across different sections to prevent inconsistencies, which involved a lot of back-and-forth and revisions.
+    This led to a lot of unplanned work, significantly increasing the time we had to spend working on this document.
+    In hindsight, we should have read the rubric thoroughly at the start, which would have shown us that it was modeled after Volere, not Meyer.
+
+    \item A significant number of our requirements were gathered from external sources.
+    Our main source was our project supervisor, Dr. Istvan David, who provided the initial project description and answered our technical questions.
+    Additionally, a team member has a connection to a competitive \emph{\Catan{}} player, which allowed us to get direct user input.
+    This helped us understand the specific needs of our target audience and the limitations of existing competitive \AI{} bots, which in turn helped shape our requirements.
+
+    \item Several courses have been, and will be, crucial for our project's success.
+    3RA3 (Requirements Engineering): This course gave us a solid foundation in writing requirements documents and using the Meyer template.
+    4AL3 (Introduction to Machine Learning): This elective course is directly relevant to our project's core, as it covers topics like reinforcement learning (RL) and deep neural networks (DNNs).
+    2AA4 (Software Design I): This course provided invaluable experience in managing a large, full-term group coding project, emphasizing iterative development and organization.
+
+    \item To successfully complete this capstone project, our team will need to acquire several key knowledge and skill sets.
+    We'll need expertise in deep reinforcement learning (DRL) andneural networks, which are at the core of our system.
+    A significant area of focus will be understanding how to apply heuristics to guide the DRL model for optimal performance.
+    Additionally, we'll need to develop a deep understanding of the digital twin concept to accurately model the physical game board.
+    Finally, mastering computer vision (CV) will be crucial for processing visual input from a camera to represent the game state.
+
+    \item For DRL and DNN's: Independent research using academic papers, online resources, and tutorials.
+    We could also have regular discussions with our supervisor, Dr. Istvan David, who is an expert in the field, as his feedback has already been very helpful.
+    For Digital Twin and Persona Modeling: Self-study and research into digital twin architectures and human-computer interaction principles, in pair with experimenting with design patterns and models to see what works best for our system.
+
+\end{enumerate}
+
 
 \end{document}

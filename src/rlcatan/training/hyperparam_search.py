@@ -59,14 +59,14 @@ def objective(trial):
     """Objective function for Optuna hyperparameter optimization."""
 
     # 1. Suggest Hyperparameters range for a random search
-    learning_rate = trial.suggest_float("learning_rate", 1e-5, 1e-3, log=True)
-    batch_size = trial.suggest_categorical("batch_size", [128, 256, 512])
-    n_steps = trial.suggest_categorical("n_steps", [1024, 2048, 4096])
-    gamma = trial.suggest_categorical("gamma", [0.98, 0.99, 0.995, 0.999])
-    ent_coef = trial.suggest_float("ent_coef", 0.0001, 0.1, log=True)
-    n_epochs = trial.suggest_categorical("n_epochs", [3, 4, 5, 10])
-    gae_lambda = trial.suggest_categorical("gae_lambda", [0.90, 0.95, 0.98, 1.0])
-    clip_range = trial.suggest_categorical("clip_range", [0.1, 0.2, 0.3])
+    learning_rate = trial.suggest_float("learning_rate", 1e-5, 1e-3, log=True) #how fast the model learns, smaller is slower but can be more stable
+    batch_size = trial.suggest_categorical("batch_size", [128, 256, 512]) #number of samples per gradient update
+    n_steps = trial.suggest_categorical("n_steps", [1024, 2048, 4096]) #number of steps to run for each environment per update (i.e., how many steps to collect before updating the model)
+    gamma = trial.suggest_categorical("gamma", [0.98, 0.99, 0.995, 0.999]) #discount factor for future rewards, closer to 1 means the agent values future rewards more
+    ent_coef = trial.suggest_float("ent_coef", 0.0001, 0.1, log=True) #coefficient for the entropy bonus, which encourages exploration by adding a penalty for low-entropy (i.e., more deterministic) policies
+    n_epochs = trial.suggest_categorical("n_epochs", [3, 4, 5, 10]) #number of epochs to perform optimization over the collected data, more epochs can lead to better performance but also longer training time and risk of overfitting
+    gae_lambda = trial.suggest_categorical("gae_lambda", [0.90, 0.95, 0.98, 1.0]) #lambda parameter for Generalized Advantage Estimation, which controls the bias-variance tradeoff in the advantage estimation, closer to 1 means less bias but more variance
+    clip_range = trial.suggest_categorical("clip_range", [0.1, 0.2, 0.3]) #clipping parameter for PPO, which limits how much the policy can change during an update, smaller values can lead to more stable training but may slow down learning
 
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     worker_pid = os.getpid()  # Get current process ID for logging

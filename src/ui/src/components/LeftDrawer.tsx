@@ -3,6 +3,7 @@ import cn from "classnames";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
+import { useTheme, useMediaQuery } from "@mui/material";
 
 import Hidden from "./Hidden";
 import PlayerStateBox from "./PlayerStateBox";
@@ -15,16 +16,29 @@ import { isTabOrShift, type InteractionEvent } from "../utils/events";
 
 import "./LeftDrawer.scss";
 
-function DrawerContent({ gameState }: { gameState: GameState }) {
+function DrawerContent({
+  gameState,
+  isExplainMode,
+  onActionClick,
+}: {
+  gameState: GameState;
+  isExplainMode?: boolean;
+  onActionClick?: (index: number) => void;
+}) {
+  const totalActions = gameState.actions.length;
+
   const playerSections = gameState.colors.map((color) => {
     const key = playerKey(gameState, color);
     return (
       <React.Fragment key={color}>
-        <PlayerStateBox
-          playerState={gameState.player_state}
-          playerKey={key}
-          color={color}
-        />
+        <div className="player-section">
+          <PlayerStateBox
+            playerState={gameState.player_state}
+            playerKey={key}
+            color={color}
+            botName={gameState.player_models?.[color]}
+          />
+        </div>
         <Divider />
       </React.Fragment>
     );
@@ -33,23 +47,44 @@ function DrawerContent({ gameState }: { gameState: GameState }) {
   return (
     <>
       {playerSections}
-      <div className="log">
+      <div className={cn("log", { "explain-mode-active": isExplainMode })}>
         {gameState.actions
           .slice()
           .reverse()
-          .map((action, i) => (
-            <div key={i} className={cn("action foreground", action[0])}>
-              {humanizeAction(gameState, action)}
-            </div>
-          ))}
+          .map((action, i) => {
+            // original index (0-based) in the chronological actions array
+            const originalIndex = totalActions - 1 - i;
+            return (
+              <div
+                key={originalIndex}
+                className={cn("action foreground", action[0], {
+                  clickable: isExplainMode,
+                })}
+                onClick={() =>
+                  isExplainMode && onActionClick && onActionClick(originalIndex)
+                }
+              >
+                <span className="move-number">#{originalIndex + 1}</span>{" "}
+                {humanizeAction(gameState, action)}
+              </div>
+            );
+          })}
       </div>
     </>
   );
 }
 
-export default function LeftDrawer() {
+export default function LeftDrawer({
+  isExplainMode,
+  onActionClick,
+}: {
+  isExplainMode?: boolean;
+  onActionClick?: (index: number) => void;
+}) {
   const { state, dispatch } = useContext(store);
   const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const openLeftDrawer = useCallback(
     (event: InteractionEvent) => {
@@ -74,7 +109,7 @@ export default function LeftDrawer() {
 
   return (
     <>
-      <Hidden breakpoint={{ size: "md", direction: "up" }} implementation="js">
+      {isMobile ? (
         <SwipeableDrawer
           className="left-drawer"
           anchor="left"
@@ -85,17 +120,13 @@ export default function LeftDrawer() {
           disableDiscovery={iOS}
           onKeyDown={closeLeftDrawer}
         >
-          <DrawerContent gameState={state.gameState as GameState} />
+          <DrawerContent gameState={state.gameState as GameState} isExplainMode={isExplainMode} onActionClick={onActionClick} />
         </SwipeableDrawer>
-      </Hidden>
-      <Hidden
-        breakpoint={{ size: "sm", direction: "down" }}
-        implementation="css"
-      >
+      ) : (
         <Drawer className="left-drawer" anchor="left" variant="permanent" open>
-          <DrawerContent gameState={state.gameState as GameState} />
+          <DrawerContent gameState={state.gameState as GameState} isExplainMode={isExplainMode} onActionClick={onActionClick} />
         </Drawer>
-      </Hidden>
+      )}
     </>
   );
 }

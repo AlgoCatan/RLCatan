@@ -121,6 +121,12 @@ class CustomTimeRemainingColumn(TimeRemainingColumn):
     help="Sets Victory Points needed to win games.",
 )
 @click.option(
+    "--config-friendly-robber",
+    default=False,
+    is_flag=True,
+    help="Prevent robber placement on opponents with less than 3 actual victory points.",
+)
+@click.option(
     "--config-map",
     default="BASE",
     type=click.Choice(["BASE", "MINI", "TOURNAMENT"], case_sensitive=False),
@@ -150,6 +156,7 @@ def simulate(
     step_db,
     config_discard_limit,
     config_vps_to_win,
+    config_friendly_robber,
     config_map,
     quiet,
     help_players,
@@ -193,7 +200,12 @@ def simulate(
     output_options = OutputOptions(
         output, output_format, include_board_tensor, db, step_db
     )
-    game_config = GameConfigOptions(config_discard_limit, config_vps_to_win, config_map)
+    game_config = GameConfigOptions(
+        config_discard_limit,
+        config_vps_to_win,
+        config_map,
+        config_friendly_robber,
+    )
     play_batch(
         num,
         players,
@@ -219,6 +231,7 @@ class GameConfigOptions:
     discard_limit: int = 7
     vps_to_win: int = 10
     catan_map: Literal["BASE", "TOURNAMENT", "MINI"] = "BASE"
+    friendly_robber: bool = False
 
 
 COLOR_TO_RICH_STYLE = {
@@ -253,6 +266,7 @@ def play_batch_core(num_games, players, game_config, accumulators=[]):
         game = Game(
             players,
             discard_limit=game_config.discard_limit,
+            friendly_robber=game_config.friendly_robber,
             vps_to_win=game_config.vps_to_win,
             catan_map=catan_map,
         )

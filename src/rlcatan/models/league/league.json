@@ -1,0 +1,626 @@
+[
+  {
+    "name": "random",
+    "path": null,
+    "elo": 702.6731293896199,
+    "games": 318
+  },
+  {
+    "name": "vf",
+    "path": null,
+    "elo": 1217.7826756217855,
+    "games": 1125
+  },
+  {
+    "name": "main",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/ppo_v2.zip",
+    "elo": -23337.828659996343,
+    "games": 5960
+  },
+  {
+    "name": "snap_292614144",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_292614144",
+    "elo": -22980.262356625884,
+    "games": 2
+  },
+  {
+    "name": "snap_292665344",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_292665344",
+    "elo": -22990.99441919878,
+    "games": 1
+  },
+  {
+    "name": "snap_292716544",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_292716544",
+    "elo": -23000.393161410215,
+    "games": 1
+  },
+  {
+    "name": "snap_292767744",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_292767744",
+    "elo": -23003.328666443394,
+    "games": 0
+  },
+  {
+    "name": "snap_292818944",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_292818944",
+    "elo": -23009.704802569962,
+    "games": 0
+  },
+  {
+    "name": "snap_292870144",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_292870144",
+    "elo": -23002.578123256077,
+    "games": 2
+  },
+  {
+    "name": "snap_292921344",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_292921344",
+    "elo": -23006.984880533248,
+    "games": 1
+  },
+  {
+    "name": "snap_292972544",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_292972544",
+    "elo": -23019.715682448626,
+    "games": 0
+  },
+  {
+    "name": "snap_293023744",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_293023744",
+    "elo": -23014.777583219726,
+    "games": 1
+  },
+  {
+    "name": "snap_293074944",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_293074944",
+    "elo": -23012.0369984718,
+    "games": 1
+  },
+  {
+    "name": "snap_293126144",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_293126144",
+    "elo": -23015.26224074221,
+    "games": 1
+  },
+  {
+    "name": "snap_293177344",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_293177344",
+    "elo": -23015.44947939747,
+    "games": 2
+  },
+  {
+    "name": "snap_293228544",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_293228544",
+    "elo": -23023.906811425186,
+    "games": 1
+  },
+  {
+    "name": "snap_293279744",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_293279744",
+    "elo": -23033.677771083672,
+    "games": 0
+  },
+  {
+    "name": "snap_293330944",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_293330944",
+    "elo": -23033.677771083672,
+    "games": 0
+  },
+  {
+    "name": "snap_293382144",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_293382144",
+    "elo": -23028.55318436528,
+    "games": 2
+  },
+  {
+    "name": "snap_293433344",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_293433344",
+    "elo": -23043.274799236657,
+    "games": 0
+  },
+  {
+    "name": "snap_293484544",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_293484544",
+    "elo": -23044.0670322742,
+    "games": 1
+  },
+  {
+    "name": "snap_293535744",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_293535744",
+    "elo": -23044.91972507253,
+    "games": 1
+  },
+  {
+    "name": "snap_293586944",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_293586944",
+    "elo": -23047.152242631095,
+    "games": 2
+  },
+  {
+    "name": "snap_293638144",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_293638144",
+    "elo": -23048.581596547145,
+    "games": 1
+  },
+  {
+    "name": "snap_293689344",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_293689344",
+    "elo": -23055.556715622366,
+    "games": 2
+  },
+  {
+    "name": "snap_293740544",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_293740544",
+    "elo": -23069.395417667507,
+    "games": 0
+  },
+  {
+    "name": "snap_293791744",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_293791744",
+    "elo": -23076.319256503604,
+    "games": 0
+  },
+  {
+    "name": "snap_293842944",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_293842944",
+    "elo": -23075.727371273508,
+    "games": 1
+  },
+  {
+    "name": "snap_293894144",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_293894144",
+    "elo": -23082.543308850916,
+    "games": 1
+  },
+  {
+    "name": "snap_293945344",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_293945344",
+    "elo": -23092.937758821583,
+    "games": 0
+  },
+  {
+    "name": "snap_293996544",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_293996544",
+    "elo": -23097.477531465178,
+    "games": 0
+  },
+  {
+    "name": "snap_294047744",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_294047744",
+    "elo": -23100.863732590955,
+    "games": 0
+  },
+  {
+    "name": "snap_294098944",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_294098944",
+    "elo": -23100.863732590955,
+    "games": 0
+  },
+  {
+    "name": "snap_518144",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_518144",
+    "elo": 1030.9649909689688,
+    "games": 6
+  },
+  {
+    "name": "snap_210944",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_210944",
+    "elo": 1016.0089522608118,
+    "games": 5
+  },
+  {
+    "name": "snap_364544",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_364544",
+    "elo": 1012.0779951230255,
+    "games": 2
+  },
+  {
+    "name": "snap_262144",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_262144",
+    "elo": 1009.5764728347058,
+    "games": 2
+  },
+  {
+    "name": "snap_569344",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_569344",
+    "elo": 1008.0042441778506,
+    "games": 2
+  },
+  {
+    "name": "snap_466944",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_466944",
+    "elo": 1006.3263193604644,
+    "games": 0
+  },
+  {
+    "name": "snap_415744",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_415744",
+    "elo": 1001.6,
+    "games": 0
+  },
+  {
+    "name": "snap_313344",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_313344",
+    "elo": 1000.2739919687293,
+    "games": 3
+  },
+  {
+    "name": "snap_159744",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_159744",
+    "elo": 1000.0,
+    "games": 0
+  },
+  {
+    "name": "snap_671744",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_671744",
+    "elo": 999.6300033176145,
+    "games": 2
+  },
+  {
+    "name": "snap_620544",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_620544",
+    "elo": 989.471887180012,
+    "games": 0
+  },
+  {
+    "name": "snap_825344",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_825344",
+    "elo": 988.3252286493046,
+    "games": 2
+  },
+  {
+    "name": "snap_722944",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_722944",
+    "elo": 986.2910289122292,
+    "games": 0
+  },
+  {
+    "name": "snap_876544",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_876544",
+    "elo": 986.0468444690619,
+    "games": 2
+  },
+  {
+    "name": "snap_774144",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_774144",
+    "elo": 980.2065259213068,
+    "games": 0
+  },
+  {
+    "name": "snap_294150144",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_294150144",
+    "elo": -23101.746780278154,
+    "games": 1
+  },
+  {
+    "name": "snap_294201344",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_294201344",
+    "elo": -23105.214291122433,
+    "games": 1
+  },
+  {
+    "name": "snap_294252544",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_294252544",
+    "elo": -23112.418875520558,
+    "games": 1
+  },
+  {
+    "name": "snap_294303744",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_294303744",
+    "elo": -23118.76096501777,
+    "games": 1
+  },
+  {
+    "name": "snap_294354944",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_294354944",
+    "elo": -23123.662634434164,
+    "games": 0
+  },
+  {
+    "name": "snap_294406144",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_294406144",
+    "elo": -23129.55238313218,
+    "games": 0
+  },
+  {
+    "name": "snap_294457344",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_294457344",
+    "elo": -23128.235142532452,
+    "games": 1
+  },
+  {
+    "name": "snap_294508544",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_294508544",
+    "elo": -23128.10230255771,
+    "games": 2
+  },
+  {
+    "name": "snap_294559744",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_294559744",
+    "elo": -23133.75276787436,
+    "games": 2
+  },
+  {
+    "name": "snap_294610944",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_294610944",
+    "elo": -23152.199636806017,
+    "games": 0
+  },
+  {
+    "name": "snap_294662144",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_294662144",
+    "elo": -23153.619098649426,
+    "games": 1
+  },
+  {
+    "name": "snap_294713344",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_294713344",
+    "elo": -23158.584867683487,
+    "games": 1
+  },
+  {
+    "name": "snap_294764544",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_294764544",
+    "elo": -23171.04050699487,
+    "games": 0
+  },
+  {
+    "name": "snap_294815744",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_294815744",
+    "elo": -23176.348209753403,
+    "games": 0
+  },
+  {
+    "name": "snap_294866944",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_294866944",
+    "elo": -23171.33643532058,
+    "games": 1
+  },
+  {
+    "name": "snap_294918144",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_294918144",
+    "elo": -23176.348209753403,
+    "games": 0
+  },
+  {
+    "name": "snap_294969344",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_294969344",
+    "elo": -23175.711953395734,
+    "games": 1
+  },
+  {
+    "name": "snap_295020544",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_295020544",
+    "elo": -23185.186379847604,
+    "games": 1
+  },
+  {
+    "name": "snap_295071744",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_295071744",
+    "elo": -23187.951937319292,
+    "games": 1
+  },
+  {
+    "name": "snap_295122944",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_295122944",
+    "elo": -23195.727143973872,
+    "games": 1
+  },
+  {
+    "name": "snap_295174144",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_295174144",
+    "elo": -23201.886310009595,
+    "games": 1
+  },
+  {
+    "name": "snap_295225344",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_295225344",
+    "elo": -23214.792688326568,
+    "games": 0
+  },
+  {
+    "name": "snap_295276544",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_295276544",
+    "elo": -23214.792688326568,
+    "games": 0
+  },
+  {
+    "name": "snap_295327744",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_295327744",
+    "elo": -23219.247698286774,
+    "games": 0
+  },
+  {
+    "name": "snap_295378944",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_295378944",
+    "elo": -23211.988898613603,
+    "games": 1
+  },
+  {
+    "name": "snap_295430144",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_295430144",
+    "elo": -23226.413290229593,
+    "games": 0
+  },
+  {
+    "name": "snap_295481344",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_295481344",
+    "elo": -23226.413290229593,
+    "games": 0
+  },
+  {
+    "name": "snap_295532544",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_295532544",
+    "elo": -23226.413290229593,
+    "games": 0
+  },
+  {
+    "name": "snap_295583744",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_295583744",
+    "elo": -23231.99497810489,
+    "games": 0
+  },
+  {
+    "name": "snap_295634944",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_295634944",
+    "elo": -23231.99497810489,
+    "games": 0
+  },
+  {
+    "name": "snap_295686144",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_295686144",
+    "elo": -23239.14874881958,
+    "games": 0
+  },
+  {
+    "name": "snap_295737344",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_295737344",
+    "elo": -23232.350423657637,
+    "games": 2
+  },
+  {
+    "name": "snap_295788544",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_295788544",
+    "elo": -23244.118271617175,
+    "games": 1
+  },
+  {
+    "name": "snap_295839744",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_295839744",
+    "elo": -23258.789002884536,
+    "games": 0
+  },
+  {
+    "name": "snap_295890944",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_295890944",
+    "elo": -23262.69258506297,
+    "games": 0
+  },
+  {
+    "name": "snap_295942144",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_295942144",
+    "elo": -23258.203461567628,
+    "games": 1
+  },
+  {
+    "name": "snap_295993344",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_295993344",
+    "elo": -23270.529759512545,
+    "games": 0
+  },
+  {
+    "name": "snap_296044544",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_296044544",
+    "elo": -23277.115840223123,
+    "games": 0
+  },
+  {
+    "name": "snap_296095744",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_296095744",
+    "elo": -23284.527771817313,
+    "games": 0
+  },
+  {
+    "name": "snap_296146944",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_296146944",
+    "elo": -23284.527771817313,
+    "games": 0
+  },
+  {
+    "name": "snap_296198144",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_296198144",
+    "elo": -23290.659375017134,
+    "games": 0
+  },
+  {
+    "name": "snap_296249344",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_296249344",
+    "elo": -23298.084003545657,
+    "games": 0
+  },
+  {
+    "name": "snap_296300544",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_296300544",
+    "elo": -23290.240445831747,
+    "games": 1
+  },
+  {
+    "name": "snap_296351744",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_296351744",
+    "elo": -23304.879071958036,
+    "games": 0
+  },
+  {
+    "name": "snap_296402944",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_296402944",
+    "elo": -23312.722629671945,
+    "games": 0
+  },
+  {
+    "name": "snap_296454144",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_296454144",
+    "elo": -23317.73440410477,
+    "games": 0
+  },
+  {
+    "name": "snap_296505344",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_296505344",
+    "elo": -23323.942222952806,
+    "games": 0
+  },
+  {
+    "name": "snap_296556544",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_296556544",
+    "elo": -23326.793546930938,
+    "games": 0
+  },
+  {
+    "name": "snap_296607744",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_296607744",
+    "elo": -23326.793546930938,
+    "games": 0
+  },
+  {
+    "name": "snap_296658944",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_296658944",
+    "elo": -23329.49425178831,
+    "games": 0
+  },
+  {
+    "name": "snap_296710144",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_296710144",
+    "elo": -23329.49425178831,
+    "games": 0
+  },
+  {
+    "name": "snap_296761344",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_296761344",
+    "elo": -23329.49425178831,
+    "games": 0
+  },
+  {
+    "name": "snap_296812544",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_296812544",
+    "elo": -23329.49425178831,
+    "games": 0
+  },
+  {
+    "name": "snap_296863744",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_296863744",
+    "elo": -23329.49425178831,
+    "games": 0
+  },
+  {
+    "name": "snap_296914944",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_296914944",
+    "elo": -23329.49425178831,
+    "games": 0
+  },
+  {
+    "name": "snap_296966144",
+    "path": "/nfs/u50/yaoh24/RLCatan/src/rlcatan/models/league/snap_296966144",
+    "elo": -23332.94476421079,
+    "games": 0
+  }
+]
