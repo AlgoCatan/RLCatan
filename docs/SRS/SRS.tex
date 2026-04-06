@@ -447,22 +447,15 @@ Additionally, we shall abide by the following legal and regulatory factors:
 \subsection{Components}\label{subsec:components}
 The system is separated into a list of major components:
 
-The figure below provides a simple view of the main component interactions so readers can quickly see how the simulator, API, frontend, storage, and model-based services connect.
+The figure below is a high-level component diagram illustrating the main components of the system and their interactions. 
 
 \begin{figure}[H]
     \centering
-    \fbox{\parbox{0.92\linewidth}{\centering
-    \textit{Game Simulation Engine} $\rightarrow$ \textit{Game State Manager} $\rightarrow$ \textit{Backend API Server} $\leftrightarrow$ \textit{User Interface}\\[0.5em]
-    \textit{Backend API Server} $\leftrightarrow$ \textit{Game State Database}\\[0.5em]
-    \textit{Backend API Server} $\rightarrow$ \textit{Reinforcement Learning Agent (PPO)}\\[0.5em]
-    \textit{Backend API Server} $\rightarrow$ \textit{Analysis Module}\\[0.5em]
-    \textit{Backend API Server} $\rightarrow$ \textit{Explanation Pipeline}\\[0.5em]
-    \textit{Training Pipeline} $\leftrightarrow$ \textit{Model Storage and Versioning}\\[0.5em]
-    \textit{Training Pipeline} $\leftrightarrow$ \textit{\Elo{} League System}
-    }}
-    \caption{\textit{Minimal component linkage view for the main RLCatan system parts.}}
-    \label{fig:component-linkage}
+    \includegraphics[width=0.8\textwidth]{Component_Diagram_final.png}
+    \caption{Component Diagram.}
+    \label{fig:hs_before}
 \end{figure}
+
 
 \begin{itemize}
     \item Computer Vision Model (Out of Scope): A future component that would process camera input to track physical board state, using techniques like object detection and image segmentation.
