@@ -433,6 +433,66 @@ low.}
 
 \end{tabularx}
 
+\newpage
+
+\subsection{Extra Feedback(ADDED)}
+
+\begin{tabularx}{\linewidth}{|P{2.3cm}|Y|P{2.5cm}|P{3.5cm}|}
+
+        % Header
+        \caption{Documentation / Code changes from general feedback} \label{TblDesign} \\
+        \hline
+        \textbf{Source} &
+        \textbf{Feedback Summary} &
+        \textbf{Link to Issue} &
+        \textbf{Link to Commit} \\
+        \hline
+        \endfirsthead
+
+        % Subsequent pages header
+        \hline
+        \textbf{Source} &
+        \textbf{Feedback Summary} &
+        \textbf{Link to Issue} &
+        \textbf{Link to Commit} \\
+        \hline
+        \endhead
+
+        % Prompt that the table continues
+        \hline
+        \multicolumn{4}{r}{\textit{Continued on next page}} \\
+        \endfoot
+
+        % No footer on last page
+        \hline
+        \endlastfoot
+
+        % Table Content
+        Supervisor Feedback &
+        To increase our RL bot's win rate, our supervisor suggested a self play leauge &
+        \href{https://github.com/AlgoCatan/RLCatan/issues/67}{Issue \#67} &
+        \href{https://github.com/AlgoCatan/RLCatan/commit/52fe9cad4af231f632b977486b6613834616fc37}{Commit 52fe9cad} 
+        \href{https://github.com/AlgoCatan/RLCatan/commit/e8e841b10dac1d3d16200a7c92cd70f4699aba02}{Commit e8e841b}\\
+
+        \hline
+        Catan Players (Stakeholders) + Supervisor Feedback &
+        After usability testing we decided to incorporate an LLM generated text based explanation system to help users understand the bot's move recommendations &
+        \href{https://github.com/AlgoCatan/RLCatan/issues/78}{Issue \#78} &
+        \href{https://github.com/AlgoCatan/RLCatan/commit/6164debd93fec9250a103d863f2908e080371332}{Commit 6164debd} 
+        \href{https://github.com/AlgoCatan/RLCatan/commit/1236c27b270ecb47aa10b6a302745fbdb701eac6}{Commit 1236c27} \\
+
+        \hline
+        Catan Players (Stakeholders) + Demo Feedback &
+        After usability testing and the rev0 demo, we did a UI overhaul to improve the user experince, based on feedback from our usability testing and our TA Tiago and Prof Dr.Spencer Smith gave some feedback. &
+        \href{https://github.com/AlgoCatan/RLCatan/issues/87}{Issue \#87} &
+        \href{https://github.com/AlgoCatan/RLCatan/commit/e6098bb1c6546b6096112c31752d3dfbc729990c}{Commit e6098bb}
+        \href{https://github.com/AlgoCatan/RLCatan/commit/747ef316da3f0032be4f767a35141bdf2b2c6b6c}{Commit 747ef316}
+        \href{https://github.com/AlgoCatan/RLCatan/commit/c63a6aecbc468958ff8cdd93be348fdfcd3fdf3d}{Commit c63a6aec}\\
+
+\end{tabularx}
+
+
+
 \end{landscape}
 
 \section{Extras}
