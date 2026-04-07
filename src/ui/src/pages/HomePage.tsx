@@ -1,3 +1,10 @@
+/*
+Module: 6. User Interface
+Author: Forked
+Date: 2026-01-05
+Purpose: Provides the homepage module for the user interface, supporting interaction, presentation, or frontend application wiring.
+*/
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {

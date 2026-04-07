@@ -1,3 +1,10 @@
+"""
+Module: 2. Training Pipeline
+Author: Forked
+Date: 2026-03-25
+Purpose: Implements the catanatron env module for the training pipeline, supporting reinforcement-learning environments, wrappers, rewards, or training data flow.
+"""
+
 from typing import TypedDict, Union
 import gymnasium as gym
 from gymnasium import spaces

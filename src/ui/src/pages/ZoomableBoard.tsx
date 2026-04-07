@@ -1,3 +1,10 @@
+/*
+Module: 6. User Interface
+Author: Forked
+Date: 2025-11-05
+Purpose: Provides the zoomableboard module for the user interface, supporting interaction, presentation, or frontend application wiring.
+*/
+
 import { useCallback, useContext, useEffect, useState } from "react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import memoize from "fast-memoize";

@@ -1,3 +1,10 @@
+"""
+Module: 2. Training Pipeline
+Author: Forked
+Date: 2025-12-26
+Purpose: Implements the data logger module for experimental training or agent-development workflows related to the project's learning pipeline.
+"""
+
 from pathlib import Path
 
 import tensorflow as tf

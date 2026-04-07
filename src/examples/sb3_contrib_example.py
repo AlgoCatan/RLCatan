@@ -1,3 +1,10 @@
+"""
+Module: 9. Game State Manager
+Author: Forked
+Date: 2026-01-09
+Purpose: Implements the sb3 contrib example module for the game state manager component, supporting simulation, state handling, utilities, or developer interaction with the game engine.
+"""
+
 import gymnasium
 import numpy as np
 from sb3_contrib.common.maskable.policies import MaskableActorCriticPolicy

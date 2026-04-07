@@ -1,3 +1,10 @@
+"""
+Module: 9. Game State Manager
+Author: Forked
+Date: 2026-02-11
+Purpose: Implements the gamescraper module for the game state manager component, supporting simulation, state handling, utilities, or developer interaction with the game engine.
+"""
+
 import requests
 from catanatron.models.board import Board
 from board_visualize import generate_board_image
@@ -16,7 +23,7 @@ def get_colonist_replay(slug: str):
     except requests.exceptions.RequestException as e:
         print(f"Connection error: {e}")
     except ValueError:
-        print("Failed to parse JSON — response was not JSON")
+        print("Failed to parse JSON ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â response was not JSON")
 
 
 slug = "BPPRTG5zMVmn9gMX"

@@ -1,3 +1,10 @@
+"""
+Module: 2. Training Pipeline
+Author: Forked
+Date: 2026-02-11
+Purpose: Implements the board tensor features module for the training pipeline, supporting reinforcement-learning environments, wrappers, rewards, or training data flow.
+"""
+
 import networkx as nx
 import numpy as np
 

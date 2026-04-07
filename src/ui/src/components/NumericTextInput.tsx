@@ -1,3 +1,10 @@
+/*
+Module: 6. User Interface
+Author: Forked
+Date: 2025-11-30
+Purpose: Provides the numerictextinput module for the user interface, supporting interaction, presentation, or frontend application wiring.
+*/
+
 import { TextField } from "@mui/material";
 import React from "react";
 import { allowOnlyNumberKeys } from "../utils/events";

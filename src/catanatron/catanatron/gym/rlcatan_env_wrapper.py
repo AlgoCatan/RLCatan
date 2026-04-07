@@ -1,3 +1,10 @@
+"""
+Module: 2. Training Pipeline
+Author: Forked
+Date: 2025-12-12
+Purpose: Implements the rlcatan env wrapper module for the training pipeline, supporting reinforcement-learning environments, wrappers, rewards, or training data flow.
+"""
+
 from __future__ import annotations
 from typing import Any, Iterable, Dict, cast, SupportsFloat
 

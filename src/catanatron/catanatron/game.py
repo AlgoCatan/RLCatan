@@ -1,9 +1,8 @@
 """
-Module: game
-Author: 
-Date: 2025-12-03
-Purpose: Implements the core game loop wrapper around state transitions,
-player turns, action execution, and whole-game progression.
+Module: 9. Game State Manager
+Author: Forked
+Date: 2026-03-23
+Purpose: Implements the main game loop, turn progression, action execution, and accumulator hooks for full Catan matches.
 """
 
 import uuid

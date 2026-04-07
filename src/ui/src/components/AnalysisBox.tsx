@@ -1,3 +1,10 @@
+/*
+Module: 6. User Interface
+Author: Forked
+Date: 2026-01-30
+Purpose: Provides the analysisbox module for the user interface, supporting interaction, presentation, or frontend application wiring.
+*/
+
 import { useContext, useState } from "react";
 import { Button } from "@mui/material";
 import { type MCTSProbabilities, type StateIndex, getMctsAnalysis } from "../utils/apiClient";

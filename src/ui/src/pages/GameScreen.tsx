@@ -1,3 +1,10 @@
+/*
+Module: 6. User Interface
+Author: Forked
+Date: 2026-03-08
+Purpose: Provides the gamescreen module for the user interface, supporting interaction, presentation, or frontend application wiring.
+*/
+
 import { useEffect, useState, useContext, useRef } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import PropTypes from "prop-types";

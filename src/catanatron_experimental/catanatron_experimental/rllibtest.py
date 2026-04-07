@@ -1,3 +1,10 @@
+"""
+Module: 2. Training Pipeline
+Author: Forked
+Date: 2025-12-12
+Purpose: Implements the rllibtest module for experimental training or agent-development workflows related to the project's learning pipeline.
+"""
+
 from ray import tune
 from ray.rllib.models.tf.tf_modelv2 import TFModelV2
 from ray.rllib.models.tf.fcnet import FullyConnectedNetwork

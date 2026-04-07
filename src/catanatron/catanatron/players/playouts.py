@@ -1,3 +1,10 @@
+"""
+Module: 3. AI Model
+Author: Forked
+Date: 2026-02-03
+Purpose: Implements the playouts module for the AI model component, supporting automated decision-making or search-based gameplay behavior.
+"""
+
 import time
 import random
 import multiprocessing

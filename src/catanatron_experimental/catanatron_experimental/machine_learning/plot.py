@@ -1,3 +1,10 @@
+"""
+Module: 2. Training Pipeline
+Author: Forked
+Date: 2025-11-23
+Purpose: Implements the plot module for experimental training or agent-development workflows related to the project's learning pipeline.
+"""
+
 import pickle
 from pathlib import Path
 

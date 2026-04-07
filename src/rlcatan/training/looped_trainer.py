@@ -1,3 +1,10 @@
+"""
+Module: 2. Training Pipeline
+Author: Forked
+Date: 2026-02-03
+Purpose: Implements the looped trainer module for the 2. Training Pipeline component, supporting training orchestration, evaluation, or experiment control.
+"""
+
 import argparse
 import time
 from continue_train_ppo import ppo_train

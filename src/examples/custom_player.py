@@ -1,3 +1,10 @@
+"""
+Module: 9. Game State Manager
+Author: Forked
+Date: 2026-03-10
+Purpose: Implements the custom player module for the game state manager component, supporting simulation, state handling, utilities, or developer interaction with the game engine.
+"""
+
 from typing import Iterable
 
 from catanatron import Game, Action, Player

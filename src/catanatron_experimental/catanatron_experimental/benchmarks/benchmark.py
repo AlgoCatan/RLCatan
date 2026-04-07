@@ -1,3 +1,10 @@
+"""
+Module: 2. Training Pipeline
+Author: Forked
+Date: 2025-12-21
+Purpose: Implements the benchmark module for experimental training or agent-development workflows related to the project's learning pipeline.
+"""
+
 from catanatron.models.board import STATIC_GRAPH
 import pickle
 import timeit

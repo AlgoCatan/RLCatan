@@ -1,3 +1,10 @@
+"""
+Module: 7. Game State Database
+Author: Forked
+Date: 2026-02-06
+Purpose: Implements the database accumulator module for the backend API server, supporting request handling, services, or backend integration logic.
+"""
+
 from catanatron.game import GameAccumulator
 from catanatron.web.models import database_session, upsert_game_state
 from catanatron.web.utils import ensure_link

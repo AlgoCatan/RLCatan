@@ -1,3 +1,10 @@
+"""
+Module: 2. Training Pipeline
+Author: Forked
+Date: 2026-03-14
+Purpose: Implements the train ppo v1 module for the 2. Training Pipeline component, supporting training orchestration, evaluation, or experiment control.
+"""
+
 from __future__ import annotations
 
 import os

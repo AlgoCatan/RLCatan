@@ -1,3 +1,10 @@
+"""
+Module: 2. Training Pipeline
+Author: Forked
+Date: 2026-03-21
+Purpose: Implements the callbacks module for the training pipeline, supporting reinforcement-learning environments, wrappers, rewards, or training data flow.
+"""
+
 from stable_baselines3.common.callbacks import BaseCallback
 import numpy as np
 

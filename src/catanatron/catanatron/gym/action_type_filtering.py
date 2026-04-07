@@ -1,3 +1,10 @@
+"""
+Module: 2. Training Pipeline
+Author: Forked
+Date: 2026-02-13
+Purpose: Implements the action type filtering module for the training pipeline, supporting reinforcement-learning environments, wrappers, rewards, or training data flow.
+"""
+
 from __future__ import annotations
 from typing import Iterable
 from catanatron.models.enums import ActionType

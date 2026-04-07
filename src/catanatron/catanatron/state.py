@@ -1,4 +1,11 @@
 """
+Module: 9. Game State Manager
+Author: Forked
+Date: 2026-03-08
+Purpose: Implements the state module for the game state manager component, supporting simulation, state handling, utilities, or developer interaction with the game engine.
+"""
+
+"""
 Module with main State class and main apply_action call (game controller).
 """
 

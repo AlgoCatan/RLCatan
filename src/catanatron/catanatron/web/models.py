@@ -1,9 +1,8 @@
 """
 Module: 7. Game State Database
 Author: Forked
-Date: 2026-01-11
-Purpose: Defines the persistence layer for stored game states and related
-web data, including database models and game-state serialization helpers.
+Date: 2026-03-22
+Purpose: Defines the persistence models and serialization helpers used to store, retrieve, and index game-state data for the web backend.
 """
 
 import os
