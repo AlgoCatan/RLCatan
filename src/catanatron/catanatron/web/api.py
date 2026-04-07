@@ -2,6 +2,7 @@ import os
 import json
 import logging
 import traceback
+import time
 from typing import List
 from functools import lru_cache
 from pathlib import Path
@@ -37,7 +38,8 @@ VALID_MAP_TEMPLATES = {"BASE", "MINI", "TOURNAMENT"}
 
 # Per-game explanation state (keyed by game_id) to support concurrent users
 # Limit to 100 games in memory to prevent memory leaks from long-running servers
-EXPLANATION_STATE = {}  # {game_id: {"accumulator": ..., "service": ...}}
+# Each entry now includes a last_accessed timestamp for LRU eviction
+EXPLANATION_STATE = {}  # {game_id: {"accumulator": ..., "service": ..., "last_accessed": timestamp}}
 MAX_EXPLANATION_STATES = 100
 
 
@@ -71,13 +73,18 @@ def _resolve_model_path(raw_path: str) -> Path:
 
 
 def _prune_explanation_state():
-    """Remove oldest explanation states if count exceeds limit."""
+    """Remove least recently used explanation states if count exceeds limit."""
     if len(EXPLANATION_STATE) > MAX_EXPLANATION_STATES:
-        # Keep the MAX_EXPLANATION_STATES most recent by removing oldest
+        # Keep the MAX_EXPLANATION_STATES most recently accessed by removing least recently used
         to_remove = len(EXPLANATION_STATE) - MAX_EXPLANATION_STATES
+        # Sort by last_accessed timestamp (ascending) to find least recently used
+        sorted_entries = sorted(
+            EXPLANATION_STATE.items(),
+            key=lambda item: item[1].get("last_accessed", 0)
+        )
         for _ in range(to_remove):
-            oldest_key = next(iter(EXPLANATION_STATE))
-            del EXPLANATION_STATE[oldest_key]
+            game_id, _ = sorted_entries[_]
+            del EXPLANATION_STATE[game_id]
 
 
 def player_factory(player_key):
@@ -200,6 +207,7 @@ def post_game_endpoint():
         "accumulator": accumulator,
         "service": service,
         "familiarity": familiarity,
+        "last_accessed": time.time(),
     }
     upsert_game_state(game)
     return jsonify({"game_id": game.id})
@@ -375,6 +383,9 @@ def explain_move_endpoint(game_id, move_index):
     state = EXPLANATION_STATE.get(game_id)
     if not state:
         abort(404, description="No explanation packets available for that game")
+
+    # Update last_accessed timestamp to mark this game as recently used (for LRU eviction)
+    state["last_accessed"] = time.time()
 
     # UI sends global action index, while accumulator keeps only recent packets.
     action_count = len(get_game_state(game_id).state.actions)
