@@ -279,6 +279,15 @@ def post_action_endpoint(game_id):
     else:
         action = action_from_json(request.json)
         game_before_action = game.copy()
+
+        # For human players, we need to build the decision_info before calling step()
+        # This is normally done in decide_with_context(), but human moves come from HTTP
+        player = game_before_action.state.current_player()
+        playable_actions = list(game_before_action.state.playable_actions)
+        player.last_decision_info = player.build_decision_info(
+            game_before_action, playable_actions, action
+        )
+
         game.execute(action)
         state = EXPLANATION_STATE.get(game_id)
         if state:
