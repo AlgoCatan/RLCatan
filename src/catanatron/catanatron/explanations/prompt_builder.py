@@ -66,10 +66,44 @@ def _get_familiarity_instruction(familiarity: str) -> str:
         )
 
 
+def _get_output_format_instruction(familiarity: str) -> str:
+    """Return output format instruction based on familiarity level."""
+    if familiarity == "HIGH":
+        return (
+            "OUTPUT FORMAT (REQUIRED):\n"
+            "- Write 3-4 paragraphs of comprehensive analysis\n"
+            "- Paragraph 1: Direct explanation of the move choice (2-3 sentences)\n"
+            "- Paragraph 2: Strategic context and position evaluation (3-4 sentences)\n"
+            "- Paragraph 3: Key factors and tradeoffs analysis (3-4 sentences)\n"
+            "- Paragraph 4 (optional): Long-term implications or competitive positioning (2-3 sentences)\n"
+            "- Use PLAIN TEXT ONLY: no asterisks, no dashes for bullets, no markdown formatting\n"
+            "- Reference specific strategic concepts (production chains, settlement clusters, blocking, etc.)"
+        )
+    elif familiarity == "LOW":
+        return (
+            "OUTPUT FORMAT (REQUIRED):\n"
+            "- Write exactly one paragraph of 3-5 sentences\n"
+            "- Use PLAIN TEXT ONLY: no asterisks, no dashes for bullets, no markdown formatting\n"
+            "- Reference the move and its 2-3 most important factors from below\n"
+            "- Write naturally as flowing prose"
+        )
+    else:  # MEDIUM
+        return (
+            "OUTPUT FORMAT (REQUIRED):\n"
+            "- Write 2 paragraphs of balanced detail\n"
+            "- Paragraph 1: Why this move was chosen (2-3 sentences)\n"
+            "- Paragraph 2: Context and strategic reasoning (3-4 sentences)\n"
+            "- Use PLAIN TEXT ONLY: no asterisks, no dashes for bullets, no markdown formatting\n"
+            "- Reference the move and its 3-4 most important factors from below\n"
+            "- Write naturally as flowing prose"
+        )
+
+
 def build_llm_prompt(det_explanation: dict, familiarity: str = "MEDIUM") -> str:
     """Generates a prompt for LLM move explanation based on familiarity level."""
     facts = det_explanation["facts_used"]
     familiarity_instruction = _get_familiarity_instruction(familiarity)
+    output_format_instruction = _get_output_format_instruction(familiarity)
 
     # Use numbered format instead of markdown bullets for considerations
     considerations = "\n".join(
@@ -81,11 +115,7 @@ def build_llm_prompt(det_explanation: dict, familiarity: str = "MEDIUM") -> str:
 AUDIENCE AND STYLE:
 {familiarity_instruction}
 
-OUTPUT FORMAT (REQUIRED):
-- Write exactly one paragraph of 3-5 sentences
-- Use PLAIN TEXT ONLY: no asterisks, no dashes for bullets, no markdown formatting
-- Reference the move and its 2-3 most important factors from below
-- Write naturally as flowing prose
+{output_format_instruction}
 
 MOVE DETAILS:
 Action: {facts["chosen_type"]}
