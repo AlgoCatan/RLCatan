@@ -1,3 +1,10 @@
+/*
+Module: 6. User Interface
+Author: Forked
+Date: 2026-03-16
+Purpose: Provides the actionstoolbar module for the user interface, supporting interaction, presentation, or frontend application wiring.
+*/
+
 import React, {
   useState,
   useRef,

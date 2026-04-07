@@ -1,3 +1,10 @@
+/*
+Module: 6. User Interface
+Author: Forked
+Date: 2026-01-23
+Purpose: Provides the coordinates module for the user interface, supporting interaction, presentation, or frontend application wiring.
+*/
+
 // Helpers for implementing https://www.redblobgames.com/grids/hexagons/
 // TODO - is this still needed with new CSS features?
 

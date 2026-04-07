@@ -1,3 +1,10 @@
+/*
+Module: 6. User Interface
+Author: Forked
+Date: 2026-03-06
+Purpose: Provides the apiclient module for the user interface, supporting interaction, presentation, or frontend application wiring.
+*/
+
 import axios from "axios";
 
 import { API_URL } from "../configuration";

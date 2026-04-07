@@ -1,3 +1,10 @@
+"""
+Module: 2. Training Pipeline
+Author: Forked
+Date: 2026-02-27
+Purpose: Implements the setup module for experimental training or agent-development workflows related to the project's learning pipeline.
+"""
+
 import setuptools
 
 setuptools.setup(

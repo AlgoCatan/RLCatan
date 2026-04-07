@@ -1,3 +1,10 @@
+"""
+Module: 2. Training Pipeline
+Author: Forked
+Date: 2026-03-27
+Purpose: Implements the mcts score collector module for experimental training or agent-development workflows related to the project's learning pipeline.
+"""
+
 import os
 from typing import Iterable
 from catanatron.utils import ensure_dir

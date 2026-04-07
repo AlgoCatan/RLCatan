@@ -1,3 +1,10 @@
+"""
+Module: 9. Game State Manager
+Author: Forked
+Date: 2025-11-27
+Purpose: Implements the player module for the game state manager component, supporting simulation, state handling, utilities, or developer interaction with the game engine.
+"""
+
 import random
 import builtins
 

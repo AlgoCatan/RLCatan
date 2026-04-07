@@ -1,3 +1,10 @@
+/*
+Module: 6. User Interface
+Author: Forked
+Date: 2026-03-10
+Purpose: Provides the api.types module for the user interface, supporting interaction, presentation, or frontend application wiring.
+*/
+
 export type Card = ResourceCard | DevelopmentCard | VictoryPointCard;
 export type DevelopmentCard =
   | "KNIGHT"

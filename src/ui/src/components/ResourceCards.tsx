@@ -1,3 +1,10 @@
+/*
+Module: 6. User Interface
+Author: Forked
+Date: 2026-03-21
+Purpose: Provides the resourcecards module for the user interface, supporting interaction, presentation, or frontend application wiring.
+*/
+
 import { type PlayerState } from "../utils/api.types";
 import { type Card } from "../utils/api.types";
 import { useState, useEffect, useRef } from "react";

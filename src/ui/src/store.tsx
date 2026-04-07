@@ -1,3 +1,10 @@
+/*
+Module: 6. User Interface
+Author: Forked
+Date: 2025-11-24
+Purpose: Provides the store module for the user interface, supporting interaction, presentation, or frontend application wiring.
+*/
+
 import React, { createContext, useReducer } from "react";
 import ACTIONS from "./actions";
 import { type GameState } from "./utils/api.types";

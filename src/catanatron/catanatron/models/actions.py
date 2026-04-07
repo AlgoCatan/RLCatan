@@ -1,4 +1,11 @@
 """
+Module: 9. Game State Manager
+Author: Forked
+Date: 2026-03-07
+Purpose: Implements the actions module for the game state manager component, supporting simulation, state handling, utilities, or developer interaction with the game engine.
+"""
+
+"""
 Move-generation functions (these return a list of actions that can be taken
 by current player). Main function is generate_playable_actions.
 """

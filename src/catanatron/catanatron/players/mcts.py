@@ -1,3 +1,10 @@
+"""
+Module: 3. AI Model
+Author: Forked
+Date: 2026-01-26
+Purpose: Implements the mcts module for the AI model component, supporting automated decision-making or search-based gameplay behavior.
+"""
+
 import math
 import time
 from collections import defaultdict

@@ -1,6 +1,6 @@
 """
-Module: 10. Explanation Pipeline
-Author:
+Module: explanation_service
+Author: Jake Read
 Date: 2026-02-04
 Purpose: Builds strategic explanations by combining deterministic packet
 analysis with LLM-backed natural-language generation.

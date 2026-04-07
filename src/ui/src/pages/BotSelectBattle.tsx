@@ -1,3 +1,10 @@
+/*
+Module: 6. User Interface
+Author: Forked
+Date: 2025-12-17
+Purpose: Provides the botselectbattle module for the user interface, supporting interaction, presentation, or frontend application wiring.
+*/
+
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@mui/material";

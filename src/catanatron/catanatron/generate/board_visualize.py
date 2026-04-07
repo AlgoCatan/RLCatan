@@ -1,3 +1,10 @@
+"""
+Module: 9. Game State Manager
+Author: Forked
+Date: 2026-03-06
+Purpose: Implements the board visualize module for the game state manager component, supporting simulation, state handling, utilities, or developer interaction with the game engine.
+"""
+
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import math
@@ -19,7 +26,7 @@ RESOURCE_COLORS = {
 # === Geometry helpers ===
 def hex_to_pixel(q, r, size=1):
     """
-    Axial (q, r) → Cartesian (x, y) for pointy-topped hex grid.
+    Axial (q, r) ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ Cartesian (x, y) for pointy-topped hex grid.
     size = distance from center to vertex.
     This spacing guarantees edge sharing (no gaps).
     """
@@ -45,7 +52,7 @@ def generate_board_image(board: Board):
     fig, ax = plt.subplots(figsize=(8, 8))
     ax.set_aspect("equal")
 
-    size = 1.0  # distance center→vertex
+    size = 1.0  # distance centerÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢vertex
     for coords, tile in board.map.land_tiles.items():
         q, r, s = coords
         x, y = hex_to_pixel(q, r, size)

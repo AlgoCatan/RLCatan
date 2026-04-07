@@ -1,3 +1,9 @@
+/*
+Module: 6. User Interface
+Author: Forked
+Date: 2026-03-26
+Purpose: Provides the hidden module for the user interface, supporting interaction, presentation, or frontend application wiring.
+*/
 
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Box } from '@mui/system';

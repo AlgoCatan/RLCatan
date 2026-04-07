@@ -1,3 +1,10 @@
+"""
+Module: 9. Game State Manager
+Author: Forked
+Date: 2025-12-16
+Purpose: Implements the decks module for the game state manager component, supporting simulation, state handling, utilities, or developer interaction with the game engine.
+"""
+
 """Providers helper functions to deal with representations of decks of cards
 
 We use a histogram / 'frequency list' to represent decks (aliased 'freqdeck').

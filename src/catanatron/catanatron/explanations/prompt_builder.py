@@ -1,3 +1,11 @@
+"""
+Module: 10. Explanation Pipeline
+Author: Forked
+Date: 2025-12-14
+Purpose: Implements the prompt builder module for the explanation pipeline, supporting prompt construction, packet analysis, or explanation generation.
+"""
+
+
 def _format_tile_coordinate(coord: tuple) -> str:
     """Format a tile coordinate tuple as a natural name like '6-5-9'."""
     if coord is None:

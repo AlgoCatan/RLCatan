@@ -1,3 +1,10 @@
+/*
+Module: 6. User Interface
+Author: Forked
+Date: 2026-02-08
+Purpose: Provides the actions module for the user interface, supporting interaction, presentation, or frontend application wiring.
+*/
+
 const ACTIONS = Object.freeze({
   SET_LEFT_DRAWER_OPENED: "SET_LEFT_DRAWER_OPENED",
   SET_RIGHT_DRAWER_OPENED: "SET_RIGHT_DRAWER_OPENED",

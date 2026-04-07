@@ -1,3 +1,10 @@
+/*
+Module: 6. User Interface
+Author: Forked
+Date: 2026-02-14
+Purpose: Provides the playerstats module for the user interface, supporting interaction, presentation, or frontend application wiring.
+*/
+
 import React from "react";
 import Divider from "@mui/material/Divider";
 import PlayerStateBox from "./PlayerStateBox";

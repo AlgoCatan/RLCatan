@@ -1,3 +1,10 @@
+"""
+Module: 2. Training Pipeline
+Author: Forked
+Date: 2026-01-28
+Purpose: Implements the benchmark game ops module for experimental training or agent-development workflows related to the project's learning pipeline.
+"""
+
 import timeit
 
 setup = """

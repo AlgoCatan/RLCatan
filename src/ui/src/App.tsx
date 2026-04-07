@@ -1,9 +1,8 @@
 /*
 Module: 6. User Interface
-Author:
-Date: 2025-12-17
-Purpose: Serves as the frontend application entry module, wiring routes,
-global providers, and the main game and admin screens for the UI.
+Author: Forked
+Date: 2025-12-26
+Purpose: Configures the main frontend application shell, routes, providers, and top-level screens for the user interface.
 */
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";

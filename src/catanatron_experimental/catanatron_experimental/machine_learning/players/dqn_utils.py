@@ -1,3 +1,10 @@
+"""
+Module: 3. AI Model
+Author: Forked
+Date: 2025-11-20
+Purpose: Implements the dqn utils module for experimental training or agent-development workflows related to the project's learning pipeline.
+"""
+
 from catanatron.gym.utils import get_matrices_path
 
 

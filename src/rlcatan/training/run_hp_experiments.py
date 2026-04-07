@@ -1,3 +1,10 @@
+"""
+Module: 2. Training Pipeline
+Author: Forked
+Date: 2026-02-09
+Purpose: Implements the run hp experiments module for the 2. Training Pipeline component, supporting training orchestration, evaluation, or experiment control.
+"""
+
 import argparse
 import subprocess
 import sys

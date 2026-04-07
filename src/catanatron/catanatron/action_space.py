@@ -1,3 +1,10 @@
+"""
+Module: 9. Game State Manager
+Author: Forked
+Date: 2026-01-29
+Purpose: Implements the action space module for the game state manager component, supporting simulation, state handling, utilities, or developer interaction with the game engine.
+"""
+
 from catanatron.models.board import get_edges
 from catanatron.models.enums import RESOURCES, Action, ActionType
 from catanatron.models.map import BASE_MAP_TEMPLATE, NUM_NODES, LandTile

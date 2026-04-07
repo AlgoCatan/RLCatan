@@ -1,3 +1,10 @@
+"""
+Module: 2. Training Pipeline
+Author: Forked
+Date: 2025-12-02
+Purpose: Implements the rayopt module for experimental training or agent-development workflows related to the project's learning pipeline.
+"""
+
 from ray import tune
 
 from catanatron.models.player import Color

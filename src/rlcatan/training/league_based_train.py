@@ -1,6 +1,6 @@
 """
 Module: 2. Training Pipeline
-Author:
+Author: Jake Read
 Date: 2026-02-18
 Purpose: Implements the training pipeline for league-based PPO self-play,
 managing opponent selection, evaluation, Elo updates, snapshotting, and

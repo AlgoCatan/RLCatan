@@ -1,3 +1,10 @@
+/*
+Module: 6. User Interface
+Author: Forked
+Date: 2026-02-16
+Purpose: Provides the promptutils module for the user interface, supporting interaction, presentation, or frontend application wiring.
+*/
+
 import type { GameAction, Tile, PlacedTile } from "./api.types";
 import type { GameState } from "./api.types";
 

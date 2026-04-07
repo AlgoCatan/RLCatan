@@ -1,3 +1,10 @@
+"""
+Module: 3. AI Model
+Author: Forked
+Date: 2026-02-11
+Purpose: Implements the minimax module for the AI model component, supporting automated decision-making or search-based gameplay behavior.
+"""
+
 import time
 import random
 from typing import Any

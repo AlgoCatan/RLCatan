@@ -22,53 +22,52 @@
 
 \maketitle
 
-\plt{Reflection is an important component of getting the full benefits from a
-learning experience.  Besides the intrinsic benefits of reflection, this
-document will be used to help the TAs grade how well your team responded to
-feedback.  Therefore, traceability between Revision 0 and Revision 1 is and
-important part of the reflection exercise.  In addition, several CEAB (Canadian
-Engineering Accreditation Board) Learning Outcomes (LOs) will be assessed based
-on your reflections.}
+%\plt{Reflection is an important component of getting the full benefits from a
+%learning experience.  Besides the intrinsic benefits of reflection, this
+%document will be used to help the TAs grade how well your team responded to
+%feedback.  Therefore, traceability between Revision 0 and Revision 1 is and
+%important part of the reflection exercise.  In addition, several CEAB (Canadian
+%Engineering Accreditation Board) Learning Outcomes (LOs) will be assessed based
+%on your reflections.}
 
-\section{Changes in Response to Feedback}
-
-\plt{Summarize the changes made over the course of the project in response to
-feedback from TAs, the instructor, teammates, other teams, the project
-supervisor (if present), and from user testers.}
-
-\plt{For those teams with an external supervisor, please highlight how the feedback 
-from the supervisor shaped your project.  In particular, you should highlight the 
-supervisor's response to your Rev 0 demonstration to them.}
-
-\plt{Version control can make the summary relatively easy, if you used issues
-and meaningful commits.  If you feedback is in an issue, and you responded in
-the issue tracker, you can point to the issue as part of explaining your
-changes.  If addressing the issue required changes to code or documentation, you
-can point to the specific commit that made the changes.  Although the links are
-helpful for the details, you should include a label for each item of feedback so
-that the reader has an idea of what each item is about without the need to click
-on everything to find out.}
-
-\plt{If you were not organized with your commits, traceability between feedback
-and commits will not be feasible to capture after the fact.  You will instead
-need to spend time writing down a summary of the changes made in response to
-each item of feedback.}
-
-\plt{You should address EVERY item of feedback.  A table or itemized list is
-recommended.  You should record every item of feedback, along with the source of
-that feedback and the change you made in response to that feedback.  The
-response can be a change to your documentation, code, or development process.
-The response can also be the reason why no changes were made in response to the
-feedback.  To make this information manageable, you will record the feedback and
-response separately for each deliverable in the sections that follow.}
-
-\plt{If the feedback is general or incomplete, the TA (or instructor) will not
-be able to grade your response to feedback.  In that case your grade on this
-document, and likely the Revision 1 versions of the other documents will be
-low.} 
+%\plt{Summarize the changes made over the course of the project in response to
+%feedback from TAs, the instructor, teammates, other teams, the project
+%supervisor (if present), and from user testers.}
+%
+%\plt{For those teams with an external supervisor, please highlight how the feedback
+%from the supervisor shaped your project.  In particular, you should highlight the
+%supervisor's response to your Rev 0 demonstration to them.}
+%
+%\plt{Version control can make the summary relatively easy, if you used issues
+%and meaningful commits.  If you feedback is in an issue, and you responded in
+%the issue tracker, you can point to the issue as part of explaining your
+%changes.  If addressing the issue required changes to code or documentation, you
+%can point to the specific commit that made the changes.  Although the links are
+%helpful for the details, you should include a label for each item of feedback so
+%that the reader has an idea of what each item is about without the need to click
+%on everything to find out.}
+%
+%\plt{If you were not organized with your commits, traceability between feedback
+%and commits will not be feasible to capture after the fact.  You will instead
+%need to spend time writing down a summary of the changes made in response to
+%each item of feedback.}
+%
+%\plt{You should address EVERY item of feedback.  A table or itemized list is
+%recommended.  You should record every item of feedback, along with the source of
+%that feedback and the change you made in response to that feedback.  The
+%response can be a change to your documentation, code, or development process.
+%The response can also be the reason why no changes were made in response to the
+%feedback.  To make this information manageable, you will record the feedback and
+%response separately for each deliverable in the sections that follow.}
+%
+%\plt{If the feedback is general or incomplete, the TA (or instructor) will not
+%be able to grade your response to feedback.  In that case your grade on this
+%document, and likely the Revision 1 versions of the other documents will be
+%low.}
 
 \newpage
 \begin{landscape}
+\section{Changes in Response to Feedback}
 \subsection{SRS and Hazard Analysis}
 
 \begin{tabularx}{\linewidth}{|P{2.3cm}|Y|P{2.5cm}|P{3.5cm}|}
@@ -298,16 +297,41 @@ low.}
         \href{https://github.com/AlgoCatan/RLCatan/commit/3d6b7901f6120db67a177b9fd7a04db081f1b6ae}{Commit 3d6b790} \\
 
         \hline
-        Internal Feedback &
+        Internal Team Feedback &
         The design has changed a lot since the MG was written, so we need to go through and update the MG to reflect our current design, and remove any sections that are no longer relevant. &
         \href{https://github.com/AlgoCatan/RLCatan/issues/117}{Issue \#117} &
         \href{https://github.com/AlgoCatan/RLCatan/commit/eb942b6e09e321dd0b32b431bcb68783ddef34f5}{Commit eb942b6} \\
 
         \hline
-        Internal Feedback &
+        Internal Team Feedback &
         Similarly to the above, the MIS docs are also quite outdated, and need a revamp to better reflect our current module structure. &
         \href{https://github.com/AlgoCatan/RLCatan/issues/117}{Issue \#117} &
         \href{https://github.com/AlgoCatan/RLCatan/commit/c42a92a3e8fca3f58d34a3f9e3a6bc7627b71200}{Commit c42a92a} \\
+
+        \hline
+        Supervisor Feedback &
+        Shortly before the rev0 demo, our supervisor suggested we begin to transition from pursuing pure technical depth, to creating something more presentable.
+        This shift in perspective led us to move our immediate focus towards creating a user-friendly front-end interface.
+        This was arguably the most impactful feedback in terms of its effect on the final product. &
+        \href{https://github.com/AlgoCatan/RLCatan/issues/75}{Issue \#75}
+        (Other issues naturally followed. Covered in other table rows) &
+        \href{https://github.com/AlgoCatan/RLCatan/commit/f17385203af6483e7ba5eec9ee40adb6a563f61c}{Commit f173852} \\
+
+        \hline
+        Catan Players (Stakeholders) + Supervisor Feedback &
+        After usability testing we decided to incorporate an LLM generated text based explanation system to help users understand the bot's move recommendations &
+        \href{https://github.com/AlgoCatan/RLCatan/issues/78}{Issue \#78} &
+        \href{https://github.com/AlgoCatan/RLCatan/commit/6164debd93fec9250a103d863f2908e080371332}{Commit 6164debd}
+        \href{https://github.com/AlgoCatan/RLCatan/commit/1236c27b270ecb47aa10b6a302745fbdb701eac6}{Commit 1236c27} \\
+
+        \hline
+        Catan Players (Stakeholders) + Demo Feedback &
+        After usability testing and the rev0 demo, we did a UI overhaul to improve the user experience, based on feedback from our usability testing, our TA Tiago and Prof Dr.Spencer Smith. &
+        \href{https://github.com/AlgoCatan/RLCatan/issues/87}{Issue \#87} &
+        \href{https://github.com/AlgoCatan/RLCatan/commit/e6098bb1c6546b6096112c31752d3dfbc729990c}{Commit e6098bb}
+        \href{https://github.com/AlgoCatan/RLCatan/commit/747ef316da3f0032be4f767a35141bdf2b2c6b6c}{Commit 747ef316}
+        \href{https://github.com/AlgoCatan/RLCatan/commit/c63a6aecbc468958ff8cdd93be348fdfcd3fdf3d}{Commit c63a6aec}\\
+
 
 \end{tabularx}
 
@@ -418,7 +442,7 @@ low.}
 
         \hline
         TA Feedback &
-        The VnV plan had vauge and ambigous tests. Fixed them to be more specific and actionable. &
+        The VnV plan had vague and ambiguous tests. Fixed them to be more specific and actionable. &
         \href{https://github.com/AlgoCatan/RLCatan/issues/114}{Issue \#114} &
         \href{https://github.com/AlgoCatan/RLCatan/commit/6b1827ec1c04290d56bfb580353462eb850ddfde}{Commit 6b1827e} \\
 
@@ -434,16 +458,15 @@ low.}
         \href{https://github.com/AlgoCatan/RLCatan/issues/115}{Issue \#115} &
         \href{https://github.com/AlgoCatan/RLCatan/commit/691eee22be31b39f1e829ad2b11d6b27e6601f55}{Commit 691eee2} \\
 
-
         \hline
-        TA Feedback +  Internal Consistency  &
-        The Vnv plan had some inconsistencies with the SRS and MG, such as missing requirements, and some tests that were no longer relevant.&
+        TA Feedback + Internal Team Feedback  &
+        The VnV plan had some inconsistencies with the SRS and MG, such as missing requirements, and some tests that were no longer relevant.&
         \href{https://github.com/AlgoCatan/RLCatan/issues/118?issue=AlgoCatan\%7CRLCatan\%7C121}{Issue \#118} &
         \href{https://github.com/AlgoCatan/RLCatan/commit/2464bc1a92d19c0b07620253ed44002eabeb3309}{Commit 2464bc1}
         \href{https://github.com/AlgoCatan/RLCatan/commit/2ebe6c54b84fca5e4cc507d08be7bb31cf51f83b}{Commit 2ebe6c5} \\
 
         \hline
-        TA feedback +  Internal Consistency  &
+        TA feedback + Internal Team Feedback  &
         The Vnv report has inconsistencies with the VnV plan, and SRS, such as missing/changed requirements.&
         \href{https://github.com/AlgoCatan/RLCatan/issues/119}{Issue \#119} &
         \href{https://github.com/AlgoCatan/RLCatan/commit/a198157e437e0459938278bd7675ba0cbb7872e1}{Commit a198157} \\
@@ -456,8 +479,8 @@ low.}
 
 
         \hline
-        Internal Consistency &
-        The Vnv Plan was missing the updated unit tests for from the VnV report &
+        Internal Team Feedback &
+        The Vnv Plan was missing some unit tests for the new modules, which were covered in the VnV report &
         \href{https://github.com/AlgoCatan/RLCatan/issues/123?reload=1}{Issue \#123} &
         \href{https://github.com/AlgoCatan/RLCatan/commit/38e7bf580312d5f45960f521d2a7e7cdf03439e1}{Commit 38e7bf5} \\
 
@@ -466,7 +489,13 @@ low.}
 
 \newpage
 
-\subsection{Extra Feedback(ADDED)}
+\subsection{Dev Plan Changes (Added Section)}
+
+Dev Plan changes are not required by the rubric, nor were they part of this document's template,
+but the final lecture slides mentioned that it should also be updated, so we added this small
+section to capture the changes we made before noticing this discrepancy.
+The Problem statement and Goals doc has not been revised, as we realised it was not necessary before
+closing issues associated with it.
 
 \begin{tabularx}{\linewidth}{|P{2.3cm}|Y|P{2.5cm}|P{3.5cm}|}
 
@@ -499,30 +528,9 @@ low.}
         \endlastfoot
 
         % Table Content
-        Supervisor Feedback &
-        To increase our RL bot's win rate, our supervisor suggested a self play leauge &
-        \href{https://github.com/AlgoCatan/RLCatan/issues/67}{Issue \#67} &
-        \href{https://github.com/AlgoCatan/RLCatan/commit/52fe9cad4af231f632b977486b6613834616fc37}{Commit 52fe9cad} 
-        \href{https://github.com/AlgoCatan/RLCatan/commit/e8e841b10dac1d3d16200a7c92cd70f4699aba02}{Commit e8e841b}\\
-
-        \hline
-        Catan Players (Stakeholders) + Supervisor Feedback &
-        After usability testing we decided to incorporate an LLM generated text based explanation system to help users understand the bot's move recommendations &
-        \href{https://github.com/AlgoCatan/RLCatan/issues/78}{Issue \#78} &
-        \href{https://github.com/AlgoCatan/RLCatan/commit/6164debd93fec9250a103d863f2908e080371332}{Commit 6164debd} 
-        \href{https://github.com/AlgoCatan/RLCatan/commit/1236c27b270ecb47aa10b6a302745fbdb701eac6}{Commit 1236c27} \\
-
-        \hline
-        Catan Players (Stakeholders) + Demo Feedback &
-        After usability testing and the rev0 demo, we did a UI overhaul to improve the user experince, based on feedback from our usability testing and our TA Tiago and Prof Dr.Spencer Smith gave some feedback. &
-        \href{https://github.com/AlgoCatan/RLCatan/issues/87}{Issue \#87} &
-        \href{https://github.com/AlgoCatan/RLCatan/commit/e6098bb1c6546b6096112c31752d3dfbc729990c}{Commit e6098bb}
-        \href{https://github.com/AlgoCatan/RLCatan/commit/747ef316da3f0032be4f767a35141bdf2b2c6b6c}{Commit 747ef316}
-        \href{https://github.com/AlgoCatan/RLCatan/commit/c63a6aecbc468958ff8cdd93be348fdfcd3fdf3d}{Commit c63a6aec}\\
-
         \hline
         TA Feedback &
-        Dev plan sextion 10 was lacking in depth reasoning on chosen technology. &
+        Dev plan section 10 was lacking in depth reasoning on chosen technology. &
         \href{https://github.com/AlgoCatan/RLCatan/issues/107}{Issue \#107} &
         \href{https://github.com/AlgoCatan/RLCatan/commit/17df6a875e2daf9593172d54ea6349b9e91b1b13}{Commit 17df6a8} \\
 
@@ -552,10 +560,10 @@ low.}
 
 \section{Extras}
 
-\plt{Summarize the extras that were tackled by this project.  Extras
-can include usability testing, code walkthroughs, user documentation, formal
-proof, GenderMag personas, Design Thinking, etc.  Extras should have already
-been approved by the course instructor as included in your problem statement.}
+%\plt{Summarize the extras that were tackled by this project.  Extras
+%can include usability testing, code walkthroughs, user documentation, formal
+%proof, GenderMag personas, Design Thinking, etc.  Extras should have already
+%been approved by the course instructor as included in your problem statement.}
 
 For our project, we chose to conduct usability testing, and create a user instructional video for our extras.
 
@@ -577,13 +585,13 @@ The responses from users we showed it to are also listed in a doc in the same fo
 
 \section{Design Iteration (LO11 (PrototypeIterate))}
 
-\plt{Explain how you arrived at your final design and implementation.  How did
-the design evolve from the first version to the final version?} 
-
-\plt{Don't just say what you changed, say why you changed it.  The needs of the
-client should be part of the explanation.  For example, if you made changes in
-response to usability testing, explain what the testing found and what changes
-it led to.}
+%\plt{Explain how you arrived at your final design and implementation.  How did
+%the design evolve from the first version to the final version?}
+%
+%\plt{Don't just say what you changed, say why you changed it.  The needs of the
+%client should be part of the explanation.  For example, if you made changes in
+%response to usability testing, explain what the testing found and what changes
+%it led to.}
 
 Over the course of the project, our design evolved significantly in response to feedback from various sources,
 including peer reviews, TA and supervisor feedback, and usability testing.
@@ -656,9 +664,9 @@ their own games, supporting experiential learning.
 
 \section{Design Decisions (LO12)}
 
-\plt{Reflect and justify your design decisions.  How did limitations,
- assumptions, and constraints influence your decisions?  Discuss each of these
- separately.}
+%\plt{Reflect and justify your design decisions.  How did limitations,
+% assumptions, and constraints influence your decisions?  Discuss each of these
+% separately.}
 
 
 Our final design was heavily shaped by as much by limitations, assumptions, and constraints.
@@ -736,12 +744,12 @@ to ensure it was still usable.
 
 \section{Economic Considerations (LO23)}
 
-\plt{Is there a market for your product? What would be involved in marketing your 
-product? What is your estimate of the cost to produce a version that you could 
-sell?  What would you charge for your product?  How many units would you have to 
-sell to make money? If your product isn't something that would be sold, like an 
-open source project, how would you go about attracting users?  How many potential 
-users currently exist?}
+%\plt{Is there a market for your product? What would be involved in marketing your
+%product? What is your estimate of the cost to produce a version that you could
+%sell?  What would you charge for your product?  How many units would you have to
+%sell to make money? If your product isn't something that would be sold, like an
+%open source project, how would you go about attracting users?  How many potential
+%users currently exist?}
 
 Our repo is open source, and we have no plans to sell anything produced during this project.
 Part of our motivation for this project was to push the field of \emph{Catan} bots forward, and charging for
@@ -773,13 +781,13 @@ we still have a large potential user base.
 
 \section{Reflection on Project Management (LO24)}
 
-\plt{This question focuses on processes and tools used for project management.}
+%\plt{This question focuses on processes and tools used for project management.}
 
 \subsection{How Does Your Project Management Compare to Your Development Plan}
 
-\plt{Did you follow your Development plan, with respect to the team meeting plan, 
-team communication plan, team member roles and workflow plan.  Did you use the 
-technology you planned on using?}
+%\plt{Did you follow your Development plan, with respect to the team meeting plan,
+%team communication plan, team member roles and workflow plan.  Did you use the
+%technology you planned on using?}
 
 Overall, our project management was fairly consistent with the development plan we proposed.
 We kept the core structure of weekly meetings, Discord-based communication, GitHub for source control,
@@ -811,8 +819,8 @@ and training, while Rebecca and Matthew focusing more on the UI and documentatio
 
 \subsection{What Went Well?}
 
-\plt{What went well for your project management in terms of processes and 
-technology?}
+%\plt{What went well for your project management in terms of processes and
+%technology?}
 
 A major thing that went well was communication.
 Discord was effective for day-to-day discussion, communicating with our supervisor, quick troubleshooting,
@@ -839,7 +847,7 @@ a high level of code quality.
 
 \subsection{What Went Wrong?}
 
-\plt{What went wrong in terms of processes and technology?}
+%\plt{What went wrong in terms of processes and technology?}
 
 The biggest project-management issue was scope uncertainty early on.
 Because reinforcement learning work is hard to estimate, especially in a game as complex as \emph{Catan},
@@ -860,7 +868,7 @@ This was especially true for the SRS, which we had to update multiple times as o
 
 \subsection{What Would you Do Differently Next Time?}
 
-\plt{What will you do differently for your next project?}
+%\plt{What will you do differently for your next project?}
 
 The main thing we would do differently is establish a user-facing component earlier.
 Even if the underlying model was weak at first, having a basic end-to-end product sooner would have made early
@@ -877,8 +885,8 @@ around features that were ultimately deferred, and dealing with old docs now wou
 
 \section{Ethics and Equity (LO18)}
 
-\plt{Describe how your team applied the principle of equity and universal design
-to ensure equitable treatment of all stakeholders.}
+%\plt{Describe how your team applied the principle of equity and universal design
+%to ensure equitable treatment of all stakeholders.}
 
 Our team tried to apply ethics and equity in two main ways,
 by thinking carefully about who the system is designed for and by avoiding design choices that would
@@ -912,11 +920,11 @@ internet, and time, but it does move the project in a more open and fair directi
 
 \section{Reflection on Capstone}
 
-\plt{This question focuses on what you learned during the course of the capstone project.}
+%\plt{This question focuses on what you learned during the course of the capstone project.}
 
 \subsection{Which Courses Were Relevant}
 
-\plt{Which of the courses you have taken were relevant for the capstone project?}
+%\plt{Which of the courses you have taken were relevant for the capstone project?}
 
 Several courses were directly relevant to this capstone, with arguably 2AA4 the most relevant.
 That course emphasized iterative development, modular design, teamwork, and managing a larger project over time.
@@ -948,8 +956,8 @@ such as version control experience, or the ability to reason about performance a
 
 \subsection{Knowledge/Skills Outside of Courses}
 
-\plt{What skills/knowledge did you need to acquire for your capstone project
-that was outside of the courses you took?}
+%\plt{What skills/knowledge did you need to acquire for your capstone project
+%that was outside of the courses you took?}
 
 The capstone also required us to learn a large amount that was not cleanly covered by our coursework.
 The biggest area was practical deep reinforcement learning engineering.

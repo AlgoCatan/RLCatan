@@ -1,3 +1,10 @@
+"""
+Module: 3. AI Model
+Author: Forked
+Date: 2025-12-03
+Purpose: Implements the weighted random module for the AI model component, supporting automated decision-making or search-based gameplay behavior.
+"""
+
 import random
 
 from catanatron.models.player import Player

@@ -1,3 +1,10 @@
+/*
+Module: 6. User Interface
+Author: Forked
+Date: 2025-11-26
+Purpose: Provides the replaybox module for the user interface, supporting interaction, presentation, or frontend application wiring.
+*/
+
 import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
 import { Button, Slider } from "@mui/material";
 

@@ -1,3 +1,10 @@
+/*
+Module: 6. User Interface
+Author: Forked
+Date: 2025-11-16
+Purpose: Provides the events module for the user interface, supporting interaction, presentation, or frontend application wiring.
+*/
+
 import { type KeyboardEvent } from "react";
 
 export type InteractionEvent =

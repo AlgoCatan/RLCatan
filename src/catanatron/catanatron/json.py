@@ -1,4 +1,11 @@
 """
+Module: 9. Game State Manager
+Author: Forked
+Date: 2025-11-25
+Purpose: Implements the json module for the game state manager component, supporting simulation, state handling, utilities, or developer interaction with the game engine.
+"""
+
+"""
 Classes to encode/decode catanatron classes to JSON format.
 """
 

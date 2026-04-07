@@ -1,3 +1,10 @@
+/*
+Module: 6. User Interface
+Author: Forked
+Date: 2026-02-24
+Purpose: Provides the leftdrawer module for the user interface, supporting interaction, presentation, or frontend application wiring.
+*/
+
 import React, { useCallback, useContext } from "react";
 import cn from "classnames";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";

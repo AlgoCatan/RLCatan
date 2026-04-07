@@ -1,3 +1,10 @@
+"""
+Module: 9. Game State Manager
+Author: Forked
+Date: 2026-01-19
+Purpose: Implements the play module for the game state manager component, supporting simulation, state handling, utilities, or developer interaction with the game engine.
+"""
+
 import os
 import importlib.util
 from dataclasses import dataclass
