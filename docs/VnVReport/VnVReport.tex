@@ -950,25 +950,28 @@ The following table maps each executed functional test to the specific requireme
 
 \subsubsection{Coverage Summary by Module}
 
+\begin{table}[H]
+    \centering
+    \begin{tabularx}{\textwidth}{|X|X|X|X|X|} % Changed first col to X and last to l
+    \hline
+    \textbf{Module} & \textbf{Requirements} & \textbf{Covered} & \textbf{Deferred} & \textbf{Coverage \%} \\ \hline
+    Computer Vision & 5 & 0 & 5 & 0\% (DEFERRED) \\ \hline
+    Training Pipeline & 5 & 5 & 0 & 100\% \\ \hline
+    AI Model & 5 & 5 & 0 & 100\% \\ \hline
+    Elo League System & 5 & 5 & 0 & 100\% \\ \hline
+    Curriculum Learning & 5 & 5 & 0 & 100\% \\ \hline
+    User Interface & 8 & 8 & 0 & 100\% \\ \hline
+    Game State Database & 5 & 5 & 0 & 100\% \\ \hline
+    Backend API Server & 3 & 3 & 0 & 100\% \\ \hline
+    Game State Manager & 5 & 5 & 0 & 100\% \\ \hline
+    Explanation Pipeline & 3 & 3 & 0 & 100\% \\ \hline
+    \textbf{TOTAL (Implemented)} & \textbf{44} & \textbf{44} & \textbf{0} & \textbf{100\%} \\ \hline
+    \textbf{TOTAL (With Deferred CV)} & \textbf{49} & \textbf{44} & \textbf{5} & \textbf{89.8\%} \\ \hline
+    \end{tabularx}
+    \caption{Module Coverage Analysis}
+    \label{tab:module-coverage}
+\end{table}
 
-\begin{tabularx}{\textwidth}{|l|c|c|c|c|}
-\hline
-\textbf{Module} & \textbf{Requirements} & \textbf{Covered} & \textbf{Deferred} & \textbf{Coverage \%} \\ \hline
-Computer Vision & 5 & 0 & 5 & 0\% (DEFERRED) \\ \hline
-Training Pipeline & 5 & 5 & 0 & 100\% \\ \hline
-AI Model & 5 & 5 & 0 & 100\% \\ \hline
-Elo League System & 5 & 5 & 0 & 100\% \\ \hline
-Curriculum Learning & 5 & 5 & 0 & 100\% \\ \hline
-User Interface & 8 & 8 & 0 & 100\% \\ \hline
-Game State Database & 5 & 5 & 0 & 100\% \\ \hline
-Backend API Server & 3 & 3 & 0 & 100\% \\ \hline
-Game State Manager & 5 & 5 & 0 & 100\% \\ \hline
-Explanation Pipeline & 3 & 3 & 0 & 100\% \\ \hline
-\textbf{TOTAL (Implemented)} & \textbf{44} & \textbf{44} & \textbf{0} & \textbf{100\%} \\ \hline
-\textbf{TOTAL (With Deferred CV)} & \textbf{49} & \textbf{44} & \textbf{5} & \textbf{89.8\%} \\ \hline
-\end{tabularx}
-\caption{Module Coverage Analysis}
-\label{tab:module-coverage}
 
 \section{Code Coverage Metrics}
 We have been using Coveralls for coverage tracking as part of our CI/CD pipeline throughout the project.
