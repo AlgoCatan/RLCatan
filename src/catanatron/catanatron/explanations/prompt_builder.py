@@ -76,7 +76,7 @@ def _get_output_format_instruction(familiarity: str) -> str:
             "- Paragraph 2: Strategic context and position evaluation (3-4 sentences)\n"
             "- Paragraph 3: Key factors and tradeoffs analysis (3-4 sentences)\n"
             "- Paragraph 4 (optional): Long-term implications or competitive positioning (2-3 sentences)\n"
-            "- Use PLAIN TEXT ONLY: no asterisks, no dashes for bullets, no markdown formatting\n"
+            "- Use PLAIN TEXT ONLY: no asterisks, no dashes for bullets, no markdown formatting, no code-like descriptions of actions.\n"
             "- Reference specific strategic concepts (production chains, settlement clusters, blocking, etc.)"
         )
     elif familiarity == "LOW":
