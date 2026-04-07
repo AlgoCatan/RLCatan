@@ -68,6 +68,7 @@ https://docs.catanatron.com/
 
 
 ## Deep Learning Training
+
 Navigate to training folder under \src\rlcatan\training using
 `cd src\rlcatan\training`
 
@@ -86,3 +87,22 @@ We use pytest for unit testing. To run all tests, navigate to the src folder and
 
 To run a specific test file, use the command below, replacing the path with the path to the desired test file: \
 `python -m pytest src/tests/web/test_api_extra.py`
+
+
+## Design Doc Module Traceability
+The design docs for this project can be found in the docs folder.
+These docs outline the architecture and design decisions made during the development of the project,
+including the modules and components of the system.
+The repo is quite large, and is heavily integrated with the Catanatron codebase.
+As such, the path to the relevant code for each module is listed below:
+
+- Training Pipeline: A variety of scripts found under `src\rlcatan\training`. Different scripts were used in different situations.
+- Curriculum Learning Manager: `src\rlcatan\training\curriculum.py` and `curriculum_callback.py`
+- Elo League System: `src\rlcatan\training\league.py`. The current league state can be found in `src\rlcatan\training\models\league`
+- User Interface: `src\ui`. This folder contains the code for the web interface.
+- Explanation Pipeline: `src\catanatron\catanatron\explanation`. This folder contains the code for generating explanations for bot moves. It was added as a new Catanatron module.
+- Backend API Server: `src\catanatron\catanatron\web\api.py`. This is a modified version of Catanatron's existing API server, which includes new endpoints for the web interface and explanation pipeline.
+- AI Model: Various model files found under `src\rlcatan\training\models`.
+- Game State Database: `src\catanatron\catanatron\web\database_accumulator.py`. Game state accumulation was part of the existing Catanatron codebase. We used this feature to enable replays in our web UI.
+- Game State Manager: Anything unmentioned above and under `src\catanatron` is part of this module. The game state manager is heavily integrated with the Catanatron codebase, so there is no single file or folder that contains all of the relevant code, although the main control is in `game.py`.
+We modified many of the existing Catanatron modules to support our project, but most changes were small and the overall structure of the codebase is still intact. The most significant changes were made to `src\catanatron\catanatron\models\player.py`, to support move explanations.
