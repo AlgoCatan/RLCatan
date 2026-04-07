@@ -54,6 +54,7 @@ urlcolor=cyan          % color of external links
 \midrule
 11/13/2025 & 1.0 & Draft Rev Minus 1\\
 01/17/2026 & 1.1 & Draft Rev 0\\
+04/06/2026 & 1.2 & Revision for Final Doc\\
 \bottomrule
 \end{tabularx}
 
@@ -61,7 +62,8 @@ urlcolor=cyan          % color of external links
 
 \section{Symbols, Abbreviations and Acronyms}
 
-See SRS Documentation at \url{https://github.com/SY3141/RLCatan}.
+See SRS Documentation at \url{https://github.com/AlgoCatan/RLCatan}.
+
 
 %\wss{Also add any additional symbols, abbreviations or acronyms}
 
@@ -76,11 +78,16 @@ See SRS Documentation at \url{https://github.com/SY3141/RLCatan}.
 \section{Introduction}
 
 The following document details the Module Interface Specifications for
-our project RLCatan. This project aims to create a competent reinforcement learning AI agent designed to master the board game Settlers of Catan through autonomous self-play training. The AI will use deep reinforcement learning algorithms to learn optimal decision-making strategies across several game states including resource management, territory expansion and adaptive responses to opponent actions.
+our project, AlgoCatan. The final implemented system is a web-based arena for
+playing against trained \emph{Catan} bots, replaying past games, viewing
+strategic analysis, and requesting natural-language move explanations.
+Its architecture combines a training pipeline, PPO-based AI models, an Elo
+league, a curriculum learning manager, a backend API server, persistent game
+storage, and a React frontend.
 
-Complementary documents include the System Requirement Specifications
-and Module Guide.  The full documentation and implementation can be
-found at \url{https://github.com/SY3141/RLCatan}.
+Complementary documents include the Software Requirements Specification
+and Module Guide. The full documentation and implementation can be
+found at \url{https://github.com/AlgoCatan/RLCatan}.
 
 \section{Notation}
 
@@ -144,18 +151,24 @@ The following table is taken directly from the Module Guide document for this pr
 \textbf{Level 1} & \textbf{Level 2}\\
 \midrule
 
-\multirow{2}{0.3\textwidth}{Hardware-Hiding Module} & Hardware-Hiding Module (OS) \\
-& Computer Vision Model \\
+\multirow{2}{0.3\textwidth}{Hardware-Hiding Module}
+& Hardware-Hiding Module (OS) (Deferred) \\
+& Computer Vision Model (Deferred) \\
 \midrule
 
-\multirow{3}{0.3\textwidth}{Behaviour-Hiding Module} &  User Interface \\
-&  Game State Manager \\
-&  Reinforcement Learning Environment \\
+\multirow{3}{0.3\textwidth}{Behaviour-Hiding Module}
+& User Interface \\
+& Game State Manager \\
+& Training Pipeline \\
 \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision Module} &  AI Model \\
+\multirow{6}{0.3\textwidth}{Software Decision Module}
+& AI Model \\
 & Game State Database \\
-&  Image Queue \\
+& Backend API Server \\
+& Elo League System \\
+& Curriculum Learning Manager \\
+& Explanation Pipeline \\
 \bottomrule
 
 \end{tabular}
@@ -166,10 +179,11 @@ The following table is taken directly from the Module Guide document for this pr
 
 
 %%%%%%%%%%%%%%%%%ADDED MODULES BELOW THIS LINE%%%%%%%%%%%%%%%%%%%%%
-\section{MIS of Hardware-Hiding Module} \label{M1}
+\section{MIS of Hardware-Hiding Module (Deferred)} \label{M1}
 
 \subsection{Module}
-Hardware-Hiding Module (M1)
+Hardware-Hiding Module (M1).
+This module is retained for future scope only and is not part of the current implemented runtime path.
 
 \subsection{Uses}
 \begin{itemize}
@@ -265,10 +279,11 @@ isInitialized & - & $\mathbb{B}$ & - \\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{MIS of Computer Vision Module} \label{M2}
+\section{MIS of Computer Vision Module (Deferred)} \label{M2}
 
 \subsection{Module}
-Computer Vision Module (M2)
+Computer Vision Module (M2).
+This module is retained for future scope only and is not part of the current implemented runtime path.
 
 \subsection{Uses}
 \begin{itemize}
@@ -394,7 +409,7 @@ getUserCorrections & - & seq of Corrections & - \\
 \subsubsection{State Variables}
 \begin{itemize}
 \item \texttt{uiState}: Abstract UI representation (type unspecified, internal)
-\item \texttt{correctionQueue}: seq of Corrections  
+\item \texttt{correctionQueue}: seq of Corrections
       \quad A sequence of user-provided corrections where each correction may include:
       \begin{itemize}
           \item element identifier: $\Sigma^{*}$
@@ -417,7 +432,7 @@ getUserCorrections & - & seq of Corrections & - \\
 
 \noindent renderBoard(state):
 \begin{itemize}
-\item transition: Updates \texttt{uiState} := graphical representation of $state$;  
+\item transition: Updates \texttt{uiState} := graphical representation of $state$;
       renders \texttt{uiState} onto \texttt{window}.
 \item output: -
 \item exception: raises \texttt{RenderError} if rendering fails.
@@ -425,7 +440,7 @@ getUserCorrections & - & seq of Corrections & - \\
 
 \noindent displayAIMove(move):
 \begin{itemize}
-\item transition: Updates \texttt{uiState} to include the visualization of $move$;  
+\item transition: Updates \texttt{uiState} to include the visualization of $move$;
       refreshes \texttt{window}.
 \item output: -
 \item exception: -
@@ -433,7 +448,7 @@ getUserCorrections & - & seq of Corrections & - \\
 
 \noindent getUserCorrections():
 \begin{itemize}
-\item transition: \texttt{tmp} := \texttt{correctionQueue};  
+\item transition: \texttt{tmp} := \texttt{correctionQueue};
       \texttt{correctionQueue} := empty sequence.
 \item output: Returns \texttt{tmp}: seq of Corrections.
 \item exception: -
@@ -549,10 +564,10 @@ None.
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{MIS of Reinforcement Learning Environment Module} \label{M5}
+\section{MIS of Training Pipeline} \label{M5}
 
 \subsection{Module}
-Reinforcement Learning Environment (M5)
+Training Pipeline (M5)
 
 \subsection{Uses}
 
@@ -868,10 +883,15 @@ queryHistory & playerID:$\Sigma^{*}$ & seq(GameStateData) & DBReadError \\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{MIS of Image Queue Module} \label{M8}
+\section{MIS of Image Queue Module (Phased Out)} \label{M8}
 
 \subsection{Module}
-Image Queue (M8)
+Image Queue (M8).
+In all other docs, M8 has been replaced by the Backend API Server module, and the image queue has been phased out.
+However, in this MIS doc, the original design is kept as a legacy implementation to cover the formalization requirement
+of the MIS rubric.
+This formalization was created before we phased out the module, and it is retained here only for completeness.
+The true M8 module, the Backend API Server, is defined immediately after this section.
 
 \subsection{Uses}
 
@@ -1025,17 +1045,401 @@ S = (queueBuffer, head, tail, size).
 \end{align*}
 
 
+\section{MIS of Backend API Server Module} \label{M8}
+
+\subsection{Module}
+Backend API Server (M8)
+
+\subsection{Uses}
+\begin{itemize}
+    \item \textbf{GameStateData}: Serialized game-state payloads.
+    \item \textbf{MoveData}: Request or response action payload.
+    \item \textbf{seq(BotMeta)}: Bot list returned to the frontend.
+    \item \textbf{ExplanationText}: Natural-language explanation payload.
+    \item \textbf{ProbabilityMap}: MCTS analysis payload.
+    \item \textbf{M4.applyAction(), M4.getState(), M4.getActionContext()}.
+    \item \textbf{M6.decide()}.
+    \item \textbf{M7.readState(), M7.writeState(), M7.readLeagueMembers()}.
+    \item \textbf{M9.listMembers()}.
+    \item \textbf{M11.explainMove()}.
+    \item \textbf{APIRequestError}: Raised when a request is invalid or cannot be fulfilled.
+\end{itemize}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+\begin{itemize}
+\item \texttt{API\_PREFIX}: $\Sigma^{*}$ = \texttt{/api}
+\end{itemize}
+
+\subsubsection{Exported Access Programs}
+\begin{center}
+\begin{tabular}{p{5cm} p{4cm} p{4cm} p{3cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+listBots & - & seq(BotMeta) & APIRequestError \\
+createGame & players:seq(PlayerKey) & $\Sigma^*$ & APIRequestError \\
+getState & gameID:$\Sigma^*$, stateIndex:$\mathbb{Z} \cup \{\bot\}$ & GameStateData & APIRequestError \\
+postAction & gameID:$\Sigma^*$, action:MoveData $\cup \{\bot\}$ & GameStateData & APIRequestError \\
+getMCTSAnalysis & gameID:$\Sigma^*$, stateIndex:$\mathbb{Z} \cup \{\bot\}$ & ProbabilityMap & APIRequestError \\
+getMoveExplanation & gameID:$\Sigma^*$, moveIndex:$\mathbb{N}$ & ExplanationText & APIRequestError \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+\begin{itemize}
+\item \texttt{activeExplanationGameID}: $\Sigma^* \cup \{\bot\}$
+\item \texttt{routeTable}: abstract mapping from HTTP route to handler
+\end{itemize}
+
+\subsubsection{Environment Variables}
+\begin{itemize}
+\item \texttt{httpRequest}: incoming request supplied by the web server runtime
+\item \texttt{httpResponse}: outgoing response written to the client
+\end{itemize}
+
+\subsubsection{Assumptions}
+\begin{itemize}
+    \item Requests are transmitted as HTTP requests with JSON payloads where required.
+    \item The backend is deployed with a valid database configuration and CORS-enabled web server environment.
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent listBots():
+\begin{itemize}
+\item transition: queries stored or configured league members
+\item output: returns a list of bot metadata for UI selection
+\item exception: raises \texttt{APIRequestError} if retrieval fails
+\end{itemize}
+
+\noindent createGame(players):
+\begin{itemize}
+\item transition: initializes a new game instance and persists its initial state
+\item output: returns a generated game identifier
+\item exception: raises \texttt{APIRequestError} if the request is malformed or initialization fails
+\end{itemize}
+
+\noindent getState(gameID, stateIndex):
+\begin{itemize}
+\item transition: -
+\item output: returns latest or indexed historical game state
+\item exception: raises \texttt{APIRequestError} if the requested state is unavailable
+\end{itemize}
+
+\noindent postAction(gameID, action):
+\begin{itemize}
+\item transition: applies a human move if \texttt{action} is supplied; otherwise advances the game with a bot move
+\item output: returns the resulting game state
+\item exception: raises \texttt{APIRequestError} if the request is invalid or the move cannot be applied
+\end{itemize}
+
+\noindent getMCTSAnalysis(gameID, stateIndex):
+\begin{itemize}
+\item transition: computes or retrieves win-probability analysis for the selected state
+\item output: returns a probability map
+\item exception: raises \texttt{APIRequestError} if analysis cannot be produced
+\end{itemize}
+
+\noindent getMoveExplanation(gameID, moveIndex):
+\begin{itemize}
+\item transition: gathers explanation context and delegates explanation generation to M11
+\item output: returns explanation text
+\item exception: raises \texttt{APIRequestError} if no explanation context exists or generation fails
+\end{itemize}
+
+\subsubsection{Local Functions}
+\begin{itemize}
+\item \texttt{parseStateIndex()}: validates replay-state selectors
+\item \texttt{serializeResponse()}: converts backend results to JSON
+\item \texttt{validateRequestBody()}: validates request shape before dispatch
+\end{itemize}
+
+
+
+\section{MIS of Elo League System Module} \label{M9}
+
+\subsection{Module}
+Elo League System (M9)
+
+\subsection{Uses}
+\begin{itemize}
+    \item \textbf{LeagueEntry}: Stored rating record for a bot or model snapshot.
+    \item \textbf{MatchResult}: Structured representation of a completed match outcome.
+    \item \textbf{PlayerKey}: Identifier for a selectable bot.
+    \item \textbf{seq(BotMeta)}: UI-visible league members.
+    \item \textbf{M7.writeModelMetadata(), M7.readLeagueMembers()}.
+    \item \textbf{LeagueError}: Raised when league operations fail.
+\end{itemize}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+\begin{itemize}
+\item \texttt{MAX\_LEAGUE\_SIZE}: $\mathbb{N}$ = 125
+\item \texttt{DEFAULT\_ELO}: $\mathbb{Z}$ = 1000
+\end{itemize}
+
+\subsubsection{Exported Access Programs}
+\begin{center}
+\begin{tabular}{p{5cm} p{4cm} p{4cm} p{3cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+registerMember & modelID:$\Sigma^*$ & PlayerKey & LeagueError \\
+updateRatings & result:MatchResult & - & LeagueError \\
+listMembers & - & seq(BotMeta) & LeagueError \\
+selectOpponent & - & PlayerKey & LeagueError \\
+pruneLeague & - & - & LeagueError \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+\begin{itemize}
+\item \texttt{leagueTable}: seq(LeagueEntry)
+\item \texttt{samplingWeights}: dict mapping PlayerKey $\rightarrow \mathbb{R}$
+\end{itemize}
+
+\subsubsection{Environment Variables}
+None.
+
+\subsubsection{Assumptions}
+\begin{itemize}
+    \item Match outcomes provided to the league are valid and complete.
+    \item Stored model snapshots referenced by league entries are loadable.
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent registerMember(modelID):
+\begin{itemize}
+\item transition: adds a new league entry for the model snapshot
+\item output: returns a selectable player key
+\item exception: raises \texttt{LeagueError} if registration fails
+\end{itemize}
+
+\noindent updateRatings(result):
+\begin{itemize}
+\item transition: updates member Elo values according to the supplied match result
+\item output: -
+\item exception: raises \texttt{LeagueError} if ratings cannot be updated
+\end{itemize}
+
+\noindent listMembers():
+\begin{itemize}
+\item transition: -
+\item output: returns league members in UI-consumable form
+\item exception: raises \texttt{LeagueError} if retrieval fails
+\end{itemize}
+
+\noindent selectOpponent():
+\begin{itemize}
+\item transition: samples or chooses an opponent according to league policy
+\item output: returns a player key
+\item exception: raises \texttt{LeagueError} if no valid opponent is available
+\end{itemize}
+
+\noindent pruneLeague():
+\begin{itemize}
+\item transition: removes or archives low-priority members to keep the league bounded
+\item output: -
+\item exception: raises \texttt{LeagueError} if pruning fails
+\end{itemize}
+
+\subsubsection{Local Functions}
+\begin{itemize}
+\item \texttt{computeEloDelta()}: calculates rating change from a result
+\item \texttt{normalizeWeights()}: updates sampling probabilities
+\item \texttt{rankMembers()}: orders league entries for pruning or display
+\end{itemize}
+
+
+
+\section{MIS of Curriculum Learning Manager Module} \label{M10}
+
+\subsection{Module}
+Curriculum Learning Manager (M10)
+
+\subsection{Uses}
+\begin{itemize}
+    \item \textbf{PhaseConfig}: Structured description of a curriculum phase.
+    \item \textbf{TrainingMetrics}: Metrics used to decide advancement.
+    \item \textbf{M9.selectOpponent()}.
+    \item \textbf{CurriculumError}: Raised when curriculum state is invalid.
+\end{itemize}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+\begin{itemize}
+\item \texttt{MIN\_PHASE\_COUNT}: $\mathbb{N}$
+\end{itemize}
+
+\subsubsection{Exported Access Programs}
+\begin{center}
+\begin{tabular}{p{5cm} p{4cm} p{4cm} p{3cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+getCurrentPhase & runID:$\Sigma^*$ & PhaseConfig & CurriculumError \\
+evaluateAdvance & metrics:TrainingMetrics & $\mathbb{B}$ & CurriculumError \\
+advancePhase & runID:$\Sigma^*$ & PhaseConfig & CurriculumError \\
+logPhaseTransition & runID:$\Sigma^*$, phase:PhaseConfig & - & CurriculumError \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+\begin{itemize}
+\item \texttt{phaseTable}: seq(PhaseConfig)
+\item \texttt{activePhase}: dict mapping run identifiers to phase index
+\end{itemize}
+
+\subsubsection{Environment Variables}
+None.
+
+\subsubsection{Assumptions}
+\begin{itemize}
+    \item Curriculum phases are defined in ascending order of complexity.
+    \item Training metrics supplied to this module are internally consistent.
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent getCurrentPhase(runID):
+\begin{itemize}
+\item transition: -
+\item output: returns the active phase configuration for the run
+\item exception: raises \texttt{CurriculumError} if the run has no active phase
+\end{itemize}
+
+\noindent evaluateAdvance(metrics):
+\begin{itemize}
+\item transition: -
+\item output: returns $\top$ iff advancement thresholds are met
+\item exception: raises \texttt{CurriculumError} if metrics are invalid
+\end{itemize}
+
+\noindent advancePhase(runID):
+\begin{itemize}
+\item transition: increments or cycles the active phase for the run according to policy
+\item output: returns the new phase configuration
+\item exception: raises \texttt{CurriculumError} if no valid next phase exists
+\end{itemize}
+
+\noindent logPhaseTransition(runID, phase):
+\begin{itemize}
+\item transition: records that the run entered \texttt{phase}
+\item output: -
+\item exception: raises \texttt{CurriculumError} if logging fails
+\end{itemize}
+
+\subsubsection{Local Functions}
+\begin{itemize}
+\item \texttt{meetsThresholds()}: checks advancement criteria
+\item \texttt{buildPhaseRules()}: materializes rule variations for a phase
+\item \texttt{cyclePolicy()}: applies fallback/cycling logic
+\end{itemize}
+
+
+\section{MIS of Explanation Pipeline Module} \label{M11}
+
+\subsection{Module}
+Explanation Pipeline (M11)
+
+\subsection{Uses}
+\begin{itemize}
+    \item \textbf{GameStateData}: State used as explanation context.
+    \item \textbf{MoveData}: Selected move to be explained.
+    \item \textbf{ExplanationText}: Natural-language explanation output.
+    \item \textbf{dict}: Structured prompt/context packet.
+    \item \textbf{M4.getActionContext()}.
+    \item \textbf{ExplanationError}: Raised when explanation generation fails.
+\end{itemize}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+\begin{itemize}
+\item \texttt{MAX\_CONTEXT\_ACTIONS}: $\mathbb{N}$
+\end{itemize}
+
+\subsubsection{Exported Access Programs}
+\begin{center}
+\begin{tabular}{p{5cm} p{4cm} p{4cm} p{3cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+buildContextPacket & gameID:$\Sigma^*$, moveIndex:$\mathbb{N}$ & dict & ExplanationError \\
+explainMove & gameID:$\Sigma^*$, moveIndex:$\mathbb{N}$ & ExplanationText & ExplanationError \\
+validateExplanation & text:ExplanationText & $\mathbb{B}$ & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+
+\subsubsection{State Variables}
+\begin{itemize}
+\item \texttt{lastContextPacket}: dict $\cup \{\bot\}$
+\item \texttt{lastExplanation}: ExplanationText $\cup \{\bot\}$
+\end{itemize}
+
+\subsubsection{Environment Variables}
+\begin{itemize}
+\item \texttt{llmService}: external large-language-model service
+\end{itemize}
+
+\subsubsection{Assumptions}
+\begin{itemize}
+    \item Sufficient replay context exists for the selected move.
+    \item The external LLM service may fail or rate-limit requests.
+\end{itemize}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent buildContextPacket(gameID, moveIndex):
+\begin{itemize}
+\item transition: gathers structured move and state context from the game-state manager and stores it in \texttt{lastContextPacket}
+\item output: returns the generated context dictionary
+\item exception: raises \texttt{ExplanationError} if context cannot be built
+\end{itemize}
+
+\noindent explainMove(gameID, moveIndex):
+\begin{itemize}
+\item transition: builds context if needed, submits the explanation request to the external LLM service, and stores the result in \texttt{lastExplanation}
+\item output: returns natural-language explanation text
+\item exception: raises \texttt{ExplanationError} if generation fails or no explanation is available
+\end{itemize}
+
+\noindent validateExplanation(text):
+\begin{itemize}
+\item transition: -
+\item output: returns $\top$ iff the explanation is non-empty and meets formatting constraints
+\item exception: -
+\end{itemize}
+
+\subsubsection{Local Functions}
+\begin{itemize}
+\item \texttt{formatPrompt()}: converts context into an LLM-ready prompt
+\item \texttt{sanitizeResponse()}: removes unusable or malformed output
+\item \texttt{fallbackErrorText()}: generates safe user-facing failure text
+\end{itemize}
+
 %%%%%%%%%END OF MODULES ADDED%%%%%%%%%%%%%%%%%%%%
 \newpage
 
 \bibliographystyle {plainnat}
 \bibliography {../../../refs/References}
-
-\newpage
-
-\section{Appendix} \label{Appendix}
-
-%\wss{Extra information if required}
 
 \newpage{}
 
