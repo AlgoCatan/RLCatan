@@ -615,9 +615,9 @@ This module tests utility functions for safely resolving model asset paths acros
 
 \textbf{Initial State:} Path resolution utilities loaded.
 
-\textbf{Input:} Absolute file path string typical of HPC environment: \texttt{/nfs/features/rlcatan/models/v1.0}.
+\textbf{Input:} Absolute file path string typical of HPC environment: \path{/nfs/features/rlcatan/models/v1.0}.
 
-\textbf{Expected Output:} Normalized path rebased to local application directory structure: \texttt{/app/models/v1.0}.
+\textbf{Expected Output:} Normalized path rebased to local application directory structure: \path{/app/models/v1.0}.
 
 \textbf{Actual Output:} Function correctly remapped HPC absolute path to application-local path structure.
 
@@ -947,9 +947,8 @@ The following table maps each executed functional test to the specific requireme
 
 \subsubsection{Coverage Summary by Module}
 
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|c|c|c|c|}
+
+\begin{tabularx}{\textwidth}{|l|c|c|c|c|}
 \hline
 \textbf{Module} & \textbf{Requirements} & \textbf{Covered} & \textbf{Deferred} & \textbf{Coverage \%} \\ \hline
 Computer Vision & 5 & 0 & 5 & 0\% (DEFERRED) \\ \hline
@@ -964,10 +963,9 @@ Game State Manager & 5 & 5 & 0 & 100\% \\ \hline
 Explanation Pipeline & 3 & 3 & 0 & 100\% \\ \hline
 \textbf{TOTAL (Implemented)} & \textbf{44} & \textbf{44} & \textbf{0} & \textbf{100\%} \\ \hline
 \textbf{TOTAL (With Deferred CV)} & \textbf{49} & \textbf{44} & \textbf{5} & \textbf{89.8\%} \\ \hline
-\end{tabular}
+\end{tabularx}
 \caption{Module Coverage Analysis}
 \label{tab:module-coverage}
-\end{table}
 
 \section{Code Coverage Metrics}
 We have been using Coveralls for coverage tracking as part of our CI/CD pipeline throughout the project.
