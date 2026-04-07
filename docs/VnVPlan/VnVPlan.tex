@@ -747,133 +747,274 @@ This subsection is limited to non-functional requirement traceability; the funct
 
 
 \section{Unit Test Description}
-This section is to be completed after the MIS (detailed design document) has been completed.
 
+\subsection{Overview and Integration with System Tests}
 
-\begin{comment}
-\wss{This section should not be filled in until after the MIS (detailed design
-  document) has been completed.}
+This section documents the unit testing activities performed to verify individual components and modules of the RLCatan system at the code level. These unit tests complement the system-level tests described in Section~4 (Functional Requirements Evaluation) by providing detailed verification of API endpoints, utility functions, and integration points.
 
-\wss{Reference your MIS (detailed design document) and explain your overall
-philosophy for test case selection.}  
+The unit tests are organized by functional module and include both dynamic testing (automated tests) and static analysis. These tests are to be executed as part of the continuous integration pipeline using Python's unittest/pytest framework for backend tests and integration with the API server for endpoint testing.
 
-\wss{To save space and time, it may be an option to provide less detail in this section.  
-For the unit tests you can potentially layout your testing strategy here.  That is, you 
-can explain how tests will be selected for each module.  For instance, your test building 
-approach could be test cases for each access program, including one test for normal behaviour 
-and as many tests as needed for edge cases.  Rather than create the details of the input 
-and output here, you could point to the unit testing code.  For this to work, you code 
-needs to be well-documented, with meaningful names for all of the tests.}
+\subsection{Unit Testing Scope and Strategy}
 
-\subsection{Unit Testing Scope}
+\subsubsection{Scope}
 
-\wss{What modules are outside of the scope.  If there are modules that are
-  developed by someone else, then you would say here if you aren't planning on
-  verifying them.  There may also be modules that are part of your software, but
-  have a lower priority for verification than others.  If this is the case,
-  explain your rationale for the ranking of module importance.}
+The unit testing scope covers the following components:
+\begin{itemize}
+    \item Backend API endpoints and request/response handling
+    \item Game State Manager and game creation/initialization
+    \item Path resolution utilities for model asset loading
+    \item Game analysis module integration with Monte Carlo Tree Search (MCTS) engine
+    \item Database constraint validation and state management
+\end{itemize}
 
-\subsection{Tests for Functional Requirements}
+Out of scope for unit testing:
+\begin{itemize}
+    \item External library verification (e.g., Catanatron, OpenAI Gym)
+    \item React frontend component testing (addressed through usability testing in Section~3)
+    \item LLM explanation pipeline (addressed through manual testing in Section~3)
+    \item Computer Vision module (deferred and not implemented)
+\end{itemize}
 
-\wss{Most of the verification will be through automated unit testing.  If
-  appropriate specific modules can be verified by a non-testing based
-  technique.  That can also be documented in this section.}
+\subsubsection{Testing Strategy}
 
-\subsubsection{Module 1}
+The unit testing strategy employs both white-box and black-box approaches:
+\begin{itemize}
+    \item \textbf{Black-box testing:} API endpoints are tested by sending HTTP requests and validating response structures and status codes without knowledge of internal implementation.
+    \item \textbf{White-box testing:} Path resolution and game state validation functions are tested with knowledge of implementation to verify edge cases and internal state transitions.
+    \item \textbf{Mocking and Isolation:} External dependencies (e.g., GameAnalyzer, database) are mocked to isolate units under test and verify behavior in controlled conditions.
+\end{itemize}
 
-\wss{Include a blurb here to explain why the subsections below cover the module.
-  References to the MIS would be good.  You will want tests from a black box
-  perspective and from a white box perspective.  Explain to the reader how the
-  tests were selected.}
+\subsection{API and Game Management Module}
+
+This module tests the backend API endpoints and game creation/initialization logic, supporting the system-level tests T.FR.AI.2.1, T.FR.API.7.1, and T.FR.DATA.6.1.
 
 \begin{enumerate}
 
-\item{test-id1\\}
+\item \texttt{test\_get\_bots\_endpoint}
 
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs}
+\textbf{Type:} Functional, Dynamic, Automatic
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
+\textbf{Initial State:} The API server is initialized and ready to receive requests.
 
-How test will be performed: 
-					
-\item{test-id2\\}
+\textbf{Input:} HTTP GET request to \texttt{/api/bots} endpoint.
 
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs}
+\textbf{Expected Output:} 200 OK status code and JSON response containing list of available bot objects with at least 10 bots (including standard bots like \texttt{catanatron\_ab\_2}, \texttt{random}, \texttt{human}).
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
+\textbf{Actual Output:} -
 
-How test will be performed: 
+\textbf{Result:} -
 
-\item{...\\}
-    
+\textbf{Requirement Traceability:} Supports FR.S.3.8 (exposing league members to UI), FR.S.4.7 (loading bot list), FR.S.4.8 (selecting opponents)
+
+\textbf{Module Tested:} Backend API Server, Elo League System
+
+
+\item \texttt{test\_stress\_test\_endpoint}
+
+\textbf{Type:} Functional, Dynamic, Automatic
+
+\textbf{Initial State:} The API server is initialized.
+
+\textbf{Input:} HTTP GET request to \texttt{/api/stress-test} endpoint.
+
+\textbf{Expected Output:} 200 OK status code and JSON object representing game state with essential structures: ``nodes'' and ``edges''.
+
+\textbf{Actual Output:} -
+
+\textbf{Result:} -
+
+\textbf{Requirement Traceability:} Supports FR.S.5.1 (storing complete game records), FR.S.7.5 (structured board access)
+
+\textbf{Module Tested:} Backend API Server, Game State Manager
+
+
+\item \texttt{test\_player\_factory\_custom\_bot}
+
+\textbf{Type:} Functional, Dynamic, Automatic
+
+\textbf{Initial State:} Internal functions mocked to simulate custom bot ``my\_custom\_bot''.
+
+\textbf{Input:} POST request to \texttt{/api/games} with ``BOT:my\_custom\_bot'' in player list.
+
+\textbf{Expected Output:} 200 OK response containing valid \texttt{game\_id}.
+
+\textbf{Actual Output:} -
+
+\textbf{Result:} -
+
+\textbf{Requirement Traceability:} Supports FR.S.2.5 (curriculum-guided RL with dynamic opponent selection), FR.S.3.3 (model versioning and interchange)
+
+\textbf{Module Tested:} Backend API Server, Training Pipeline, AI Model integration
+
+
+\item \texttt{test\_create\_game\_all\_player\_types}
+
+\textbf{Type:} Functional, Dynamic, Automatic
+
+\textbf{Initial State:} The API server is initialized.
+
+\textbf{Input:} Series of POST requests to \texttt{/api/games} with different player types (CATANATRON, VALUE\_FUNCTION, HUMAN, PPO models).
+
+\textbf{Expected Output:} 200 OK status code and valid \texttt{game\_id} for each request type.
+
+\textbf{Actual Output:} -
+
+\textbf{Result:} -
+
+\textbf{Requirement Traceability:} Supports FR.S.2.1 (rule enforcement in training), FR.S.2.2 (self-play with league opponents), FR.S.3.1 (valid game state analysis)
+
+\textbf{Module Tested:} Backend API Server, Game State Manager, Training Pipeline
+
 \end{enumerate}
 
-\subsubsection{Module 2}
+\subsection{Path Resolution Module}
 
-...
+This module tests utility functions for safely resolving model asset paths across different deployment environments (HPC, local development, production).
 
-\subsection{Tests for Nonfunctional Requirements}
-
-\wss{If there is a module that needs to be independently assessed for
-  performance, those test cases can go here.  In some projects, planning for
-  nonfunctional tests of units will not be that relevant.}
-
-\wss{These tests may involve collecting performance data from previously
-  mentioned functional tests.}
-
-\subsubsection{Module ?}
-		
 \begin{enumerate}
 
-\item{test-id1\\}
+\item \texttt{test\_resolve\_model\_path\_absolute\_hpc}
 
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
-					
-Initial State: 
-					
-Input/Condition: 
-					
-Output/Result: 
-					
-How test will be performed: 
-					
-\item{test-id2\\}
+\textbf{Type:} Functional, Dynamic, Automatic
 
-Type: Functional, Dynamic, Manual, Static etc.
-					
-Initial State: 
-					
-Input: 
-					
-Output: 
-					
-How test will be performed: 
+\textbf{Initial State:} Path resolution utilities loaded.
+
+\textbf{Input:} Absolute file path string typical of HPC environment: \path{/nfs/features/rlcatan/models/v1.0}.
+
+\textbf{Expected Output:} Normalized path rebased to local application directory structure: \path{/app/models/v1.0}.
+
+\textbf{Actual Output:} -
+
+\textbf{Result:} -
+
+\textbf{Requirement Traceability:} Supports FR.S.2.2 (self-play training with correct model loading), FR.S.3.3 (seamless model interface)
+
+\textbf{Module Tested:} AI Model, Training Pipeline (path resolution utility)
+
+
+\item \texttt{test\_resolve\_model\_path\_relative}
+
+\textbf{Type:} Functional, Dynamic, Automatic
+
+\textbf{Initial State:} Path resolution utilities loaded.
+
+\textbf{Input:} Standard relative path string: \texttt{data/models/v2}.
+
+\textbf{Expected Output:} Absolute path correctly appending input to application root: \texttt{/app/data/models/v2}.
+
+\textbf{Actual Output:} -
+
+\textbf{Result:} -
+
+\textbf{Requirement Traceability:} Supports FR.S.2.2 (opponent selection and model loading in training), FR.S.3.3 (model versioning)
+
+\textbf{Module Tested:} AI Model, Elo League System (model lookup and loading)
 
 \end{enumerate}
 
-\subsubsection{Module ?}
+\subsection{Game Analysis Module}
 
-...
+This module verifies integration with the Monte Carlo Tree Search (MCTS) engine for analyzing active games.
 
-\subsection{Traceability Between Test Cases and Modules}
+\begin{enumerate}
 
-\wss{Provide evidence that all of the modules have been considered.}
-\end{comment}
+\item \texttt{test\_mcts\_analysis\_endpoint}
+
+\textbf{Type:} Functional, Dynamic, Automatic
+
+\textbf{Initial State:} Valid game created via API; GameAnalyzer mocked to return fixed win probabilities (e.g., RED=0.5, BLUE=0.3, WHITE=0.15, ORANGE=0.05).
+
+\textbf{Input:} GET request to game's analysis URL: \texttt{/api/games/{game\_id}/mcts-analysis}.
+
+\textbf{Expected Output:} 200 OK status and JSON response with \texttt{success=True} and win probabilities matching mocked values.
+
+\textbf{Actual Output:} -
+
+\textbf{Result:} -
+
+\textbf{Requirement Traceability:} Supports FR.S.3.4 (demonstrating AI learning through win probability analysis), FR.S.2.4 (batch and real-time evaluation modes)
+
+\textbf{Module Tested:} Backend API Server, Game State Manager, Game Analysis integration
+
+
+\item \texttt{test\_mcts\_analysis\_endpoint\_not\_found}
+
+\textbf{Type:} Functional, Dynamic, Automatic
+
+\textbf{Initial State:} The API server is initialized.
+
+\textbf{Input:} GET request to analysis endpoint with non-existent game ID: \texttt{/api/games/99999/mcts-analysis}.
+
+\textbf{Expected Output:} Error status code (404 Not Found or 500 Internal Server Error) without returning false success.
+
+\textbf{Actual Output:} -
+
+\textbf{Result:} -
+
+\textbf{Requirement Traceability:} Supports robust error handling for FR.S.7.5 (structured game state access)
+
+\textbf{Module Tested:} Backend API Server (error handling)
+
+\end{enumerate}
+
+\subsection{Database Constraint Validation Tests}
+
+The following tests were executed as part of system-level test T.NFR.D-3 (Data Integrity - Concurrent Update Handling) and verify that the database layer enforces game state and action validity at the unit level.
+
+\begin{enumerate}
+
+\item \texttt{test\_invalid\_game\_state\_rejection}
+
+\textbf{Type:} Functional, Dynamic, Automatic
+
+\textbf{Initial State:} Database with transaction logging enabled.
+
+\textbf{Input/Condition:} Attempt to store 15 intentionally invalid game states:
+\begin{itemize}
+    \item Negative resource counts
+    \item Invalid player counts (0 or >4)
+    \item Out-of-bounds settlement locations
+    \item Impossible board configurations
+\end{itemize}
+
+\textbf{Expected Output:} 100\% rejection of invalid states; no invalid data persists in database.
+
+\textbf{Actual Output:} -
+
+\textbf{Result:} -
+
+\textbf{Requirement Traceability:} Supports NFR.S.5 (Data Integrity - validation), FR.S.7.2 (accurate asset tracking)
+
+\textbf{Module Tested:} Game State Database, Game State Manager
+
+
+\item \texttt{test\_invalid\_action\_rejection}
+
+\textbf{Type:} Functional, Dynamic, Automatic
+
+\textbf{Initial State:} Active game session with action logging.
+
+\textbf{Input/Condition:} Attempt to store 12 intentionally invalid actions:
+\begin{itemize}
+    \item Malformed move objects (missing required fields)
+    \item References to non-existent game IDs
+    \item Illegal moves (building where not allowed)
+    \item Out-of-range action types
+\end{itemize}
+
+\textbf{Expected Output:} 100\% rejection of invalid actions; constraint violations logged.
+
+\textbf{Actual Output:} -
+
+\textbf{Result:} -
+
+\textbf{Requirement Traceability:} Supports FR.S.7.1 (rule-consistent state updates), FR.S.7.4 (automatic board state reflection)
+
+\textbf{Module Tested:} Game State Database, Backend API Server (input validation)
+
+\end{enumerate}
+
+
 
 \bibliographystyle{plainnat}
 
