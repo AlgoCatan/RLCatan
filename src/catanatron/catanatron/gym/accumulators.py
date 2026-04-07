@@ -1,3 +1,10 @@
+"""
+Module: 2. Training Pipeline
+Author: Forked
+Date: 2026-01-01
+Purpose: Implements the accumulators module for the training pipeline, supporting reinforcement-learning environments, wrappers, rewards, or training data flow.
+"""
+
 import os
 from collections import defaultdict
 import time

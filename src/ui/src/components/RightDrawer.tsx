@@ -1,3 +1,10 @@
+/*
+Module: 6. User Interface
+Author: Forked
+Date: 2026-01-20
+Purpose: Provides the rightdrawer module for the user interface, supporting interaction, presentation, or frontend application wiring.
+*/
+
 import { useCallback, useContext, useEffect, type PropsWithChildren } from "react";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Drawer from "@mui/material/Drawer";

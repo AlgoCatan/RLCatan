@@ -1,3 +1,10 @@
+"""
+Module: 9. Game State Manager
+Author: Forked
+Date: 2025-12-11
+Purpose: Implements the gym example module for the game state manager component, supporting simulation, state handling, utilities, or developer interaction with the game engine.
+"""
+
 import random
 import gymnasium
 import catanatron.gym

@@ -1,6 +1,6 @@
 """
 Module: 4. Elo League System
-Author:
+Author: Jake Read
 Date: 2026-01-22
 Purpose: Manages the self-play league roster, persisted snapshots, and Elo
 ratings used to track and sample opponents during training.

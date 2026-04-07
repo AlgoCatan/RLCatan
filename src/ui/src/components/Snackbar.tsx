@@ -1,3 +1,10 @@
+/*
+Module: 6. User Interface
+Author: Forked
+Date: 2026-01-02
+Purpose: Provides the snackbar module for the user interface, supporting interaction, presentation, or frontend application wiring.
+*/
+
 import { IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import type { GameState } from "../utils/api.types";

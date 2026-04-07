@@ -1,3 +1,10 @@
+"""
+Module: 9. Game State Manager
+Author: Forked
+Date: 2026-03-10
+Purpose: Implements the test gen module for the game state manager component, supporting simulation, state handling, utilities, or developer interaction with the game engine.
+"""
+
 # add temporarily in test or local run
 import random
 from catanatron.models.map import CatanMap, BASE_MAP_TEMPLATE, number_probability

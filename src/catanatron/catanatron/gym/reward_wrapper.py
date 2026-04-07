@@ -1,3 +1,10 @@
+"""
+Module: 2. Training Pipeline
+Author: Forked
+Date: 2026-03-02
+Purpose: Implements the reward wrapper module for the training pipeline, supporting reinforcement-learning environments, wrappers, rewards, or training data flow.
+"""
+
 import gymnasium as gym
 from typing import Any, Dict, Optional, cast
 from collections import Counter
@@ -49,8 +56,8 @@ class RewardWrapper(gym.Wrapper):
 
     Features:
       - Tracks total resource cards held by the current active player.
-      - Positive delta (gain) → gain_scale * gained resources.
-      - Negative delta (spend) → spend_scale * spent resources.
+      - Positive delta (gain) ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ gain_scale * gained resources.
+      - Negative delta (spend) ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ spend_scale * spent resources.
       - Small flat bonus for BUILD_* actions (roads/settlements/cities).
       - Global exponential decay applied to the shaped + base reward: (decay_factor ** step_count).
       - Automatically disables shaping until the resource mapping is discovered in info/state.

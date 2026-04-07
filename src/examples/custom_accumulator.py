@@ -1,3 +1,10 @@
+"""
+Module: 9. Game State Manager
+Author: Forked
+Date: 2025-12-31
+Purpose: Implements the custom accumulator module for the game state manager component, supporting simulation, state handling, utilities, or developer interaction with the game engine.
+"""
+
 from catanatron import ActionType
 from catanatron.cli import SimulationAccumulator, register_cli_accumulator
 

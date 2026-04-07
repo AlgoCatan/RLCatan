@@ -1,3 +1,10 @@
+/*
+Module: 6. User Interface
+Author: Forked
+Date: 2026-01-28
+Purpose: Provides the playerstatebox module for the user interface, supporting interaction, presentation, or frontend application wiring.
+*/
+
 import cn from "classnames";
 
 import "./PlayerStateBox.scss";

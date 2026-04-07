@@ -1,3 +1,10 @@
+/*
+Module: 6. User Interface
+Author: Forked
+Date: 2025-11-04
+Purpose: Provides the actionlog module for the user interface, supporting interaction, presentation, or frontend application wiring.
+*/
+
 import cn from "classnames";
 import { humanizeAction } from "../utils/promptUtils";
 import { type GameState } from "../utils/api.types";

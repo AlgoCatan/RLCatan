@@ -1,3 +1,10 @@
+"""
+Module: 8. Backend API Server
+Author: Forked
+Date: 2026-03-30
+Purpose: Implements the mcts analysis module for the backend API server, supporting request handling, services, or backend integration logic.
+"""
+
 from catanatron.players.mcts import StateNode
 
 

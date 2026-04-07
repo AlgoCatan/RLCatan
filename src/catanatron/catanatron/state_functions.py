@@ -1,4 +1,11 @@
 """
+Module: 9. Game State Manager
+Author: Forked
+Date: 2025-11-08
+Purpose: Implements the state functions module for the game state manager component, supporting simulation, state handling, utilities, or developer interaction with the game engine.
+"""
+
+"""
 Functions that mutate the given state accordingly. Core of game logic.
 Some are helpers to _read_ information from state and keep the rest
 of the code decoupled from state representation.

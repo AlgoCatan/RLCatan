@@ -1,3 +1,10 @@
+/*
+Module: 6. User Interface
+Author: Forked
+Date: 2026-03-11
+Purpose: Provides the usewindowsize module for the user interface, supporting interaction, presentation, or frontend application wiring.
+*/
+
 import { useEffect, useState } from "react";
 
 // Hook

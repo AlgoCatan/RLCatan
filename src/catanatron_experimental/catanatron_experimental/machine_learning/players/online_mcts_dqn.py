@@ -1,3 +1,10 @@
+"""
+Module: 3. AI Model
+Author: Forked
+Date: 2025-12-08
+Purpose: Implements the online mcts dqn module for experimental training or agent-development workflows related to the project's learning pipeline.
+"""
+
 from collections import deque
 from catanatron_experimental.data_logger import DataLogger
 import os

@@ -1,3 +1,10 @@
+"""
+Module: 9. Game State Manager
+Author: Forked
+Date: 2026-01-15
+Purpose: Implements the enums module for the game state manager component, supporting simulation, state handling, utilities, or developer interaction with the game engine.
+"""
+
 from enum import Enum
 from collections import namedtuple
 from typing import List, Literal, Final

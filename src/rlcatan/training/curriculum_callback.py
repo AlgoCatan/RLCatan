@@ -1,3 +1,10 @@
+"""
+Module: 5. Curriculum Learning Manager
+Author: Forked
+Date: 2025-11-07
+Purpose: Implements the curriculum callback module for the 5. Curriculum Learning Manager component, supporting training orchestration, evaluation, or experiment control.
+"""
+
 """Curriculum learning callback for progressive training."""
 
 from __future__ import annotations

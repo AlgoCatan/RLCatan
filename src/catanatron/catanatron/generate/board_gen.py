@@ -1,3 +1,10 @@
+"""
+Module: 9. Game State Manager
+Author: Forked
+Date: 2025-12-22
+Purpose: Implements the board gen module for the game state manager component, supporting simulation, state handling, utilities, or developer interaction with the game engine.
+"""
+
 from catanatron.models.board import Board
 from catanatron.models.map import TOURNAMENT_MAP
 import random

@@ -1,9 +1,8 @@
 /*
 Module: 6. User Interface
-Author: Forked, Modified by Sunny Yao
-Date: 2026-03-24
-Purpose: Renders the digital twin of the Catan board, including tiles,
-nodes, edges, robber state, and board-relative action visuals.
+Author: Forked
+Date: 2026-01-19
+Purpose: Renders the interactive digital board view, including tiles, nodes, edges, robber placement, and action overlays.
 */
 
 import classnames from "classnames";

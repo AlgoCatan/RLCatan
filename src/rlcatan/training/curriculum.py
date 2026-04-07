@@ -1,9 +1,8 @@
 """
 Module: 5. Curriculum Learning Manager
-Author: Mathew Cheung
-Date: 2025-11-14
-Purpose: Defines the curriculum-learning phase structure and progression
-logic used to move training through increasingly difficult game settings.
+Author: Jake Read
+Date: 2026-03-29
+Purpose: Defines curriculum phase configuration and progression rules for moving training through increasingly complex game settings.
 """
 
 from __future__ import annotations

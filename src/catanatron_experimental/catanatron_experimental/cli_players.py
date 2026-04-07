@@ -1,3 +1,10 @@
+"""
+Module: 2. Training Pipeline
+Author: Forked
+Date: 2026-01-25
+Purpose: Implements the cli players module for experimental training or agent-development workflows related to the project's learning pipeline.
+"""
+
 # from catanatron_experimental.mcts_score_collector import (
 #     MCTSScoreCollector,
 #     MCTSPredictor,

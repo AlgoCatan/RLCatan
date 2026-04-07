@@ -1,3 +1,10 @@
+/*
+Module: 6. User Interface
+Author: Forked
+Date: 2026-03-14
+Purpose: Provides the serviceworker module for the user interface, supporting interaction, presentation, or frontend application wiring.
+*/
+
 // This optional code is used to register a service worker.
 // register() is not called by default.
 

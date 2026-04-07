@@ -1,3 +1,10 @@
+/*
+Module: 6. User Interface
+Author: Forked
+Date: 2026-03-09
+Purpose: Provides the stateutils module for the user interface, supporting interaction, presentation, or frontend application wiring.
+*/
+
 import type { Color, GameState } from "./api.types";
 
 /**

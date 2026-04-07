@@ -1,3 +1,10 @@
+/*
+Module: 6. User Interface
+Author: Forked
+Date: 2026-01-10
+Purpose: Provides the replayscreen module for the user interface, supporting interaction, presentation, or frontend application wiring.
+*/
+
 import { useEffect, useContext, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { GridLoader } from "react-spinners";

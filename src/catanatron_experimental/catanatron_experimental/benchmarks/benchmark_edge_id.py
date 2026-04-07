@@ -1,3 +1,10 @@
+"""
+Module: 2. Training Pipeline
+Author: Forked
+Date: 2026-02-09
+Purpose: Implements the benchmark edge id module for experimental training or agent-development workflows related to the project's learning pipeline.
+"""
+
 import timeit
 
 result = timeit.timeit("tuple(sorted((a,b)))", setup="a = 20; b = 45", number=2_000_000)

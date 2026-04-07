@@ -1,3 +1,10 @@
+"""
+Module: 3. AI Model
+Author: Forked
+Date: 2025-12-09
+Purpose: Implements the value module for the AI model component, supporting automated decision-making or search-based gameplay behavior.
+"""
+
 import random
 
 from catanatron.state_functions import (

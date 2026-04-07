@@ -1,3 +1,10 @@
+"""
+Module: 9. Game State Manager
+Author: Forked
+Date: 2026-03-26
+Purpose: Implements the features module for the game state manager component, supporting simulation, state handling, utilities, or developer interaction with the game engine.
+"""
+
 from typing import Any, List, Literal, Tuple
 import functools
 from collections import Counter

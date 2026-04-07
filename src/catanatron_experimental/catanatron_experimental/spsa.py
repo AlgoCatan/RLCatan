@@ -1,4 +1,11 @@
 """
+Module: 2. Training Pipeline
+Author: Forked
+Date: 2026-02-08
+Purpose: Implements the spsa module for experimental training or agent-development workflows related to the project's learning pipeline.
+"""
+
+"""
 Implements https://www.chessprogramming.org/SPSA
 
 This seems to work!  - November 7, 2021
@@ -16,12 +23,12 @@ from catanatron.cli.play import play_batch
 
 # for (k=0; k < N; k++) {
 #   ak = a / (k + 1 + A)^alpha;
-#   ck = c / (k + 1)^γ;
+#   ck = c / (k + 1)^ÃƒÆ’Ã†â€™Ãƒâ€¦Ã‚Â½ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â³;
 #   for each p
-#     Δp = 2 * round ( rand() / (RAND_MAX + 1.0) ) - 1.0;
-#   Θ+ = Θ + ck*Δ;
-#   Θ- = Θ - ck*Δ;
-#   Θ +=  ak * match(Θ+, Θ-) / (ck*Δ);
+#     ÃƒÆ’Ã†â€™Ãƒâ€¦Ã‚Â½ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Âp = 2 * round ( rand() / (RAND_MAX + 1.0) ) - 1.0;
+#   ÃƒÆ’Ã†â€™Ãƒâ€¦Ã‚Â½ÃƒÆ’Ã¢â‚¬Â¹Ãƒâ€¦Ã¢â‚¬Å“+ = ÃƒÆ’Ã†â€™Ãƒâ€¦Ã‚Â½ÃƒÆ’Ã¢â‚¬Â¹Ãƒâ€¦Ã¢â‚¬Å“ + ck*ÃƒÆ’Ã†â€™Ãƒâ€¦Ã‚Â½ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â;
+#   ÃƒÆ’Ã†â€™Ãƒâ€¦Ã‚Â½ÃƒÆ’Ã¢â‚¬Â¹Ãƒâ€¦Ã¢â‚¬Å“- = ÃƒÆ’Ã†â€™Ãƒâ€¦Ã‚Â½ÃƒÆ’Ã¢â‚¬Â¹Ãƒâ€¦Ã¢â‚¬Å“ - ck*ÃƒÆ’Ã†â€™Ãƒâ€¦Ã‚Â½ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â;
+#   ÃƒÆ’Ã†â€™Ãƒâ€¦Ã‚Â½ÃƒÆ’Ã¢â‚¬Â¹Ãƒâ€¦Ã¢â‚¬Å“ +=  ak * match(ÃƒÆ’Ã†â€™Ãƒâ€¦Ã‚Â½ÃƒÆ’Ã¢â‚¬Â¹Ãƒâ€¦Ã¢â‚¬Å“+, ÃƒÆ’Ã†â€™Ãƒâ€¦Ã‚Â½ÃƒÆ’Ã¢â‚¬Â¹Ãƒâ€¦Ã¢â‚¬Å“-) / (ck*ÃƒÆ’Ã†â€™Ãƒâ€¦Ã‚Â½ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â);
 # }
 
 N = 1000

@@ -1,3 +1,10 @@
+/*
+Module: 6. User Interface
+Author: Forked
+Date: 2026-03-29
+Purpose: Provides the botselectplay module for the user interface, supporting interaction, presentation, or frontend application wiring.
+*/
+
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@mui/material";

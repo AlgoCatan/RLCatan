@@ -1,3 +1,10 @@
+"""
+Module: 3. AI Model
+Author: Forked
+Date: 2026-02-19
+Purpose: Implements the tree search utils module for the AI model component, supporting automated decision-making or search-based gameplay behavior.
+"""
+
 import math
 from collections import defaultdict
 

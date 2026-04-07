@@ -1,3 +1,10 @@
+/*
+Module: 6. User Interface
+Author: Forked
+Date: 2025-12-20
+Purpose: Provides the prompt module for the user interface, supporting interaction, presentation, or frontend application wiring.
+*/
+
 import { isPlayersTurn } from "../utils/stateUtils";
 import { type GameState } from "../utils/api.types";
 

@@ -1,3 +1,10 @@
+"""
+Module: 10. Explanation Pipeline
+Author: Forked
+Date: 2025-11-02
+Purpose: Implements the packet builder module for the explanation pipeline, supporting prompt construction, packet analysis, or explanation generation.
+"""
+
 from collections import Counter
 
 from catanatron.models.actions import serialize_action

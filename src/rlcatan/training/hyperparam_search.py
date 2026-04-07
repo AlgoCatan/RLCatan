@@ -1,3 +1,10 @@
+"""
+Module: 2. Training Pipeline
+Author: Forked
+Date: 2026-02-14
+Purpose: Implements the hyperparam search module for the 2. Training Pipeline component, supporting training orchestration, evaluation, or experiment control.
+"""
+
 import optuna
 from optuna.samplers import RandomSampler
 import os

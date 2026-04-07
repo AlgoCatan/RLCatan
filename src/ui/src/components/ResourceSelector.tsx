@@ -1,3 +1,10 @@
+/*
+Module: 6. User Interface
+Author: Forked
+Date: 2025-12-01
+Purpose: Provides the resourceselector module for the user interface, supporting interaction, presentation, or frontend application wiring.
+*/
+
 import React from "react";
 import {
   Dialog,

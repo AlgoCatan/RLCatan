@@ -1,3 +1,10 @@
+"""
+Module: 10. Explanation Pipeline
+Author: Forked
+Date: 2025-12-26
+Purpose: Implements the deterministic explainers module for the explanation pipeline, supporting prompt construction, packet analysis, or explanation generation.
+"""
+
 from __future__ import annotations
 from typing import Any
 

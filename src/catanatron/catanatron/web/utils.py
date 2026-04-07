@@ -1,3 +1,10 @@
+"""
+Module: 8. Backend API Server
+Author: Forked
+Date: 2025-12-29
+Purpose: Implements the utils module for the backend API server, supporting request handling, services, or backend integration logic.
+"""
+
 import webbrowser
 from catanatron.web.models import database_session, upsert_game_state
 

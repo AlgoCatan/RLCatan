@@ -1,3 +1,10 @@
+"""
+Module: 2. Training Pipeline
+Author: Forked
+Date: 2025-11-16
+Purpose: Implements the optunation module for experimental training or agent-development workflows related to the project's learning pipeline.
+"""
+
 import optuna
 
 from catanatron.models.player import Color

@@ -1,3 +1,10 @@
+/*
+Module: 6. User Interface
+Author: Forked
+Date: 2025-11-12
+Purpose: Provides the adminpage module for the user interface, supporting interaction, presentation, or frontend application wiring.
+*/
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Alert, Button, CircularProgress } from "@mui/material";
