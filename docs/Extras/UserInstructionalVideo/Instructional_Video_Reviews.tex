@@ -1,0 +1,176 @@
+\documentclass{article}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{hyperref}
+
+\title{User Review Summary for the Instructional Video\\\progname}
+\author{\authname}
+\date{}
+
+\input{../../Comments}
+\input{../../Common}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\listoftables
+
+\newpage
+
+\begin{table}[hp]
+\caption{Revision History} \label{TblRevisionHistory}
+\begin{tabularx}{\textwidth}{llX}
+\toprule
+\textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
+\midrule
+Apr 7th 2026 & All & Full breakdown for Final Doc submission.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\newpage
+
+\section{Introduction}
+
+To get a general sense of how useful the instructional video was, a small set of
+informal user reviews was collected. Users were asked to use the video while
+navigating the Catan Arena platform, including setting up Bot vs.\ Bot matches,
+playing a game against a bot, and using the replay and explanation features.
+
+This write-up is not intended to be a full usability study. Instead, it provides a
+quick summary of whether the video was generally enough to help users get started
+without needing someone to walk them through the site.
+
+\section{Review Summary}
+
+Table~\ref{tab:review-summary} summarizes the ratings provided by the seven users
+included in this summary.
+
+\begin{table}[H]
+\centering
+\caption{Summary of User Ratings}
+\label{tab:review-summary}
+\begin{tabularx}{0.75\textwidth}{lXc}
+\toprule
+\textbf{User} & \textbf{General Impression} & \textbf{Rating} \\
+\midrule
+User 1 & Quick, clear, and easy to follow & 5/5 \\
+User 2 & Mostly helpful, but the replay section moved too fast & 3/5 \\
+User 3 & Beginner-friendly and enough to get started confidently & 5/5 \\
+User 4 & Well made overall, with one or two missing details & 4/5 \\
+User 5 & Easy to follow and useful for both gameplay and replay & 5/5 \\
+User 6 & Strong explanation of the replay and move-breakdown features & 4/5 \\
+User 7 & Good setup instructions, but replay was less smooth on tablet & 3/5 \\
+\midrule
+\multicolumn{2}{r}{\textbf{Average Rating}} & \textbf{4.14/5} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Individual User Reviews}
+
+\subsection{User 1 --- Rating: 5/5}
+
+\begin{itemize}
+    \item I usually skip tutorial videos, but this one was short enough that I actually watched it.
+    \item I got a Bot vs.\ Bot match running pretty quickly just by copying what it showed.
+    \item Seeing the AI play first made it easier to understand where everything was before I started clicking around myself.
+    \item The replay section was also useful, since I probably would not have noticed that button on my own.
+\end{itemize}
+
+\subsection{User 2 --- Rating: 3/5}
+
+\begin{itemize}
+    \item The first part of the video was easy enough to follow, but it sped up a lot once it got to replay.
+    \item I did not realize right away that I had to click the move text itself to open the explanation.
+    \item Once I found it, the explanation feature was actually pretty useful.
+    \item That part of the video would be easier to follow with a clearer visual cue.
+\end{itemize}
+
+\subsection{User 3 --- Rating: 5/5}
+
+\begin{itemize}
+    \item I had not used the site before, and the video made it pretty easy to get started.
+    \item I tried a normal game against an Easy bot and did not feel lost.
+    \item The replay explanation feature helped a lot when I wanted to understand why a move happened.
+    \item After watching the video once, I did not feel like I needed extra instructions.
+\end{itemize}
+
+\subsection{User 4 --- Rating: 4/5}
+
+\begin{itemize}
+    \item The video itself looked polished and the audio was clear.
+    \item The replay analysis section was probably the most interesting part for me.
+    \item I ended up spending quite a while clicking through moves just to see how the bots were playing.
+    \item The only thing I noticed missing was that it did not really explain changing bot speed.
+\end{itemize}
+
+\subsection{User 5 --- Rating: 5/5}
+
+\begin{itemize}
+    \item It was easy to follow because it just showed someone using the actual interface.
+    \item I played a game, then went back into replay to check why the bot had made a few choices.
+    \item That part was especially helpful once the game got close near the end.
+    \item Overall it felt straightforward and practical.
+\end{itemize}
+
+\subsection{User 6 --- Rating: 4/5}
+
+\begin{itemize}
+    \item I already know \emph{Catan}, so I mostly cared about the replay and explanation features.
+    \item The video did a good job showing how to step through the game and inspect individual moves.
+    \item I used it to look at early settlement placements and see what the bot seemed to value.
+    \item That part of the site is one of the strongest features, and the video explained it fairly well.
+\end{itemize}
+
+\subsection{User 7 --- Rating: 3/5}
+
+\begin{itemize}
+    \item I was watching the video on my PC while using the site on my tablet, and that mostly worked fine.
+    \item Starting a bot game was easy from the instructions.
+    \item The only part that felt awkward was replay, since some of the buttons looked pretty small.
+    \item I could still use it, but that section felt a bit less smooth than the rest.
+\end{itemize}
+
+\section{Observed Themes}
+
+\subsection{Strengths}
+
+A few strengths showed up consistently across the reviews:
+
+\begin{itemize}
+    \item Most users found the video easy to follow for starting a match.
+    \item The Bot vs.\ Bot and standard gameplay setup were generally clear.
+    \item Several users said the replay and explanation features were useful once they found them.
+    \item A number of users felt the video was enough to get them started without needing extra help.
+\end{itemize}
+
+\subsection{Areas for Improvement}
+
+The main issues mentioned across the reviews were:
+
+\begin{itemize}
+    \item The replay section was harder to follow than the rest of the video.
+    \item It was not always obvious that users needed to click the move log text to open explanations.
+    \item Some smaller controls, such as bot speed or replay-related buttons, were easy to miss.
+    \item The current video works best on desktop, and some elements may be less clear on smaller screens.
+\end{itemize}
+
+Fixing these issues is currently considered out of scope given the time constraints, but they are worth noting for future improvements post-capstone.
+
+\section{Conclusion}
+
+Overall, the feedback suggests that the instructional video does a good job helping
+new users get started with the platform, especially when it comes to setting up
+matches and understanding the basic layout of the site. The replay and explanation
+features were also seen as useful, but they were the part users seemed most likely
+to miss or need a second look at.
+
+The clearest next improvement would be to slow down the replay walkthrough and
+make the explanation click target more visually obvious in the video.
+
+\end{document}
