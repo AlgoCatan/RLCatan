@@ -1,3 +1,11 @@
+"""
+Module: 5. Curriculum Learning Manager
+Author: Mathew Cheung
+Date: 2025-11-14
+Purpose: Defines the curriculum-learning phase structure and progression
+logic used to move training through increasingly difficult game settings.
+"""
+
 from __future__ import annotations
 from typing import TypedDict, List, Dict, Any, Optional
 import json

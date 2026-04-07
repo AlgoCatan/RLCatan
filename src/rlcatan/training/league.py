@@ -1,12 +1,15 @@
-# league.py
+"""
+Module: 4. Elo League System
+Author:
+Date: 2026-01-22
+Purpose: Manages the self-play league roster, persisted snapshots, and Elo
+ratings used to track and sample opponents during training.
+"""
+
 from __future__ import annotations
 from dataclasses import dataclass, asdict
 import json, os, random
 from typing import List, Optional
-
-"""
-A league system for managing AI opponents with Elo ratings.
-"""
 
 @dataclass
 class LeagueMember:

@@ -1,3 +1,12 @@
+"""
+Module: 2. Training Pipeline
+Author:
+Date: 2026-02-18
+Purpose: Implements the training pipeline for league-based PPO self-play,
+managing opponent selection, evaluation, Elo updates, snapshotting, and
+graceful stopping between training phases.
+"""
+
 import os
 import signal
 
@@ -10,10 +19,6 @@ from catanatron.players.ppo_player import PPOPlayer
 from catanatron.players.value import ValueFunctionPlayer
 from catanatron.cli.accumulators import StatisticsAccumulator
 from catanatron.game import Game
-
-"""
-League-based training loop to allow for self-play.
-"""
 
 STOP_REQUESTED = False
 

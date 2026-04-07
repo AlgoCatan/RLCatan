@@ -1,3 +1,11 @@
+"""
+Module: 10. Explanation Pipeline
+Author:
+Date: 2026-02-04
+Purpose: Builds strategic explanations by combining deterministic packet
+analysis with LLM-backed natural-language generation.
+"""
+
 from typing import Protocol, Any
 import os
 

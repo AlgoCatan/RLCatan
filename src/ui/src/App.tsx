@@ -1,3 +1,11 @@
+/*
+Module: 6. User Interface
+Author:
+Date: 2025-12-17
+Purpose: Serves as the frontend application entry module, wiring routes,
+global providers, and the main game and admin screens for the UI.
+*/
+
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { SnackbarProvider } from "notistack";
 import { createTheme, ThemeProvider } from "@mui/material/styles";

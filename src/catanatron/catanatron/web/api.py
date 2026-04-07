@@ -1,3 +1,11 @@
+"""
+Module: 8. Backend API Server
+Author: Forked, modified by Sunny Yao
+Date: 2026-03-19
+Purpose: Exposes the backend HTTP API for game creation, gameplay actions,
+analysis requests, bot discovery, and explanation-related endpoints.
+"""
+
 import os
 import json
 import logging

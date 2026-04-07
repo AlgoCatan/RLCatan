@@ -1,3 +1,11 @@
+/*
+Module: 6. User Interface
+Author: Forked, Modified by Sunny Yao
+Date: 2026-03-24
+Purpose: Renders the digital twin of the Catan board, including tiles,
+nodes, edges, robber state, and board-relative action visuals.
+*/
+
 import classnames from "classnames";
 
 import { SQRT3 } from "../utils/coordinates";

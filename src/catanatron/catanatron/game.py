@@ -1,5 +1,9 @@
 """
-Contains Game class which is a thin-wrapper around the State class.
+Module: game
+Author: 
+Date: 2025-12-03
+Purpose: Implements the core game loop wrapper around state transitions,
+player turns, action execution, and whole-game progression.
 """
 
 import uuid

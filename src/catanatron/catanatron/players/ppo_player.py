@@ -1,3 +1,11 @@
+"""
+Module: 3. AI Model
+Author: Jake Read
+Date: 2026-03-07
+Purpose: Loads and runs PPO-based Catan agents, translating between the
+model's action-space representation and concrete in-game actions.
+"""
+
 from __future__ import annotations
 
 from pathlib import Path
