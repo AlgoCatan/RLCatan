@@ -23,7 +23,9 @@ def get_colonist_replay(slug: str):
     except requests.exceptions.RequestException as e:
         print(f"Connection error: {e}")
     except ValueError:
-        print("Failed to parse JSON ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â response was not JSON")
+        print(
+            "Failed to parse JSON ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â response was not JSON"
+        )
 
 
 slug = "BPPRTG5zMVmn9gMX"

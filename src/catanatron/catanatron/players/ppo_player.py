@@ -1,6 +1,6 @@
 """
 Module: 3. AI Model
-Author: Jake Read 
+Author: Jake Read
 Date: 2026-03-11
 Purpose: Loads and runs PPO-based agents, translating between model outputs and legal in-game actions for automated play.
 """

@@ -46,7 +46,9 @@ VALID_MAP_TEMPLATES = {"BASE", "MINI", "TOURNAMENT"}
 # Per-game explanation state (keyed by game_id) to support concurrent users
 # Limit to 100 games in memory to prevent memory leaks from long-running servers
 # Each entry now includes a last_accessed timestamp for LRU eviction
-EXPLANATION_STATE = {}  # {game_id: {"accumulator": ..., "service": ..., "last_accessed": timestamp}}
+EXPLANATION_STATE = (
+    {}
+)  # {game_id: {"accumulator": ..., "service": ..., "last_accessed": timestamp}}
 MAX_EXPLANATION_STATES = 100
 
 
@@ -86,8 +88,7 @@ def _prune_explanation_state():
         to_remove = len(EXPLANATION_STATE) - MAX_EXPLANATION_STATES
         # Sort by last_accessed timestamp (ascending) to find least recently used
         sorted_entries = sorted(
-            EXPLANATION_STATE.items(),
-            key=lambda item: item[1].get("last_accessed", 0)
+            EXPLANATION_STATE.items(), key=lambda item: item[1].get("last_accessed", 0)
         )
         for _ in range(to_remove):
             game_id, _ = sorted_entries[_]
