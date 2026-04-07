@@ -53,19 +53,25 @@ There is no IP to protect in this project.
 
 \section{Team Meeting Plan}
 
-\raggedright
-Our team regularly meets 4:30-6:30pm every Thursday.
-We will schedule additional meetings every time we have an addressable 
-agenda. Virtual meetings will be held through a Discord call 
-and physical meetings will be held at tutorial locations or ETB.
- Meetings may be hybrid depending on schedules. We will schedule
-  meetings with our advisor when we require resources or 
-  expertise. Meetings will be structured with a set agenda devised by the notetaker
-  before scheduling to address all of the topics we need to discuss.
+To maintain project momentum and ensure high-quality communication, the team adheres to a structured synchronization protocol consisting of weekly status updates and targeted technical sessions.
+
+\begin{itemize}
+    \item \textbf{Standing Synchronous Meetings:} Held every Thursday from 4:30 PM -- 6:30 PM. These sessions are dedicated to high-level project tracking, addressing technical blockers, and redistributing tasks based on the current sprint's progress.
+    \item \textbf{Meeting Structure \& Documentation:} 
+    \begin{itemize}
+        \item \textbf{Agenda Management:} The designated team organizer distributes a formal agenda via Discord 24 hours prior to the meeting. This includes "Action Items" carried over from the previous week and "New Items" for immediate discussion.
+    \end{itemize}
+    \item \textbf{Communication Channels:} 
+    \begin{itemize}
+        \item \textbf{Discord:} Serves as the primary hub for daily asynchronous coordination.
+        \item \textbf{Physical Presence:} In-person meetings are held in the Engineering Technology Building (ETB) to facilitate collaborative whiteboarding, with hybrid support available via video link.
+    \end{itemize}
+    \item \textbf{Supervisor Consultations:} Formal meetings with the Project Supervisor are scheduled every Monday at 5:15-6:00 PM, online through Zoom. These sessions focus on high-level project guidance, milestone reviews, and strategic feedback.
+\end{itemize}
 
 \section{Team Communication Plan}
 
-\raggedright
+
 We will be using Discord as our main communication 
 platform. We will create a server with channels for general 
 discussion, meeting scheduling, and project management.
@@ -110,20 +116,31 @@ As the project progresses, these roles may shift to ensure a balanced workload.
 
 \section{Workflow Plan}
 
-\raggedright
-We will be using GitHub for version control and collaboration.
-To manage development, we will create branches for each task on the Kanban Board,
-along with sub-branches for individual team members work.
-Should this prove infeasible, we may deviate from this fine-grained strategy, opting to group multiple items in single pull requests.
-Pull requests will be used to review and merge code changes, ensuring quality and
-consistency. GitHub Issues will be used to track tasks and bugs, with 
-issues assigned to specific team members or whoever is available.
-Issue categories will be managed via tags, labelling them as front-end, back-end, heuristics, etc.
-To streamline this process, we will also use issue templates for 
-consistency in reporting and classification of issues.  We will be
-using CI for automated testing. For CD, we will develop deployment pipelines in the
-event that we have access to a computing node where we can train our RL agent.
-We also plan to utilize SonarQube for static code analysis.
+
+The project follows a professional \textbf{Feature Branch Workflow} to ensure the \texttt{main} branch remains stable, deployable, and verified at all times.
+
+\subsection{GitHub Workflow and Branching Strategy}
+\begin{itemize}
+    \item \textbf{Branch Naming Conventions:} All development must occur on dedicated branches following the format:
+    \begin{itemize}
+      \item \textbf{issue\#-short-description} (e.g., \texttt{issue\#42-add-reward-shaping})
+    \end{itemize}
+    \item \textbf{Pull Requests (PRs) \& Peer Review:} No code is merged directly into \texttt{main}. Every PR requires at least one peer review. Reviewers evaluate logic, adherence to the project's style guides (PEP 8 for Python), and the inclusion of necessary unit tests.
+    \item \textbf{Conflict Management:} To maintain a clean, readable project history, developers are encouraged to rebase their feature branches against \texttt{main} prior to final merging.
+\end{itemize}
+
+\subsection{Issue Tracking and Project Management}
+\begin{itemize}
+    \item \textbf{Standardized Reporting:} We utilize GitHub Issue Templates for both "Bug Reports" and "Feature Requests." This ensures that every task has a clear way of describing the problem, expected behavior, and steps to reproduce (for bugs) or a detailed description of the desired functionality (for features).
+    \item \textbf{Labeling Architecture:} Issues are categorized using a multi-tag system covering scope (\texttt{backend}, \texttt{frontend}, \texttt{RL-env}), priority (\texttt{high}, \texttt{blocker}), and status (\texttt{in-progress}, \texttt{review-required}).
+\end{itemize}
+
+\subsection{Continuous Integration and Quality Assurance (CI/QA)}
+\begin{itemize}
+    \item \textbf{Automated Testing (CI):} GitHub Actions are configured to trigger our test suite on every PR. This includes \texttt{pytest} for backend logic and \texttt{Vitest} for frontend state management. Merging is restricted if the CI pipeline fails.
+    \item \textbf{Static Analysis:} \textbf{SonarQube} and \textbf{ESLint} are integrated into the pipeline to monitor code smells, technical debt, and potential security vulnerabilities.
+    \item \textbf{Deployment (CD):} The project is containerized using \textbf{Docker}. Our deployment pipeline automates the delivery of stable builds to our dedicated computing node, ensuring the training environment for our RL agent remains consistent with the development environment.
+\end{itemize}
 
 \section{Project Decomposition and Scheduling}
 
