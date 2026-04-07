@@ -779,88 +779,91 @@ Based on testing results, we have identified and prioritized changes as follows:
 
 \subsection*{High Priority (Rev 1 Implementation)}
 
-\textbf{Change 1: UI Color-Coding and Visual Representation}
+\subsubsection*{Change 1: UI Color-Coding and Visual Representation}
 
-\textit{Test Evidence:} NFR.U.1 (Usability Survey) - 5 out of 7 participants (71\%) reported difficulty matching digital piece colors to physical Catan board expectations.
-Catan-to-Bot Intuition score: 2.8/5.
+\noindent
+\textbf{Test Evidence:} NFR.U.1 (Usability Survey) - 5 out of 7 participants (71\%) reported difficulty matching digital piece colors to physical Catan board expectations, with a Catan-to-Bot Intuition score of 2.8/5.
 
-\textit{What Changed:} Redesigned player color palette and piece representation to exactly match physical Catan board colors (Red=\#FF0000, Blue=\#0000FF, White=\#FFFFFF, Orange=\#FFA500).
-Added resource token icons with color-blind-safe palettes and clear hexagon type labels.
+\noindent
+\textbf{What Changed:} Redesigned player color palette and piece representation to exactly match physical Catan board colors (Red=\#FF0000, Blue=\#0000FF, White=\#FFFFFF, Orange=\#FFA500). Added resource token icons with color-blind-safe palettes and clear hexagon type labels.
 
-\textit{Why:} Participants struggled with the digital-to-physical mapping, indicating a gap in FR.S.4.1 (Interactive Board View) and FR.S.4.2 (Visual Indicators) implementation.
+\noindent
+\textbf{Why:} Participants struggled with the digital-to-physical mapping, indicating a gap in FR.S.4.1 (Interactive Board View) and FR.S.4.2 (Visual Indicators) implementation.
 
-\textit{Requirement Impact:} Directly improves FR.S.4.1, FR.S.4.2, and NFR.S.2 (Usability).
-Expected post-implementation Intuition score: 4/5.
+\noindent
+\textbf{Requirement Impact:} Directly improves FR.S.4.1, FR.S.4.2, and NFR.S.2 (Usability). Expected post-implementation Intuition score: 4/5.
 
-\textbf{Change 2: Game Flow Navigation Enhancement}
+\subsubsection*{Change 2: Game Flow Navigation Enhancement}
 
-\textit{Test Evidence:} NFR.U.1 and NFR.U.2 (Usability/Accessibility) - 4 out of 7 participants requested clearer hexagon type labels.
-Accessibility test showed text clarity issues at 80\% browser zoom.
+\noindent
+\textbf{Test Evidence:} NFR.U.1 and NFR.U.2 (Usability/Accessibility) - 4 out of 7 participants requested clearer hexagon type labels, and accessibility tests showed text clarity issues at 80\% browser zoom.
 
-\textit{What Changed:} Implemented permanent resource type labels on all hexagons (Wheat, Sheep, Brick, Ore, Lumber, Desert).
-Created tooltip system with minimum 14pt font, scalable to 120\% with browser zoom.
-Added visual action flow highlighting.
+\noindent
+\textbf{What Changed:} Implemented permanent resource type labels on all hexagons (Wheat, Sheep, Brick, Ore, Lumber, Desert). Created a tooltip system with minimum 14pt font, scalable to 120\% with browser zoom, and added visual action flow highlighting.
 
-\textit{Why:} Unlabeled hexagons created cognitive load for new players, and accessibility failures could exclude users.
-This directly addresses FR.S.4.3 (Action Controls) and FR.S.4.5 (Multi-Platform Support) gaps.
+\noindent
+\textbf{Why:} Unlabeled hexagons created cognitive load for new players, and accessibility failures could exclude users. This directly addresses FR.S.4.3 (Action Controls) and FR.S.4.5 (Multi-Platform Support) gaps.
 
-\textit{Requirement Impact:} Improves FR.S.4.3, FR.S.4.5, and NFR.S.2 (Usability/Accessibility).
+\noindent
+\textbf{Requirement Impact:} Improves FR.S.4.3, FR.S.4.5, and NFR.S.2 (Usability/Accessibility).
 
-\textbf{Change 3: Data Validation Layer Hardening}
+\subsubsection*{Change 3: Data Validation Layer Hardening}
 
-\textit{Test Evidence:} T.NFR.D.1, T.NFR.D.2, T.NFR.D.3 (Data Integrity Tests) - All 15 invalid state payloads rejected (100\% success), all 12 invalid action payloads rejected (100\% success).
+\noindent
+\textbf{Test Evidence:} T.NFR.D.1, T.NFR.D.2, T.NFR.D.3 (Data Integrity Tests) - All 15 invalid state payloads rejected (100\% success), all 12 invalid action payloads rejected (100\% success).
 
-\textit{What Changed:} Added pre-storage validation checks for game state constraints.
-Implemented comprehensive error logging with specific violation details.
-Added database schema constraints (foreign keys, check constraints) as secondary protection layer.
+\noindent
+\textbf{What Changed:} Added pre-storage validation checks for game state constraints, implemented comprehensive error logging with specific violation details, and added database schema constraints (foreign keys, check constraints) as a secondary protection layer.
 
-\textit{Why:} Tests confirmed database integrity was working, but to prevent future regressions and improve auditability, we hardened the validation layer.
+\noindent
+\textbf{Why:} Tests confirmed database integrity was working, but to prevent future regressions and improve auditability, we hardened the validation layer.
 
-\textit{Requirement Impact:} Ensures FR.S.7.1 (Following Rules), FR.S.7.2 (Player Asset Tracking), and NFR.S.5 (Data Integrity) remain robust.
-Prevents data corruption from persisting.
+\noindent
+\textbf{Requirement Impact:} Ensures FR.S.7.1 (Following Rules), FR.S.7.2 (Player Asset Tracking), and NFR.S.5 (Data Integrity) remain robust and prevents data corruption from persisting.
 
 \subsection*{Medium Priority (Post-Rev 1 / Backlog)}
 
-\textbf{Change 4: Performance Optimization}
+\subsubsection*{Change 4: Performance Optimization}
 
-\textit{Test Evidence:} T.NFR.P.1 and T.NFR.P.2 (Performance/Scalability) - AI Suggestion latency averaged 350ms (under 500ms target), Board Update averaged 85ms (under 200ms target), but UI render time averaged 45ms per frame (target 60fps = 16.67ms not achieved).
+\noindent
+\textbf{Test Evidence:} T.NFR.P.1 and T.NFR.P.2 (Performance/Scalability) - AI Suggestion latency averaged 350ms (under 500ms target), Board Update averaged 85ms (under 200ms target), but UI render time averaged 45ms per frame (target 60fps = 16.67ms not achieved).
 
-\textit{What Changed:} Optimized WebSocket message batching, implemented React memoization, migrated to canvas-based rendering for board, added server-side caching for state queries.
+\noindent
+\textbf{What Changed:} Optimized WebSocket message batching, implemented React memoization, migrated to canvas-based rendering for the board, and added server-side caching for state queries.
 
-\textit{Why:} While meeting latency targets, frame rate indicated room for improvement to enhance perceived responsiveness.
+\noindent
+\textbf{Why:} While meeting latency targets, the frame rate indicated room for improvement to enhance perceived responsiveness.
 
-\textit{Requirement Impact:} Improves NFR.S.1 (Scalability).
-Target: 60fps (currently ~22fps post-optimization, further improvements deferred).
+\noindent
+\textbf{Requirement Impact:} Improves NFR.S.1 (Scalability). Target: 60fps (currently ~22fps post-optimization, with further improvements deferred).
 
-\textbf{Change 5: Unit Testing Framework Establishment}
+\subsubsection*{Change 5: Unit Testing Framework Establishment}
 
-\textit{Test Evidence:} 10 unit tests executed (100\% pass rate) covering API endpoints, path resolution, MCTS integration, database constraints.
+\noindent
+\textbf{Test Evidence:} 10 unit tests executed (100\% pass rate) covering API endpoints, path resolution, MCTS integration, and database constraints.
 
-\textit{What Changed:} Integrated pytest framework for all Python backend modules.
-Added unit test execution to CI/CD pipeline (blocks merges on failure). Established 80\% minimum code coverage threshold for new contributions.
-Created test documentation and examples.
+\noindent
+\textbf{What Changed:} Integrated pytest framework for all Python backend modules, added unit test execution to the CI/CD pipeline (blocks merges on failure), established an 80\% minimum code coverage threshold for new contributions, and created test documentation and examples.
 
-\textit{Why:} Tests demonstrated modules work correctly in isolation, but formalizing the framework prevents future regressions.
+\noindent
+\textbf{Why:} Tests demonstrated that modules work correctly in isolation, but formalizing the framework prevents future regressions.
 
-\textit{Requirement Impact:} Improves NFR.S.3 (Maintainability).
-Provides executable documentation for future developers.
+\noindent
+\textbf{Requirement Impact:} Improves NFR.S.3 (Maintainability) and provides executable documentation for future developers.
 
 \subsection*{Out of Scope}
+
 The following findings from testing will not be addressed due to time constraints or project priorities:
+
 \begin{itemize}
-    \item \textbf{Low-Impact Security Issues:} SonarQube identified low-risk security issues.
-    Given deployment context, these are deferred to future cycles.
-    \item \textbf{Advanced Model Optimizations:} Testing revealed user experience is a larger bottleneck than AI model performance.
-    Model optimization deferred in favor of usability improvements.
-    \item \textbf{Deployment Strategy:} Currently using paid Render hosting.
-    Long-term hosting decisions deferred post-project completion.
+    \item \textbf{Low-Impact Security Issues:} SonarQube identified low-risk security issues. Given the deployment context, these are deferred to future cycles.
+    \item \textbf{Advanced Model Optimizations:} Testing revealed that user experience is a larger bottleneck than AI model performance. Model optimization has been deferred in favor of usability improvements.
+    \item \textbf{Deployment Strategy:} Currently using paid Render hosting. Long-term hosting decisions are deferred post-project completion.
 \end{itemize}
 
 \subsection*{Summary}
 
-Testing conclusions have shifted our priorities from improving the model's decision-making to enhancing the user experience and code quality.
-The VnV process identified 5 concrete changes—3 implemented (UI/UX, data validation), 2 deferred (performance, testing framework)—demonstrating clear linkage between test results and quality improvements.
-This evidence-based approach strengthens our confidence that the system meets both functional (FR.S.4.1-4.5, FR.S.7.1-7.2) and nonfunctional (NFR.S.2, NFR.S.5) requirements.
+Testing conclusions have shifted our priorities from improving the model's decision-making to enhancing the user experience and code quality. The VnV process identified 5 concrete changes—3 implemented (UI/UX, data validation) and 2 deferred (performance, testing framework)—demonstrating clear linkage between test results and quality improvements. This evidence-based approach strengthens our confidence that the system meets both functional (FR.S.4.1--4.5, FR.S.7.1--7.2) and nonfunctional (NFR.S.2, NFR.S.5) requirements.
 
 \section{Automated Testing}
 
